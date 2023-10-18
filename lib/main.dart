@@ -3,6 +3,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:hotel_manager/screens/user_screen.dart';
 import 'firebase_options.dart';
+import 'login_view.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -53,9 +54,18 @@ class _MyHomePageState extends State<MyHomePage> {
     _database.child('counter').set(counter);
   }
 
+
+  void _navigateToLogin() {
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => LoginView(),
+    ));
+  }
+
+
   void _navigateToUserScreen() {
     Navigator.pushNamed(context, '/userScreen');
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -74,6 +84,10 @@ class _MyHomePageState extends State<MyHomePage> {
             Text(
               '$_counter',
               style: Theme.of(context).textTheme.headlineMedium,
+            ),
+            ElevatedButton(
+              onPressed: _navigateToLogin,
+              child: const Text('Login'),
             ),
           ],
         ),
