@@ -27,16 +27,24 @@ class _RegisterViewState extends State<RegisterView> {
       );
     } else {
         _registerIfPossible();
-      // TODO: Add registration logic here using Firebase Authentication or your preferred authentication method
     }
+  }
+
+  void _showSnackbar(BuildContext context, String username) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(username),
+        duration: const Duration(seconds: 2),
+      ),
+    );
   }
 
   void _registerIfPossible() async{
     UserCredential? userCredential = await _userAuth.signUp(emailController.text.trim(), passwordController.text.trim());
     if (userCredential != null) {
-      print("Registered");
+      _showSnackbar(context, "Registered");
     } else {
-      print("Registration failed");
+      _showSnackbar(context, "Registration failed");
     }
   }
 

@@ -18,15 +18,23 @@ class _LoginViewState extends State<LoginView> {
 
   void _login() {
     _loginIfPossible();
-    // TODO: Add login logic here using Firebase Authentication
+  }
+
+  void _showSnackbar(BuildContext context, String username) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(username),
+        duration: const Duration(seconds: 2),
+      ),
+    );
   }
 
   Future<void> _loginIfPossible() async {
     UserCredential? userCredential = await _userAuth.signIn(emailController.text.trim(), passwordController.text.trim());
     if (userCredential != null) {
-      print("Signed in");
+      _showSnackbar(context, "Signed in");
     } else {
-      print("Sign-in failed");
+      _showSnackbar(context, "Signed in");
     }
   }
 
