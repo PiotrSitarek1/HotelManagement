@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'register_screen.dart';
 
 class LoginView extends StatefulWidget {
-  const LoginView({super.key});
+  const LoginView({Key? key});
 
   @override
   _LoginViewState createState() => _LoginViewState();
@@ -14,6 +15,12 @@ class _LoginViewState extends State<LoginView> {
 
   void _login() {
     // TODO: Add login logic here using Firebase Authentication
+  }
+
+  void _navigateToRegister() {
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => RegisterView(),
+    ));
   }
 
   @override
@@ -117,6 +124,16 @@ class _LoginViewState extends State<LoginView> {
                       }
                     },
                     child: const Text('Login'),
+                  ),
+                  const SizedBox(height: 16),
+                  TextButton(
+                    onPressed: _navigateToRegister,
+                    child: const Text(
+                      "Don't have an account? Sign Up",
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
                   ),
                 ],
               ),

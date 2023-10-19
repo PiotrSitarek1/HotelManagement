@@ -3,7 +3,8 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:hotel_manager/screens/user_screen.dart';
 import 'firebase_options.dart';
-import 'login_view.dart';
+import 'screens/login_screen.dart';
+import 'screens/register_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -61,6 +62,11 @@ class _MyHomePageState extends State<MyHomePage> {
     ));
   }
 
+  void _navigateToRegister() {
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => RegisterView(),
+    ));
+  }
 
   void _navigateToUserScreen() {
     Navigator.pushNamed(context, '/userScreen');
@@ -88,6 +94,10 @@ class _MyHomePageState extends State<MyHomePage> {
             ElevatedButton(
               onPressed: _navigateToLogin,
               child: const Text('Login'),
+            ),
+            ElevatedButton(
+              onPressed: _navigateToRegister,
+              child: const Text('Register'),
             ),
           ],
         ),
