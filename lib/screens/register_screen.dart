@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:hotel_manager/services/user_auth.dart';
 import 'login_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class RegisterView extends StatefulWidget {
   const RegisterView({Key? key});
@@ -9,6 +11,7 @@ class RegisterView extends StatefulWidget {
 }
 
 class _RegisterViewState extends State<RegisterView> {
+  final UserAuth _userAuth = UserAuth();
   final _formKey = GlobalKey<FormState>();
   final TextEditingController firstNameController = TextEditingController();
   final TextEditingController lastNameController = TextEditingController();
@@ -23,7 +26,17 @@ class _RegisterViewState extends State<RegisterView> {
         const SnackBar(content: Text('Please accept the terms of use and privacy policy')),
       );
     } else {
+        _registerIfPossible();
       // TODO: Add registration logic here using Firebase Authentication or your preferred authentication method
+    }
+  }
+
+  void _registerIfPossible() async{
+    UserCredential? userCredential = await _userAuth.signUp(emailController.text.trim(), passwordController.text.trim());
+    if (userCredential != null) {
+      print("Registered");
+    } else {
+      print("Registration failed");
     }
   }
 
