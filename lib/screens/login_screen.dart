@@ -34,7 +34,7 @@ class _LoginViewState extends State<LoginView> {
     if (userCredential != null) {
       _showSnackbar(context, "Signed in");
     } else {
-      _showSnackbar(context, "Signed in");
+      _showSnackbar(context, "Problem with signing in");
     }
   }
 
