@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:hotel_manager/services/user_auth.dart';
 import 'register_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({Key? key});
@@ -9,12 +11,31 @@ class LoginView extends StatefulWidget {
 }
 
 class _LoginViewState extends State<LoginView> {
+  final UserAuth _userAuth = UserAuth();
   final _formKey = GlobalKey<FormState>();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
   void _login() {
-    // TODO: Add login logic here using Firebase Authentication
+    _loginIfPossible();
+  }
+
+  void _showSnackbar(BuildContext context, String username) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(username),
+        duration: const Duration(seconds: 2),
+      ),
+    );
+  }
+
+  Future<void> _loginIfPossible() async {
+    UserCredential? userCredential = await _userAuth.signIn(emailController.text.trim(), passwordController.text.trim());
+    if (userCredential != null) {
+      _showSnackbar(context, "Signed in");
+    } else {
+      _showSnackbar(context, "Problem with signing in");
+    }
   }
 
   void _navigateToRegister() {
