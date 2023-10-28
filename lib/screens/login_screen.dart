@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'register_screen.dart';
+import 'sign_up_visitor.dart';
 import 'change_password_screen.dart';
 
 class LoginView extends StatefulWidget {
@@ -20,13 +20,13 @@ class _LoginViewState extends State<LoginView> {
 
   void _navigateToRegister() {
     Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => RegisterVisitorView(),
+      builder: (context) => const RegisterVisitorView(),
     ));
   }
 
   void _navigateToForgotPassword() {
     Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => ChangePasswordView(),
+      builder: (context) => const ChangePasswordView(),
     ));
   }
 
