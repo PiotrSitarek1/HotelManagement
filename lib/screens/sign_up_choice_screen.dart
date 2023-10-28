@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'sign_up_visitor.dart';
+import 'sign_up_visitor_screen.dart';
 import 'sign_up_hotel_owner_screen.dart';
 
 class SignupScreen extends StatelessWidget {

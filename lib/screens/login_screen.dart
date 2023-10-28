@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'sign_up_visitor.dart';
+import 'sign_up_visitor_screen.dart';
 import 'change_password_screen.dart';
 import 'package:hotel_manager/services/user_auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
