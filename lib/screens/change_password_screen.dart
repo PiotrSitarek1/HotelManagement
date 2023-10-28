@@ -1,33 +1,22 @@
 import 'package:flutter/material.dart';
-import 'register_screen.dart';
-import 'change_password_screen.dart';
 
-class LoginView extends StatefulWidget {
-  const LoginView({Key? key});
+class ChangePasswordView extends StatefulWidget {
+  const ChangePasswordView({Key? key});
 
   @override
-  _LoginViewState createState() => _LoginViewState();
+  _ChangePasswordViewState createState() => _ChangePasswordViewState();
 }
 
-class _LoginViewState extends State<LoginView> {
+class _ChangePasswordViewState extends State<ChangePasswordView> {
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
+  final TextEditingController oldPasswordController = TextEditingController();
+  final TextEditingController newPasswordController = TextEditingController();
+  final TextEditingController confirmNewPasswordController =
+      TextEditingController();
 
-  void _login() {
-    // TODO: Add login logic here using Firebase Authentication
-  }
-
-  void _navigateToRegister() {
-    Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => RegisterVisitorView(),
-    ));
-  }
-
-  void _navigateToForgotPassword() {
-    Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => ChangePasswordView(),
-    ));
+  void _changePassword() {
+    // TODO: Add logic to change the password
+    // Verify the old password and update it to the new password.
   }
 
   @override
@@ -71,7 +60,7 @@ class _LoginViewState extends State<LoginView> {
                       child: Padding(
                         padding: EdgeInsets.only(bottom: 16.0),
                         child: Text(
-                          'Sign In',
+                          'Change Password',
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 24,
@@ -87,16 +76,17 @@ class _LoginViewState extends State<LoginView> {
                         borderRadius: BorderRadius.circular(borderRadius),
                       ),
                       child: TextFormField(
-                        controller: emailController,
+                        controller: oldPasswordController,
+                        obscureText: true,
                         decoration: const InputDecoration(
-                          labelText: 'Email',
+                          labelText: 'Old Password',
                           border: InputBorder.none,
                           contentPadding: EdgeInsets.all(12.0),
                         ),
                         style: const TextStyle(color: Colors.black),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Please enter your email';
+                            return 'Please enter your old password';
                           }
                           return null;
                         },
@@ -110,17 +100,43 @@ class _LoginViewState extends State<LoginView> {
                         borderRadius: BorderRadius.circular(borderRadius),
                       ),
                       child: TextFormField(
-                        controller: passwordController,
+                        controller: newPasswordController,
                         obscureText: true,
                         decoration: const InputDecoration(
-                          labelText: 'Password',
+                          labelText: 'New Password',
                           border: InputBorder.none,
                           contentPadding: EdgeInsets.all(12.0),
                         ),
                         style: const TextStyle(color: Colors.black),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Please enter your password';
+                            return 'Please enter your new password';
+                          }
+                          return null;
+                        },
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    Container(
+                      height: 50,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(borderRadius),
+                      ),
+                      child: TextFormField(
+                        controller: confirmNewPasswordController,
+                        obscureText: true,
+                        decoration: const InputDecoration(
+                          labelText: 'Confirm New Password',
+                          border: InputBorder.none,
+                          contentPadding: EdgeInsets.all(12.0),
+                        ),
+                        style: const TextStyle(color: Colors.black),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please confirm your new password';
+                          } else if (value != newPasswordController.text) {
+                            return 'Passwords do not match';
                           }
                           return null;
                         },
@@ -130,33 +146,16 @@ class _LoginViewState extends State<LoginView> {
                     ElevatedButton(
                       onPressed: () {
                         if (_formKey.currentState!.validate()) {
-                          _login();
+                          _changePassword();
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('Please fill input')),
+                            const SnackBar(
+                                content: Text(
+                                    'Please fill input or passwords do not match')),
                           );
                         }
                       },
-                      child: const Text('Login'),
-                    ),
-                    const SizedBox(height: 16),
-                    TextButton(
-                      onPressed: _navigateToRegister,
-                      child: const Text(
-                        "Don't have an account? Sign Up",
-                        style: TextStyle(
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                    TextButton(
-                      onPressed: _navigateToForgotPassword,
-                      child: const Text(
-                        "Forgot Password",
-                        style: TextStyle(
-                          color: Colors.white,
-                        ),
-                      ),
+                      child: const Text('Change Password'),
                     ),
                   ],
                 ),
