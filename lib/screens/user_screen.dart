@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:hotel_manager/models/user_model.dart';
 import 'package:hotel_manager/services/user_service.dart';
@@ -24,7 +23,7 @@ class _UserScreenState extends State<UserScreen> {
   }
 
   Future<void> _fetchUsers() async {
-      await _userService.fetchAllUsers();
+    await _userService.fetchAllUsers();
   }
 
   @override
@@ -53,10 +52,14 @@ class _UserScreenState extends State<UserScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('User Screen'),
-      ),
-      body: Center(
+      appBar: null,
+      body: Container(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage("assets/images/blank_background.png"),
+            fit: BoxFit.cover,
+          ),
+        ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[

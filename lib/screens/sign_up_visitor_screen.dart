@@ -3,27 +3,29 @@ import 'package:hotel_manager/services/user_auth.dart';
 import 'login_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-class RegisterView extends StatefulWidget {
-  const RegisterView({Key? key});
+class RegisterVisitorView extends StatefulWidget {
+  const RegisterVisitorView({Key? key});
 
   @override
-  _RegisterViewState createState() => _RegisterViewState();
+  _RegisterVisitorViewState createState() => _RegisterVisitorViewState();
 }
 
-class _RegisterViewState extends State<RegisterView> {
+class _RegisterVisitorViewState extends State<RegisterVisitorView> {
   final UserAuth _userAuth = UserAuth();
   final _formKey = GlobalKey<FormState>();
   final TextEditingController firstNameController = TextEditingController();
   final TextEditingController lastNameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  final TextEditingController confirmPasswordController = TextEditingController();
-  bool acceptTerms = false; // New variable for the checkbox
+  final TextEditingController confirmPasswordController =
+      TextEditingController();
+  bool acceptTerms = false;
 
   void _register() {
     if (!acceptTerms) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please accept the terms of use and privacy policy')),
+        const SnackBar(
+            content: Text('Please accept the terms of use and privacy policy')),
       );
     } else {
         _registerIfPossible();
@@ -57,13 +59,17 @@ class _RegisterViewState extends State<RegisterView> {
   @override
   Widget build(BuildContext context) {
     double borderRadius = 10.0;
-    Color customPurpleColor = const Color(0xFF8887C4);
-    Color customBlueColor = const Color(0xFFE2E2FE);
+    Color customPurpleColor = const Color(0xFF9E70FC);
 
     return Scaffold(
       appBar: null,
       body: Container(
-        color: customBlueColor,
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage("assets/images/blank_background.png"),
+            fit: BoxFit.cover,
+          ),
+        ),
         child: Center(
           child: Container(
             width: 300,
@@ -93,13 +99,14 @@ class _RegisterViewState extends State<RegisterView> {
                         'Sign Up',
                         style: TextStyle(
                           color: Colors.white,
-                          fontSize: 24,
+                          fontSize: 16,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                     ),
                   ),
                   Container(
+                    height: 50,
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(borderRadius),
@@ -109,7 +116,8 @@ class _RegisterViewState extends State<RegisterView> {
                       decoration: const InputDecoration(
                         labelText: 'First Name',
                         border: InputBorder.none,
-                        contentPadding: EdgeInsets.all(12.0),
+                        contentPadding: EdgeInsets.symmetric(
+                            vertical: 6.0, horizontal: 12.0),
                       ),
                       style: const TextStyle(color: Colors.black),
                       validator: (value) {
@@ -120,8 +128,9 @@ class _RegisterViewState extends State<RegisterView> {
                       },
                     ),
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 10),
                   Container(
+                    height: 50,
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(borderRadius),
@@ -142,8 +151,9 @@ class _RegisterViewState extends State<RegisterView> {
                       },
                     ),
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 10),
                   Container(
+                    height: 50,
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(borderRadius),
@@ -164,8 +174,9 @@ class _RegisterViewState extends State<RegisterView> {
                       },
                     ),
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 10),
                   Container(
+                    height: 50,
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(borderRadius),
@@ -187,8 +198,9 @@ class _RegisterViewState extends State<RegisterView> {
                       },
                     ),
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 10),
                   Container(
+                    height: 50,
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(borderRadius),
@@ -212,7 +224,7 @@ class _RegisterViewState extends State<RegisterView> {
                       },
                     ),
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 10),
                   Row(
                     children: [
                       Checkbox(
@@ -233,24 +245,28 @@ class _RegisterViewState extends State<RegisterView> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 10),
                   ElevatedButton(
                     onPressed: () {
                       if (_formKey.currentState!.validate() && acceptTerms) {
                         _register();
                       } else if (!acceptTerms) {
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Please accept the terms of use and privacy policy')),
+                          const SnackBar(
+                              content: Text(
+                                  'Please accept the terms of use and privacy policy')),
                         );
                       } else {
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Please fill input or passwords do not match')),
+                          const SnackBar(
+                              content: Text(
+                                  'Please fill input or passwords do not match')),
                         );
                       }
                     },
                     child: const Text('Sign Up'),
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 10),
                   GestureDetector(
                     onTap: _navigateToLogin,
                     child: const Text(
@@ -260,7 +276,6 @@ class _RegisterViewState extends State<RegisterView> {
                         decoration: TextDecoration.underline,
                       ),
                     ),
-
                   ),
                 ],
               ),

@@ -2,9 +2,10 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:hotel_manager/screens/user_screen.dart';
+import 'package:hotel_manager/screens/user_settings_screen.dart';
 import 'firebase_options.dart';
 import 'screens/login_screen.dart';
-import 'screens/register_screen.dart';
+import 'screens/sign_up_choice_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -58,13 +59,19 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void _navigateToLogin() {
     Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => LoginView(),
+      builder: (context) => const LoginView(),
     ));
   }
 
   void _navigateToRegister() {
     Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => RegisterView(),
+      builder: (context) => const SignupScreen(),
+    ));
+  }
+
+  void _navigateToUserSettings() {
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => const UserSettingsView(),
     ));
   }
 
@@ -98,6 +105,10 @@ class _MyHomePageState extends State<MyHomePage> {
             ElevatedButton(
               onPressed: _navigateToRegister,
               child: const Text('Register'),
+            ),
+            ElevatedButton(
+              onPressed: _navigateToUserSettings,
+              child: const Text('User settings'),
             ),
           ],
         ),
