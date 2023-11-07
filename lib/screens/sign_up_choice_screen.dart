@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'sign_up_visitor_screen.dart';
 import 'sign_up_hotel_owner_screen.dart';
 
@@ -7,7 +8,7 @@ class SignupScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Color customPurpleColor = const Color(0xFF9E70FC);
+    Color customBluePrimary = Colors.blueGrey;
 
     return Scaffold(
       appBar: null,
@@ -22,15 +23,12 @@ class SignupScreen extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Text(
+              Text(
                 'Wanna Sign up as?',
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: GoogleFonts.roboto(
+                    fontSize: 24, fontWeight: FontWeight.bold),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 64),
               ElevatedButton(
                 onPressed: () {
                   Navigator.of(context).push(
@@ -40,16 +38,17 @@ class SignupScreen extends StatelessWidget {
                   );
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: customPurpleColor,
+                  backgroundColor: customBluePrimary,
                 ),
-                child: const Text(
-                  'VISITOR',
-                  style: TextStyle(
-                    color: Colors.white,
-                  ),
+                child: Text(
+                  'HOTEL VISITOR',
+                  style: GoogleFonts.roboto(
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white),
                 ),
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 32),
               ElevatedButton(
                 onPressed: () {
                   Navigator.of(context).push(
@@ -59,13 +58,14 @@ class SignupScreen extends StatelessWidget {
                   );
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: customPurpleColor,
+                  backgroundColor: customBluePrimary,
                 ),
-                child: const Text(
+                child: Text(
                   'HOTEL OWNER',
-                  style: TextStyle(
-                    color: Colors.white,
-                  ),
+                  style: GoogleFonts.roboto(
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white),
                 ),
               ),
             ],

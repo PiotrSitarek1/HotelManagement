@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hotel_manager/screens/change_password_screen.dart';
+import 'package:hotel_manager/screens/login_screen.dart';
+import 'package:hotel_manager/screens/sign_up_choice_screen.dart';
 
 class LoginMenuView extends StatefulWidget {
   const LoginMenuView({Key? key});
@@ -9,8 +12,29 @@ class LoginMenuView extends StatefulWidget {
 }
 
 class _LoginMenuViewState extends State<LoginMenuView> {
+  void _navigateToLogin() {
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => const LoginView(),
+    ));
+  }
+
+  void _navigateToRegister() {
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => const SignupScreen(),
+    ));
+  }
+
+  void _navigateToForgotPassword() {
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => const ChangePasswordView(),
+    ));
+  }
+
   @override
   Widget build(BuildContext context) {
+    Color customBluePrimary = Colors.blueGrey;
+    Color customBlueAccent = const Color.fromARGB(255, 5, 35, 75);
+
     return Scaffold(
         appBar: null,
         body: Container(
@@ -42,9 +66,9 @@ class _LoginMenuViewState extends State<LoginMenuView> {
                 ),
                 const SizedBox(height: 96),
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: _navigateToLogin,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blueGrey, // Background color
+                    backgroundColor: customBluePrimary, // Background color
                   ),
                   child: Text(
                     'Login as Visitor',
@@ -56,9 +80,9 @@ class _LoginMenuViewState extends State<LoginMenuView> {
                 ),
                 //const SizedBox(height: 4),
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: _navigateToLogin,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blueGrey, // Background color
+                    backgroundColor: customBluePrimary, // Background color
                   ),
                   child: Text(
                     'Login as Manager',
@@ -70,24 +94,24 @@ class _LoginMenuViewState extends State<LoginMenuView> {
                 ),
                 const SizedBox(height: 32),
                 GestureDetector(
-                  onTap: () {},
+                  onTap: _navigateToForgotPassword,
                   child: Text("FORGOT PASSWORD",
                       style: GoogleFonts.roboto(
                           fontWeight: FontWeight.w900,
-                          color: const Color.fromARGB(255, 8, 48, 117))),
+                          color: customBlueAccent)),
                 ),
                 const SizedBox(height: 12),
                 Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                  const Text("Not a member?"),
+                  const Text("Don't have an account yet?"),
                   const SizedBox(
                     width: 4,
                   ),
                   GestureDetector(
-                    onTap: () {},
+                    onTap: _navigateToRegister,
                     child: Text("Sign up",
                         style: GoogleFonts.roboto(
                             fontWeight: FontWeight.bold,
-                            color: const Color.fromARGB(255, 8, 48, 117))),
+                            color: customBlueAccent)),
                   )
                 ])
               ],

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class ChangePasswordView extends StatefulWidget {
   const ChangePasswordView({Key? key});
@@ -22,7 +23,9 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
   @override
   Widget build(BuildContext context) {
     double borderRadius = 10.0;
-    Color customPurpleColor = const Color(0xFF9E70FC);
+
+    Color customBluePrimary = Colors.blueGrey;
+    Color customBlueAccent = const Color.fromARGB(255, 5, 35, 75);
 
     return Scaffold(
       appBar: null,
@@ -38,7 +41,7 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
             width: 300,
             padding: const EdgeInsets.all(16.0),
             decoration: BoxDecoration(
-              color: customPurpleColor,
+              color: customBluePrimary,
               borderRadius: BorderRadius.circular(10.0),
               boxShadow: const [
                 BoxShadow(
@@ -55,17 +58,16 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    const Align(
+                    Align(
                       alignment: Alignment.topCenter,
                       child: Padding(
                         padding: EdgeInsets.only(bottom: 16.0),
                         child: Text(
                           'Change Password',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                          ),
+                          style: GoogleFonts.roboto(
+                              fontSize: 24,
+                              color: Colors.white,
+                              fontWeight: FontWeight.w900),
                         ),
                       ),
                     ),
@@ -155,7 +157,11 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
                           );
                         }
                       },
-                      child: const Text('Change Password'),
+                      child: Text('Change Password',
+                          style: GoogleFonts.roboto(
+                              fontSize: 16,
+                              color: customBlueAccent,
+                              fontWeight: FontWeight.bold)),
                     ),
                   ],
                 ),

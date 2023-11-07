@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:hotel_manager/screens/start_screen.dart';
 import 'package:hotel_manager/screens/user_screen.dart';
 import 'package:hotel_manager/screens/user_settings_screen.dart';
 import 'firebase_options.dart';
@@ -56,7 +57,6 @@ class _MyHomePageState extends State<MyHomePage> {
     _database.child('counter').set(counter);
   }
 
-
   void _navigateToLogin() {
     Navigator.of(context).push(MaterialPageRoute(
       builder: (context) => const LoginView(),
@@ -79,6 +79,11 @@ class _MyHomePageState extends State<MyHomePage> {
     Navigator.pushNamed(context, '/userScreen');
   }
 
+  void _navigateToStartPage() {
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => const StartView(),
+    ));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -109,6 +114,10 @@ class _MyHomePageState extends State<MyHomePage> {
             ElevatedButton(
               onPressed: _navigateToUserSettings,
               child: const Text('User settings'),
+            ),
+            ElevatedButton(
+              onPressed: _navigateToStartPage,
+              child: const Text('mainPage'),
             ),
           ],
         ),

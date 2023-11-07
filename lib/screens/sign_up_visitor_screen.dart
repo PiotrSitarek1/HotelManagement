@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:hotel_manager/services/user_auth.dart';
 import 'login_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -28,7 +29,7 @@ class _RegisterVisitorViewState extends State<RegisterVisitorView> {
             content: Text('Please accept the terms of use and privacy policy')),
       );
     } else {
-        _registerIfPossible();
+      _registerIfPossible();
     }
   }
 
@@ -41,8 +42,9 @@ class _RegisterVisitorViewState extends State<RegisterVisitorView> {
     );
   }
 
-  void _registerIfPossible() async{
-    UserCredential? userCredential = await _userAuth.signUp(emailController.text.trim(), passwordController.text.trim());
+  void _registerIfPossible() async {
+    UserCredential? userCredential = await _userAuth.signUp(
+        emailController.text.trim(), passwordController.text.trim());
     if (userCredential != null) {
       _showSnackbar(context, "Registered");
     } else {
@@ -59,7 +61,8 @@ class _RegisterVisitorViewState extends State<RegisterVisitorView> {
   @override
   Widget build(BuildContext context) {
     double borderRadius = 10.0;
-    Color customPurpleColor = const Color(0xFF9E70FC);
+    Color customBluePrimary = Colors.blueGrey;
+    Color customBlueAccent = const Color.fromARGB(255, 5, 35, 75);
 
     return Scaffold(
       appBar: null,
@@ -75,7 +78,7 @@ class _RegisterVisitorViewState extends State<RegisterVisitorView> {
             width: 300,
             padding: const EdgeInsets.all(16.0),
             decoration: BoxDecoration(
-              color: customPurpleColor,
+              color: customBluePrimary,
               borderRadius: BorderRadius.circular(10.0),
               boxShadow: const [
                 BoxShadow(
@@ -91,17 +94,16 @@ class _RegisterVisitorViewState extends State<RegisterVisitorView> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Align(
+                  Align(
                     alignment: Alignment.topCenter,
                     child: Padding(
                       padding: EdgeInsets.only(bottom: 16.0),
                       child: Text(
                         'Sign Up',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style: GoogleFonts.roboto(
+                            fontSize: 24,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold),
                       ),
                     ),
                   ),
@@ -264,7 +266,11 @@ class _RegisterVisitorViewState extends State<RegisterVisitorView> {
                         );
                       }
                     },
-                    child: const Text('Sign Up'),
+                    child: Text('Sign Up',
+                        style: GoogleFonts.roboto(
+                            fontSize: 16,
+                            color: customBlueAccent,
+                            fontWeight: FontWeight.bold)),
                   ),
                   const SizedBox(height: 10),
                   GestureDetector(

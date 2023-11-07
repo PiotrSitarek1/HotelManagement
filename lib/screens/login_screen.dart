@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'sign_up_visitor_screen.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:hotel_manager/screens/sign_up_choice_screen.dart';
 import 'change_password_screen.dart';
 import 'package:hotel_manager/services/user_auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -31,7 +32,8 @@ class _LoginViewState extends State<LoginView> {
   }
 
   Future<void> _loginIfPossible() async {
-    UserCredential? userCredential = await _userAuth.signIn(emailController.text.trim(), passwordController.text.trim());
+    UserCredential? userCredential = await _userAuth.signIn(
+        emailController.text.trim(), passwordController.text.trim());
     if (userCredential != null) {
       _showSnackbar(context, "Signed in");
     } else {
@@ -41,7 +43,7 @@ class _LoginViewState extends State<LoginView> {
 
   void _navigateToRegister() {
     Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => const RegisterVisitorView(),
+      builder: (context) => const SignupScreen(),
     ));
   }
 
@@ -54,7 +56,8 @@ class _LoginViewState extends State<LoginView> {
   @override
   Widget build(BuildContext context) {
     double borderRadius = 10.0;
-    Color customPurpleColor = const Color(0xFF9E70FC);
+    Color customBluePrimary = Colors.blueGrey;
+    Color customBlueAccent = const Color.fromARGB(255, 5, 35, 75);
 
     return Scaffold(
       appBar: null,
@@ -70,7 +73,7 @@ class _LoginViewState extends State<LoginView> {
             width: 300,
             padding: const EdgeInsets.all(16.0),
             decoration: BoxDecoration(
-              color: customPurpleColor,
+              color: customBluePrimary,
               borderRadius: BorderRadius.circular(10.0),
               boxShadow: const [
                 BoxShadow(
@@ -87,17 +90,16 @@ class _LoginViewState extends State<LoginView> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    const Align(
+                    Align(
                       alignment: Alignment.topCenter,
                       child: Padding(
                         padding: EdgeInsets.only(bottom: 16.0),
                         child: Text(
                           'Sign In',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                          ),
+                          style: GoogleFonts.roboto(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white),
                         ),
                       ),
                     ),
@@ -158,27 +160,41 @@ class _LoginViewState extends State<LoginView> {
                           );
                         }
                       },
-                      child: const Text('Login'),
+                      child: Text('Login',
+                          style: GoogleFonts.roboto(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: customBlueAccent)),
                     ),
-                    const SizedBox(height: 16),
-                    TextButton(
-                      onPressed: _navigateToRegister,
-                      child: const Text(
-                        "Don't have an account? Sign Up",
-                        style: TextStyle(
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
+                    const SizedBox(height: 8),
                     TextButton(
                       onPressed: _navigateToForgotPassword,
-                      child: const Text(
-                        "Forgot Password",
-                        style: TextStyle(
-                          color: Colors.white,
-                        ),
+                      child: Text(
+                        "FORGOT PASSWORD",
+                        style: GoogleFonts.roboto(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white),
                       ),
                     ),
+                    const SizedBox(height: 8),
+                    Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                      Text(
+                        "Don't have an account yet?",
+                        style: GoogleFonts.roboto(
+                            color: Colors.white, fontSize: 14),
+                      ),
+                      const SizedBox(
+                        width: 4,
+                      ),
+                      GestureDetector(
+                        onTap: _navigateToRegister,
+                        child: Text("Sign up",
+                            style: GoogleFonts.roboto(
+                                fontWeight: FontWeight.bold,
+                                color: customBlueAccent)),
+                      )
+                    ]),
                   ],
                 ),
               ),
