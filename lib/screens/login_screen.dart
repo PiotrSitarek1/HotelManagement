@@ -22,10 +22,10 @@ class _LoginViewState extends State<LoginView> {
     _loginIfPossible();
   }
 
-  void _showSnackbar(BuildContext context, String username) {
+  void _showSnackbar(BuildContext context, String text) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(username),
+        content: Text(text),
         duration: const Duration(seconds: 2),
       ),
     );
@@ -36,10 +36,18 @@ class _LoginViewState extends State<LoginView> {
         emailController.text.trim(), passwordController.text.trim());
     if (userCredential != null) {
       _showSnackbar(context, "Signed in");
+      _navigateToLogged();
     } else {
       _showSnackbar(context, "Problem with signing in");
     }
   }
+
+  void _navigateToLogged() {
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => const LoggedView(),
+    ));
+  }
+
 
   void _navigateToRegister() {
     Navigator.of(context).push(MaterialPageRoute(

@@ -2,7 +2,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:hotel_manager/screens/start_screen.dart';
-import 'package:hotel_manager/screens/user_screen.dart';
 import 'package:hotel_manager/screens/user_settings_screen.dart';
 import 'firebase_options.dart';
 import 'screens/login_screen.dart';
@@ -25,10 +24,7 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
           useMaterial3: true,
         ),
-        home: const MyHomePage(title: 'Flutter Demo Home Page'),
-        routes: {
-          '/userScreen': (context) => const UserScreen(),
-        });
+        home: const MyHomePage(title: 'Flutter Demo Home Page'));
   }
 }
 
@@ -73,10 +69,6 @@ class _MyHomePageState extends State<MyHomePage> {
     Navigator.of(context).push(MaterialPageRoute(
       builder: (context) => const UserSettingsView(),
     ));
-  }
-
-  void _navigateToUserScreen() {
-    Navigator.pushNamed(context, '/userScreen');
   }
 
   void _navigateToStartPage() {
@@ -125,12 +117,6 @@ class _MyHomePageState extends State<MyHomePage> {
       floatingActionButton: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          FloatingActionButton(
-            heroTag: 'userScreenNav',
-            onPressed: _navigateToUserScreen,
-            tooltip: 'Navigate to User Screen',
-            child: const Icon(Icons.add),
-          ),
           const SizedBox(height: 16),
           FloatingActionButton(
             heroTag: 'counterUpdate',

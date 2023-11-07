@@ -3,11 +3,17 @@ class Hotel {
   final String address;
   final String contact;
   final String imageUrl;
-  final int supervisorId;
+  final String supervisorId;
   final List<int> services;
 
-  Hotel(this.name, this.address, this.contact, this.imageUrl, this.supervisorId,
-      this.services);
+  Hotel({
+    required this.name,
+    required this.address,
+    this.contact = '',
+    this.imageUrl = '',
+    this.supervisorId = '',
+    this.services = const [],
+  });
 
   Map<String, dynamic> toMap() {
     return {
@@ -22,12 +28,12 @@ class Hotel {
 
   factory Hotel.fromMap(Map<String, dynamic> map) {
     return Hotel(
-      map['name'],
-      map['address'],
-      map['contact'],
-      map['imageUrl'],
-      map['supervisorId'] as int,
-      List<int>.from(map['services'] ?? []),
+      name: map['name'],
+      address: map['address'],
+      contact: map['contact'] ?? '',
+      imageUrl: map['imageUrl'] ?? '',
+      supervisorId: map['supervisorId'] ?? '',
+      services: List<int>.from(map['services'] ?? []),
     );
   }
 }

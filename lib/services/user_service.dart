@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:firebase_database/firebase_database.dart';
@@ -8,7 +9,7 @@ class UserService {
   final DatabaseReference _userRef =
       FirebaseDatabase.instance.ref().child('users');
 
-  Future<void> addUser(User user) async {
+  Future<void> addUser(UserDb user) async {
     Map<String, dynamic> userMap = user.toMap();
     await _userRef.push().set(userMap);
   }
@@ -25,17 +26,14 @@ class UserService {
     }
   }
 
-  Future<User?> getUserById(String userId) async {
-    DataSnapshot snapshot = await _userRef.child(userId).once() as DataSnapshot;
-    if (snapshot.value != null && snapshot.value is Map<dynamic, dynamic>) {
-      Map<dynamic, dynamic> userMap = snapshot.value as Map<dynamic, dynamic>;
-      return User.fromMap(userMap.cast<String, dynamic>());
-    }
-
-    return null;
+  Future<UserDb?> getUserByUID(String uID) async {
+    Query query = _userRef.orderByChild("uID").equalTo(uID);
+    DataSnapshot event = await query.get();
+    Map<String, dynamic> userData = json.decode(json.encode(event.children.first.value));
+    return UserDb.fromMap(userData);
   }
 
-  Future<void> updateUser(String userId, User updatedUser) async {
+  Future<void> updateUser(String userId, UserDb updatedUser) async {
     Map<String, dynamic> userMap = updatedUser.toMap();
     await _userRef.child(userId).update(userMap);
   }

@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hotel_manager/services/user_auth.dart';
+import 'package:hotel_manager/services/user_service.dart';
+import 'package:hotel_manager/utils/Roles.dart';
 import 'login_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:hotel_manager/models/user_model.dart';
 
 class RegisterVisitorView extends StatefulWidget {
   const RegisterVisitorView({Key? key});
@@ -13,6 +16,7 @@ class RegisterVisitorView extends StatefulWidget {
 
 class _RegisterVisitorViewState extends State<RegisterVisitorView> {
   final UserAuth _userAuth = UserAuth();
+  final UserService _userService = UserService();
   final _formKey = GlobalKey<FormState>();
   final TextEditingController firstNameController = TextEditingController();
   final TextEditingController lastNameController = TextEditingController();
@@ -46,6 +50,9 @@ class _RegisterVisitorViewState extends State<RegisterVisitorView> {
     UserCredential? userCredential = await _userAuth.signUp(
         emailController.text.trim(), passwordController.text.trim());
     if (userCredential != null) {
+      UserDb user = UserDb(userCredential.user!.uid, firstNameController.text,
+          firstNameController.text, lastNameController.text, Role.user, "0");
+      _userService.addUser(user);
       _showSnackbar(context, "Registered");
     } else {
       _showSnackbar(context, "Registration failed");
