@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'login_screen.dart';
 
 class RegisterOwnerView extends StatefulWidget {
@@ -42,7 +43,8 @@ class _RegisterOwnerViewState extends State<RegisterOwnerView> {
   @override
   Widget build(BuildContext context) {
     double borderRadius = 10.0;
-    Color customPurpleColor = const Color(0xFF9E70FC);
+    Color customBluePrimary = Colors.blueGrey;
+    Color customBlueAccent = const Color.fromARGB(255, 5, 35, 75);
 
     return Scaffold(
       appBar: null,
@@ -58,7 +60,7 @@ class _RegisterOwnerViewState extends State<RegisterOwnerView> {
             width: 300,
             padding: const EdgeInsets.all(16.0),
             decoration: BoxDecoration(
-              color: customPurpleColor,
+              color: customBluePrimary,
               borderRadius: BorderRadius.circular(10.0),
               boxShadow: const [
                 BoxShadow(
@@ -75,17 +77,16 @@ class _RegisterOwnerViewState extends State<RegisterOwnerView> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    const Align(
+                    Align(
                       alignment: Alignment.topCenter,
                       child: Padding(
                         padding: EdgeInsets.only(bottom: 16.0),
                         child: Text(
                           'Sign Up',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
+                          style: GoogleFonts.roboto(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white),
                         ),
                       ),
                     ),
@@ -296,7 +297,13 @@ class _RegisterOwnerViewState extends State<RegisterOwnerView> {
                           );
                         }
                       },
-                      child: const Text('Sign Up'),
+                      child: Text(
+                        'Sign Up',
+                        style: GoogleFonts.roboto(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: customBlueAccent),
+                      ),
                     ),
                     const SizedBox(height: 10),
                     GestureDetector(

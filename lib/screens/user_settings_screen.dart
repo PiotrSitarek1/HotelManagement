@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'change_password_screen.dart';
 
 class UserSettingsView extends StatefulWidget {
@@ -33,7 +34,8 @@ class _UserSettingsViewState extends State<UserSettingsView> {
   @override
   Widget build(BuildContext context) {
     double borderRadius = 10.0;
-    Color customPurpleColor = const Color(0xFF9E70FC);
+    Color customBluePrimary = Colors.blueGrey;
+    Color customBlueAccent = const Color.fromARGB(255, 5, 35, 75);
 
     return Scaffold(
       appBar: null,
@@ -49,7 +51,7 @@ class _UserSettingsViewState extends State<UserSettingsView> {
             width: 300,
             padding: const EdgeInsets.all(16.0),
             decoration: BoxDecoration(
-              color: customPurpleColor,
+              color: customBluePrimary,
               borderRadius: BorderRadius.circular(10.0),
               boxShadow: const [
                 BoxShadow(
@@ -64,17 +66,16 @@ class _UserSettingsViewState extends State<UserSettingsView> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Align(
+                  Align(
                     alignment: Alignment.topCenter,
                     child: Padding(
                       padding: EdgeInsets.only(bottom: 16.0),
                       child: Text(
                         'User Settings',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style: GoogleFonts.roboto(
+                            fontSize: 24,
+                            fontWeight: FontWeight.w900,
+                            color: Colors.white),
                       ),
                     ),
                   ),
@@ -90,7 +91,13 @@ class _UserSettingsViewState extends State<UserSettingsView> {
                       const SizedBox(width: 7),
                       TextButton(
                         onPressed: _changeProfilePicture,
-                        child: const Text('Change Profile Picture'),
+                        child: Text(
+                          'Change Profile Picture',
+                          style: GoogleFonts.roboto(
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                              color: customBlueAccent),
+                        ),
                       ),
                     ],
                   ),
@@ -131,12 +138,20 @@ class _UserSettingsViewState extends State<UserSettingsView> {
                   const SizedBox(height: 16),
                   TextButton(
                     onPressed: _navigateToChangePassword,
-                    child: const Text('Change Password'),
+                    child: Text('Change Password',
+                        style: GoogleFonts.roboto(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            color: customBlueAccent)),
                   ),
                   const SizedBox(height: 16),
                   ElevatedButton(
                     onPressed: _changePersonalData,
-                    child: const Text('Save Changes'),
+                    child: Text('Save Changes',
+                        style: GoogleFonts.roboto(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: customBlueAccent)),
                   ),
                 ],
               ),
