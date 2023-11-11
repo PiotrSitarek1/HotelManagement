@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hotel_manager/screens/user_settings_screen.dart';
 import 'package:hotel_manager/services/user_auth.dart';
 import 'package:hotel_manager/services/user_service.dart';
 import 'package:hotel_manager/utils/Roles.dart';
@@ -37,6 +38,12 @@ class _RegisterVisitorViewState extends State<RegisterVisitorView> {
     }
   }
 
+  void _navigateToUserSettings() {
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => const UserSettingsView(),
+    ));
+  }
+
   void _showSnackbar(BuildContext context, String username) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -50,10 +57,11 @@ class _RegisterVisitorViewState extends State<RegisterVisitorView> {
     UserCredential? userCredential = await _userAuth.signUp(
         emailController.text.trim(), passwordController.text.trim());
     if (userCredential != null) {
-      UserDb user = UserDb(userCredential.user!.uid, firstNameController.text,
-          firstNameController.text, lastNameController.text, Role.user, "0");
-      _userService.addUser(user);
+      UserDb user = UserDb(firstNameController.text, firstNameController.text,
+          lastNameController.text, Role.user, "0");
+      _userService.addUser(userCredential.user!.uid, user);
       _showSnackbar(context, "Registered");
+      _navigateToUserSettings();
     } else {
       _showSnackbar(context, "Registration failed");
     }

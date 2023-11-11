@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hotel_manager/screens/sign_up_choice_screen.dart';
+import 'package:hotel_manager/screens/user_settings_screen.dart';
 import 'change_password_screen.dart';
 import 'package:hotel_manager/services/user_auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -44,7 +45,7 @@ class _LoginViewState extends State<LoginView> {
 
   void _navigateToLogged() {
     Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => const LoggedView(),
+      builder: (context) => const UserSettingsView(),
     ));
   }
 

@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hotel_manager/models/hotel_model.dart';
+import 'package:hotel_manager/screens/user_settings_screen.dart';
 import 'package:hotel_manager/services/hotel_service.dart';
 import '../models/user_model.dart';
 import '../services/user_auth.dart';
@@ -45,7 +46,13 @@ class _RegisterOwnerViewState extends State<RegisterOwnerView> {
 
   void _navigateToLogin() {
     Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => LoginView(),
+      builder: (context) => const LoginView(),
+    ));
+  }
+
+  void _navigateToUserSettings() {
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => const UserSettingsView(),
     ));
   }
 
@@ -53,16 +60,24 @@ class _RegisterOwnerViewState extends State<RegisterOwnerView> {
     UserCredential? userCredential = await _userAuth.signUp(
         emailController.text.trim(), passwordController.text.trim());
     if (userCredential != null) {
-      Hotel newHotel = Hotel(name: hotelNameController.text, address: hotelAddressController.text);
+      Hotel newHotel = Hotel(
+          name: hotelNameController.text, address: hotelAddressController.text);
       String? hotelKey = await _hotelService.addHotel(newHotel);
-      if(hotelKey == null){
+      if (hotelKey == null) {
         _showSnackbar(context, "Hotel registration failed");
         return;
       }
-      UserDb newUser = UserDb(userCredential.user!.uid, firstNameController.text,
-          firstNameController.text, lastNameController.text, Role.supervisor, hotelKey);
-      _userService.addUser(newUser);
-      _showSnackbar(context, "User and Hotel registered - Hotel needs to be configured");
+      UserDb newUser = UserDb(
+          firstNameController.text,
+          firstNameController.text,
+          lastNameController.text,
+          Role.supervisor,
+          hotelKey);
+      _userService.addUser(userCredential.user!.uid, newUser);
+      _showSnackbar(
+          context, "User and Hotel registered - Hotel needs to be configured");
+
+      _navigateToUserSettings();
     } else {
       _showSnackbar(context, "Registration failed");
     }
