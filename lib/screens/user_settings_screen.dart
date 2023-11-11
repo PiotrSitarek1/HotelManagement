@@ -1,6 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hotel_manager/services/user_service.dart';
+import '../models/user_model.dart';
 import 'change_password_screen.dart';
 
 class UserSettingsView extends StatefulWidget {
@@ -11,13 +14,30 @@ class UserSettingsView extends StatefulWidget {
 }
 
 class _UserSettingsViewState extends State<UserSettingsView> {
+  final UserService _userService = UserService();
   final TextEditingController firstNameController = TextEditingController();
   final TextEditingController lastNameController = TextEditingController();
+  late String uID;
+
+  @override
+  void initState() {
+    super.initState();
+    User? user = FirebaseAuth.instance.currentUser;
+    uID = user!.uid;
+    _getPersonalData();
+  }
 
   void _navigateToChangePassword() {
     Navigator.of(context).push(MaterialPageRoute(
       builder: (context) => const ChangePasswordView(),
     ));
+  }
+
+  Future<void> _getPersonalData() async {
+    // TODO: Read more fields
+    UserDb? userDb = await _userService.getUserByUID(uID);
+    firstNameController.text = userDb!.firstname;
+    lastNameController.text = userDb.lastname;
   }
 
   void _changePersonalData() {
