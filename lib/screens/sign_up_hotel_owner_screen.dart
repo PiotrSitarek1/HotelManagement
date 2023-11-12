@@ -1,4 +1,12 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:hotel_manager/models/hotel_model.dart';
+import 'package:hotel_manager/screens/user_settings_screen.dart';
+import 'package:hotel_manager/services/hotel_service.dart';
+import '../models/user_model.dart';
+import '../services/user_auth.dart';
+import '../services/user_service.dart';
+import '../utils/Roles.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'login_screen.dart';
 
@@ -10,6 +18,9 @@ class RegisterOwnerView extends StatefulWidget {
 }
 
 class _RegisterOwnerViewState extends State<RegisterOwnerView> {
+  final UserAuth _userAuth = UserAuth();
+  final UserService _userService = UserService();
+  final HotelService _hotelService = HotelService();
   final _formKey = GlobalKey<FormState>();
   final TextEditingController firstNameController = TextEditingController();
   final TextEditingController lastNameController = TextEditingController();
@@ -29,15 +40,56 @@ class _RegisterOwnerViewState extends State<RegisterOwnerView> {
             content: Text('Please accept the terms of use and privacy policy')),
       );
     } else {
-      // TODO: Add registration logic here using Firebase Authentication or your preferred authentication method
-      // You can also access hotel owner-specific fields like hotelName and hotelAddress here.
+      _registerIfPossible();
     }
   }
 
   void _navigateToLogin() {
     Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => LoginView(),
+      builder: (context) => const LoginView(),
     ));
+  }
+
+  void _navigateToUserSettings() {
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => const UserSettingsView(),
+    ));
+  }
+
+  void _registerIfPossible() async {
+    UserCredential? userCredential = await _userAuth.signUp(
+        emailController.text.trim(), passwordController.text.trim());
+    if (userCredential != null) {
+      Hotel newHotel = Hotel(
+          name: hotelNameController.text, address: hotelAddressController.text);
+      String? hotelKey = await _hotelService.addHotel(newHotel);
+      if (hotelKey == null) {
+        _showSnackbar(context, "Hotel registration failed");
+        return;
+      }
+      UserDb newUser = UserDb(
+          firstNameController.text,
+          firstNameController.text,
+          lastNameController.text,
+          Role.supervisor,
+          hotelKey);
+      _userService.addUser(userCredential.user!.uid, newUser);
+      _showSnackbar(
+          context, "User and Hotel registered - Hotel needs to be configured");
+
+      _navigateToUserSettings();
+    } else {
+      _showSnackbar(context, "Registration failed");
+    }
+  }
+
+  void _showSnackbar(BuildContext context, String text) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(text),
+        duration: const Duration(seconds: 2),
+      ),
+    );
   }
 
   @override
