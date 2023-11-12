@@ -6,9 +6,10 @@ class UserDb {
   final String lastname;
   final Role role;
   final String hotelId;
+  final bool activated;
 
   UserDb(this.username, this.firstname, this.lastname, this.role,
-      this.hotelId);
+      this.hotelId, this.activated);
 
   Map<String, dynamic> toMap() {
     return {
@@ -17,6 +18,7 @@ class UserDb {
       'lastname': lastname,
       'role': role.toString().split('.').last,
       'hotelId': hotelId,
+      'activated': activated,
     };
   }
 
@@ -30,6 +32,7 @@ class UserDb {
               .firstWhere((role) => role.toString() == 'Role.${map['role']}')
           : Role.user,
       map['hotelId'] ?? '',
+      map['activated'] ?? '',
     );
   }
 }

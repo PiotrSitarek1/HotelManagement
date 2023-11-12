@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:hotel_manager/models/hotel_model.dart';
 import 'package:hotel_manager/screens/user_settings_screen.dart';
 import 'package:hotel_manager/services/hotel_service.dart';
+import 'package:hotel_manager/utils/toast.dart';
 import '../models/user_model.dart';
 import '../services/user_auth.dart';
 import '../services/user_service.dart';
@@ -11,7 +12,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'login_screen.dart';
 
 class RegisterOwnerView extends StatefulWidget {
-  const RegisterOwnerView({Key? key});
+  const RegisterOwnerView({super.key});
 
   @override
   _RegisterOwnerViewState createState() => _RegisterOwnerViewState();
@@ -64,7 +65,7 @@ class _RegisterOwnerViewState extends State<RegisterOwnerView> {
           name: hotelNameController.text, address: hotelAddressController.text);
       String? hotelKey = await _hotelService.addHotel(newHotel);
       if (hotelKey == null) {
-        _showSnackbar(context, "Hotel registration failed");
+        showToast("Hotel registration failed");
         return;
       }
       UserDb newUser = UserDb(
@@ -72,24 +73,15 @@ class _RegisterOwnerViewState extends State<RegisterOwnerView> {
           firstNameController.text,
           lastNameController.text,
           Role.supervisor,
-          hotelKey);
+          hotelKey,
+          false);
       _userService.addUser(userCredential.user!.uid, newUser);
-      _showSnackbar(
-          context, "User and Hotel registered - Hotel needs to be configured");
+      showToast("User and Hotel registered - Hotel needs to be configured");
 
       _navigateToUserSettings();
     } else {
-      _showSnackbar(context, "Registration failed");
+      showToast("Registration failed");
     }
-  }
-
-  void _showSnackbar(BuildContext context, String text) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(text),
-        duration: const Duration(seconds: 2),
-      ),
-    );
   }
 
   @override
@@ -132,7 +124,7 @@ class _RegisterOwnerViewState extends State<RegisterOwnerView> {
                     Align(
                       alignment: Alignment.topCenter,
                       child: Padding(
-                        padding: EdgeInsets.only(bottom: 16.0),
+                        padding: const EdgeInsets.only(bottom: 16.0),
                         child: Text(
                           'Sign Up',
                           style: GoogleFonts.roboto(
