@@ -10,6 +10,12 @@ class HotelWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String imageUrl = hotel.imageUrl;
+
+    if (imageUrl == null || Uri.tryParse(imageUrl)?.isAbsolute == false) {
+      imageUrl =
+          'https://img.freepik.com/darmowe-wektory/plaskie-tlo-fasady-hotelu_23-2148157379.jpg?size=338&ext=jpg&ga=GA1.1.1826414947.1699747200&semt=sph';
+    }
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: ClipRRect(
@@ -18,7 +24,7 @@ class HotelWidget extends StatelessWidget {
           decoration: BoxDecoration(
             image: DecorationImage(
                 //todo protection from null or invalid URL adress
-                image: NetworkImage(hotel.imageUrl),
+                image: NetworkImage(imageUrl),
                 fit: BoxFit.cover),
           ),
           height: 400,
@@ -40,7 +46,7 @@ class HotelWidget extends StatelessWidget {
                         height: 300,
                         width: 150,
                         child: Image(
-                          image: NetworkImage(hotel.imageUrl),
+                          image: NetworkImage(imageUrl),
                           fit: BoxFit.cover,
                         ),
                       ),
@@ -53,17 +59,17 @@ class HotelWidget extends StatelessWidget {
                           Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Text(
-                              hotel.name,
+                              hotel.name ?? 'Hotel_Name',
                               style: GoogleFonts.roboto(
                                   fontSize: 16,
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold),
                             ),
                           ),
-                          Text(hotel.address,
+                          Text(hotel.address ?? 'Hotel_Adress',
                               style: GoogleFonts.roboto(
                                   fontSize: 14, color: Colors.white)),
-                          Text(hotel.contact,
+                          Text(hotel.contact ?? 'Hotel_Contact',
                               style: GoogleFonts.roboto(
                                   fontSize: 14, color: Colors.white)),
                           Container(
