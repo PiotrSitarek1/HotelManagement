@@ -64,35 +64,22 @@ class _LoginMenuViewState extends State<LoginMenuView> {
                   style: GoogleFonts.roboto(
                       fontSize: 16, fontWeight: FontWeight.bold),
                 ),
-                const SizedBox(height: 96),
+                const SizedBox(height: 64),
                 ElevatedButton(
                   onPressed: _navigateToLogin,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: customBluePrimary, // Background color
                   ),
                   child: Text(
-                    'Login as Visitor',
+                    'Login',
                     style: GoogleFonts.roboto(
                         fontSize: 14,
-                        fontWeight: FontWeight.bold,
+                        fontWeight: FontWeight.w900,
                         color: Colors.white),
                   ),
                 ),
-                //const SizedBox(height: 4),
-                ElevatedButton(
-                  onPressed: _navigateToLogin,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: customBluePrimary, // Background color
-                  ),
-                  child: Text(
-                    'Login as Manager',
-                    style: GoogleFonts.roboto(
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white),
-                  ),
-                ),
-                const SizedBox(height: 32),
+
+                const SizedBox(height: 64),
                 GestureDetector(
                   onTap: _navigateToForgotPassword,
                   child: Text("FORGOT PASSWORD",
