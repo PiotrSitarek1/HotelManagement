@@ -2,12 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hotel_manager/screens/sign_up_choice_screen.dart';
 import 'package:hotel_manager/screens/user_settings_screen.dart';
+import 'package:hotel_manager/services/user_service.dart';
+import 'package:hotel_manager/utils/Roles.dart';
+import 'package:hotel_manager/utils/toast.dart';
+import '../models/user_model.dart';
 import 'change_password_screen.dart';
 import 'package:hotel_manager/services/user_auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class LoginView extends StatefulWidget {
-  const LoginView({Key? key});
+  const LoginView({super.key});
 
   @override
   _LoginViewState createState() => _LoginViewState();
@@ -15,6 +19,7 @@ class LoginView extends StatefulWidget {
 
 class _LoginViewState extends State<LoginView> {
   final UserAuth _userAuth = UserAuth();
+  final UserService _userService = UserService();
   final _formKey = GlobalKey<FormState>();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
@@ -23,23 +28,26 @@ class _LoginViewState extends State<LoginView> {
     _loginIfPossible();
   }
 
-  void _showSnackbar(BuildContext context, String text) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(text),
-        duration: const Duration(seconds: 2),
-      ),
-    );
-  }
-
   Future<void> _loginIfPossible() async {
     UserCredential? userCredential = await _userAuth.signIn(
         emailController.text.trim(), passwordController.text.trim());
     if (userCredential != null) {
-      _showSnackbar(context, "Signed in");
-      _navigateToLogged();
+      UserDb? userDb =
+          await _userService.getUserByUID(userCredential.user!.uid);
+
+      if (userDb != null) {
+        if (userDb.role == Role.supervisor) {
+          if (!userDb.activated) {
+            showToast("Account has not been activated yet");
+            return;
+          }
+        }
+        _navigateToLogged();
+      } else {
+        showToast("User details not found");
+      }
     } else {
-      _showSnackbar(context, "Problem with signing in");
+      showToast("Problem with signing in");
     }
   }
 
