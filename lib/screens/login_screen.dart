@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hotel_manager/screens/sign_up_choice_screen.dart';
-import 'package:hotel_manager/screens/user_settings_screen.dart';
+import 'package:hotel_manager/screens/user_flow/user_bottom_navigation.dart';
 import 'package:hotel_manager/services/user_service.dart';
 import 'package:hotel_manager/utils/Roles.dart';
 import 'package:hotel_manager/utils/toast.dart';
@@ -53,10 +53,9 @@ class _LoginViewState extends State<LoginView> {
 
   void _navigateToLogged() {
     Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => const UserSettingsView(),
+      builder: (context) => const UserBottomNavigationView(),
     ));
   }
-
 
   void _navigateToRegister() {
     Navigator.of(context).push(MaterialPageRoute(

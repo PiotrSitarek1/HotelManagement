@@ -13,37 +13,26 @@ class AvilableHotelsView extends StatefulWidget {
 class _AvilableHotelsView extends State<AvilableHotelsView> {
   final List<Hotel> _hotels = [
     Hotel(
-      'Example Hotel1',
-      '123 Main Street',
-      '555-1234',
-      'https://pix8.agoda.net/hotelImages/124/1246280/1246280_16061017110043391702.jpg?ca=6&ce=1&s=1024x768',
-      1, // Supervisor ID
-      [1, 2, 3], // List of services
-    ),
+        name: 'Hotel1',
+        address: '123 Main Street',
+        contact: '999-999-999',
+        imageUrl:
+            'https://pix8.agoda.net/hotelImages/124/1246280/1246280_16061017110043391702.jpg?ca=6&ce=1&s=1024x768',
+        supervisorId: '1',
+        services: [1, 2, 3]),
     Hotel(
-      'Example Hotel2',
-      '123 Main Street',
-      '555-1234',
-      'https://pix8.agoda.net/hotelImages/124/1246280/1246280_16061017110043391702.jpg?ca=6&ce=1&s=1024x768',
-      1, // Supervisor ID
-      [1, 2, 3], // List of services
-    ),
+        name: 'Hotel 2',
+        address: 'Another Street 13',
+        contact: '234-234-234',
+        imageUrl:
+            'https://pix8.agoda.net/hotelImages/124/1246280/1246280_16061017110043391702.jpg?ca=6&ce=1&s=1024x768',
+        supervisorId: '1',
+        services: [1, 2, 3]),
     Hotel(
-      'Example Hotel3',
-      '123 Main Street',
-      '555-1234',
-      'https://pix8.agoda.net/hotelImages/124/1246280/1246280_16061017110043391702.jpg?ca=6&ce=1&s=1024x768',
-      1, // Supervisor ID
-      [1, 2, 3], // List of services
-    ),
-    Hotel(
-      'Example Hotel4',
-      '123 Main Street',
-      '555-1234',
-      'https://pix8.agoda.net/hotelImages/124/1246280/1246280_16061017110043391702.jpg?ca=6&ce=1&s=1024x768',
-      1, // Supervisor ID
-      [1, 2, 3], // List of services
-    )
+        name: 'Hotel',
+        address: 'HotelAdress',
+        supervisorId: '1',
+        services: [1, 2, 3]),
   ];
 
   @override
