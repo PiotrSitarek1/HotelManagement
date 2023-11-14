@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../services/user_auth.dart';
+import '../utils/toast.dart';
+
 class ChangePasswordView extends StatefulWidget {
   const ChangePasswordView({Key? key});
 
@@ -9,15 +12,16 @@ class ChangePasswordView extends StatefulWidget {
 }
 
 class _ChangePasswordViewState extends State<ChangePasswordView> {
-  final _formKey = GlobalKey<FormState>();
-  final TextEditingController oldPasswordController = TextEditingController();
-  final TextEditingController newPasswordController = TextEditingController();
-  final TextEditingController confirmNewPasswordController =
-      TextEditingController();
+  final UserAuth _userAuth = UserAuth();
 
-  void _changePassword() {
-    // TODO: Add logic to change the password
-    // Verify the old password and update it to the new password.
+  final _formKey = GlobalKey<FormState>();
+  final TextEditingController emailController = TextEditingController();
+
+  void _changePassword() async {
+    AuthStatus status = await _userAuth.resetPassword(emailController.text.trim());
+    if(status == AuthStatus.successful){
+      showToast("Email sended");
+    }
   }
 
   @override
@@ -78,67 +82,17 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
                         borderRadius: BorderRadius.circular(borderRadius),
                       ),
                       child: TextFormField(
-                        controller: oldPasswordController,
-                        obscureText: true,
+                        controller: emailController,
+                        obscureText: false,
                         decoration: const InputDecoration(
-                          labelText: 'Old Password',
+                          labelText: 'email',
                           border: InputBorder.none,
                           contentPadding: EdgeInsets.all(12.0),
                         ),
                         style: const TextStyle(color: Colors.black),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Please enter your old password';
-                          }
-                          return null;
-                        },
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    Container(
-                      height: 50,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(borderRadius),
-                      ),
-                      child: TextFormField(
-                        controller: newPasswordController,
-                        obscureText: true,
-                        decoration: const InputDecoration(
-                          labelText: 'New Password',
-                          border: InputBorder.none,
-                          contentPadding: EdgeInsets.all(12.0),
-                        ),
-                        style: const TextStyle(color: Colors.black),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter your new password';
-                          }
-                          return null;
-                        },
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    Container(
-                      height: 50,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(borderRadius),
-                      ),
-                      child: TextFormField(
-                        controller: confirmNewPasswordController,
-                        obscureText: true,
-                        decoration: const InputDecoration(
-                          labelText: 'Confirm New Password',
-                          border: InputBorder.none,
-                          contentPadding: EdgeInsets.all(12.0),
-                        ),
-                        style: const TextStyle(color: Colors.black),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please confirm your new password';
-                          } else if (value != newPasswordController.text) {
-                            return 'Passwords do not match';
+                            return 'Please enter your email';
                           }
                           return null;
                         },

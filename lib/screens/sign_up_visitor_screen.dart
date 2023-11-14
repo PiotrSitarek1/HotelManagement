@@ -54,8 +54,6 @@ class _RegisterVisitorViewState extends State<RegisterVisitorView> {
       _userService.addUser(userCredential.user!.uid, user);
       showToast("Registered");
       _navigateToUserSettings();
-    } else {
-      showToast("Registration failed");
     }
   }
 
