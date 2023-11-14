@@ -33,6 +33,8 @@ class _AvilableHotelsView extends State<AvilableHotelsView> {
         address: 'HotelAdress',
         supervisorId: '1',
         services: [1, 2, 3]),
+
+
   ];
 
   @override
