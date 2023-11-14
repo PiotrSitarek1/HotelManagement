@@ -21,7 +21,7 @@ class UserAuth {
           .signInWithEmailAndPassword(email: login, password: password);
       return user;
     } on FirebaseAuthException catch (e) {
-      showToast(e.code);
+      showToast(e.code.replaceAll(RegExp(r'[_-]'), ' ').toLowerCase());
       return null;
     }
   }
@@ -32,7 +32,7 @@ class UserAuth {
           .createUserWithEmailAndPassword(email: login, password: password);
       return user;
     } on FirebaseAuthException catch (e) {
-      showToast(e.code);
+      showToast(e.code.replaceAll(RegExp(r'[_-]'), ' ').toLowerCase());
       return null;
     }
   }
@@ -46,7 +46,7 @@ class UserAuth {
       await FirebaseAuth.instance.sendPasswordResetEmail(email: login).then((value) => status = AuthStatus.successful).
       catchError((e) {
         status = AuthException.handleAuthException(e);
-        showToast(e.code);
+        showToast(e.code.replaceAll(RegExp(r'[_-]'), ' ').toLowerCase());
         return status;
       });
       return status;
