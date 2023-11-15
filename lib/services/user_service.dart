@@ -19,6 +19,15 @@ class UserService {
     return UserDb.fromMap(userData);
   }
 
+  Future<String?> getHotelByUserUID(String uID) async {
+    UserDb? userDb = await getUserByUID(uID);
+    if(userDb != null) {
+      return userDb.hotelId;
+    } else {
+      return "USER_NOT_FOUND";
+    }
+  }
+
   Future<void> updateUser(String userId, UserDb updatedUser) async {
     Map<String, dynamic> userMap = updatedUser.toMap();
     await _userRef.child(userId).update(userMap);

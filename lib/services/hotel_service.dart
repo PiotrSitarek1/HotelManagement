@@ -1,7 +1,14 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:developer';
+import 'dart:ffi';
+import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:hotel_manager/utils/toast.dart';
+import 'package:path_provider/path_provider.dart';
 import '../models/hotel_model.dart';
 
 
@@ -29,18 +36,20 @@ class HotelService {
   }
 
   Future<Hotel?> getHotelById(String hotelId) async {
-    DataSnapshot snapshot = await _hotelRef.child(hotelId).once() as DataSnapshot;
-    if (snapshot.value != null && snapshot.value is Map<dynamic, dynamic>) {
-      Map<dynamic, dynamic> hotelMap = snapshot.value as Map<dynamic, dynamic>;
-      return Hotel.fromMap(hotelMap.cast<String, dynamic>());
-    }
-
-    return null;
+    DataSnapshot snapshot = await _hotelRef.child(hotelId).get();
+    if (snapshot.value == null) return null;
+    Map<String, dynamic> userData = json.decode(json.encode(snapshot.value));
+    return Hotel.fromMap(userData);
   }
 
-  Future<void> updateHotel(String hotelId, Hotel updatedHotel) async {
-    Map<String, dynamic> hotelMap = updatedHotel.toMap();
-    await _hotelRef.child(hotelId).update(hotelMap);
+  Future<String> updateHotel(String hotelId, Hotel updatedHotel) async {
+    try {
+      Map<String, dynamic> hotelMap = updatedHotel.toMap();
+      await _hotelRef.child(hotelId).update(hotelMap);
+      return "SUCCESS";
+    }catch(e){
+      return e.toString();
+    }
   }
 
   Future<void> deleteHotel(String hotelId) async {
@@ -55,6 +64,36 @@ class HotelService {
       print("$fieldToUpdate updated successfully.");
     } catch (error) {
       print("Failed to update $fieldToUpdate: $error");
+    }
+  }
+
+  Future<String> uploadImageToFirebaseStorage(File file) async {
+    String imageName = DateTime.now().millisecondsSinceEpoch.toString();
+    final reference =
+        FirebaseStorage.instance.ref().child('images/$imageName.jpg');
+    final uploadTask = reference.putFile(file);
+
+    await uploadTask.whenComplete(() => null);
+
+    String imageUrl = await reference.getDownloadURL();
+    return imageUrl;
+  }
+
+  Future<File?> downloadImageFile(String imageUrl) async {
+    try {
+      final ref = FirebaseStorage.instance.refFromURL(imageUrl);
+      final bytes = await ref.getData();
+
+      if (bytes != null) {
+        final tempDir = await getTemporaryDirectory();
+        final tempFile = File('${tempDir.path}/temp_image.jpg');
+        await tempFile.writeAsBytes(Uint8List.fromList(bytes));
+        return tempFile;
+      } else {
+        return null;
+      }
+    } catch (e) {
+      return null;
     }
   }
 }

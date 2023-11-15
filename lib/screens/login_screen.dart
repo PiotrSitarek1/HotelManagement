@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hotel_manager/screens/owner_panel_screen.dart';
 import 'package:hotel_manager/screens/sign_up_choice_screen.dart';
 import 'package:hotel_manager/screens/user_flow/user_bottom_navigation.dart';
 import 'package:hotel_manager/services/user_service.dart';
@@ -41,17 +42,25 @@ class _LoginViewState extends State<LoginView> {
             showToast("Account has not been activated yet");
             return;
           }
+          _navigateToLoggedOwner();
+        } else {
+          _navigateToLoggedUser();
         }
-        _navigateToLogged();
       } else {
         showToast("User details not found");
       }
     }
   }
 
-  void _navigateToLogged() {
+  void _navigateToLoggedUser() {
     Navigator.of(context).push(MaterialPageRoute(
       builder: (context) => const UserBottomNavigationView(),
+    ));
+  }
+
+  void _navigateToLoggedOwner() {
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => const OwnerPanelScreen(),
     ));
   }
 

@@ -1,25 +1,31 @@
 class Hotel {
   final String name;
   final String address;
-  final String contact;
-  final String imageUrl;
-  final String supervisorId;
+  late final String email;
+  late final String phoneNumber;
+  late final String imageUrl;
+  late final String supervisorId;
   final List<int> services;
 
   Hotel({
     required this.name,
     required this.address,
-    this.contact = '',
-    this.imageUrl = '',
-    this.supervisorId = '',
+    String? email,
+    String? phoneNumber,
+    String? imageUrl,
+    String? supervisorId,
     this.services = const [],
-  });
+  })  : email = email ?? '',
+        phoneNumber = phoneNumber ?? '',
+        supervisorId = supervisorId ?? '',
+        imageUrl = imageUrl ?? '';
 
   Map<String, dynamic> toMap() {
     return {
       'name': name,
       'address': address,
-      'contact': contact,
+      'email': email,
+      'phoneNumber': phoneNumber,
       'imageUrl': imageUrl,
       'supervisorId': supervisorId,
       'services': services,
@@ -30,7 +36,8 @@ class Hotel {
     return Hotel(
       name: map['name'],
       address: map['address'],
-      contact: map['contact'] ?? '',
+      email: map['email'] ?? '',
+      phoneNumber: map['phoneNumber'] ?? '',
       imageUrl: map['imageUrl'] ?? '',
       supervisorId: map['supervisorId'] ?? '',
       services: List<int>.from(map['services'] ?? []),

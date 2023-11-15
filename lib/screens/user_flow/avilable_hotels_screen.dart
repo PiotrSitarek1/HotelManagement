@@ -11,7 +11,7 @@ class AvilableHotelsView extends StatefulWidget {
 }
 
 class _AvilableHotelsView extends State<AvilableHotelsView> {
-  final List<Hotel> _hotels = [
+  /*final List<Hotel> _hotels = [
     Hotel(
         name: 'Hotel1',
         address: '123 Main Street',
@@ -35,7 +35,7 @@ class _AvilableHotelsView extends State<AvilableHotelsView> {
         services: [1, 2, 3]),
 
 
-  ];
+  ];*/
 
   @override
   Widget build(BuildContext context) {
@@ -62,17 +62,17 @@ class _AvilableHotelsView extends State<AvilableHotelsView> {
                 ),
               ),
             ),
-            Container(
-              height: 520,
-              child: ListView.builder(
-                itemCount: _hotels.length,
-                itemBuilder: (context, index) {
-                  return HotelWidget(
-                    hotel: _hotels[index],
-                  );
-                },
-              ),
-            ),
+            // Container(
+            //   height: 520,
+            //   child: ListView.builder(
+            //     itemCount: _hotels.length,
+            //     itemBuilder: (context, index) {
+            //       return HotelWidget(
+            //         hotel: _hotels[index],
+            //       );
+            //     },
+            //   ),
+            // ),
           ],
         ),
       ),
