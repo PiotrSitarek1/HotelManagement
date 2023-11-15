@@ -46,8 +46,6 @@ class _LoginViewState extends State<LoginView> {
       } else {
         showToast("User details not found");
       }
-    } else {
-      showToast("Problem with signing in");
     }
   }
 
