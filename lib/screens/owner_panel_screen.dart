@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hotel_manager/screens/room_list_screen.dart';
+import 'package:hotel_manager/screens/service_list_screen.dart';
 import 'package:hotel_manager/screens/user_settings_screen.dart';
 
 class OwnerPanelScreen extends StatefulWidget {
@@ -184,6 +185,35 @@ class _OwnerPanelScreenState extends State<OwnerPanelScreen> {
                     ),
                   ),
                   const SizedBox(height: 20),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const ServiceListScreen(),
+                        ),
+                      );
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(
+                          Icons.edit,
+                          color: Colors.white,
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          "Edit hotel's services",
+                          style: GoogleFonts.roboto(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 20),
                   ElevatedButton(
                     onPressed: _saveChanges,
                     style: ButtonStyle(
@@ -226,10 +256,4 @@ class _OwnerPanelScreenState extends State<OwnerPanelScreen> {
   void _saveChanges() {
     // TODO: Add logic to save changes to the database
   }
-}
-
-void main() {
-  runApp(const MaterialApp(
-    home: OwnerPanelScreen(),
-  ));
 }
