@@ -10,7 +10,6 @@ class HotelWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     String imageUrl = hotel.imageUrl;
 
     if (imageUrl == null || Uri.tryParse(imageUrl)?.isAbsolute == false) {
@@ -25,9 +24,7 @@ class HotelWidget extends StatelessWidget {
         child: Container(
           decoration: BoxDecoration(
             image: DecorationImage(
-                //todo protection from null or invalid URL adress
-                image: NetworkImage(imageUrl),
-                fit: BoxFit.cover),
+                image: NetworkImage(imageUrl), fit: BoxFit.cover),
           ),
           height: 400,
           child: Center(
@@ -49,7 +46,6 @@ class HotelWidget extends StatelessWidget {
                         width: 150,
                         child: Image(
                           image: NetworkImage(imageUrl),
-
                           fit: BoxFit.cover,
                         ),
                       ),
@@ -63,19 +59,16 @@ class HotelWidget extends StatelessWidget {
                             padding: const EdgeInsets.all(8.0),
                             child: Text(
                               hotel.name ?? 'Hotel_Name',
-
                               style: GoogleFonts.roboto(
                                   fontSize: 16,
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold),
                             ),
                           ),
-
                           Text(hotel.address ?? 'Hotel_Adress',
                               style: GoogleFonts.roboto(
                                   fontSize: 14, color: Colors.white)),
                           Text(hotel.email ?? 'Hotel_Contact',
-
                               style: GoogleFonts.roboto(
                                   fontSize: 14, color: Colors.white)),
                           Container(

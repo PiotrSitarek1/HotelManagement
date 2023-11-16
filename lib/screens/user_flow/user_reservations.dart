@@ -1,36 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:hotel_manager/components/hotel_widget.dart';
-import 'package:hotel_manager/models/hotel_model.dart';
+import 'package:hotel_manager/components/reservation_widget.dart';
+// import 'package:hotel_manager/models/reservation_model.dart';
+import 'package:hotel_manager/screens/user_flow/reservation_placeholder.dart';
 
-class AvilableHotelsView extends StatefulWidget {
-  const AvilableHotelsView({super.key});
+class UserReservationsView extends StatefulWidget {
+  const UserReservationsView({super.key});
 
   @override
-  _AvilableHotelsView createState() => _AvilableHotelsView();
+  State<StatefulWidget> createState() => _UserReservationsView();
 }
 
-class _AvilableHotelsView extends State<AvilableHotelsView> {
-  final List<Hotel> _hotels = [
-    Hotel(
-        name: 'Hotel1',
-        address: '123 Main Street',
-        imageUrl:
-            'https://pix8.agoda.net/hotelImages/124/1246280/1246280_16061017110043391702.jpg?ca=6&ce=1&s=1024x768',
-        supervisorId: '1',
-        services: [1, 2, 3]),
-    Hotel(
-        name: 'Hotel 2',
-        address: 'Another Street 13',
-        imageUrl:
-            'https://pix8.agoda.net/hotelImages/124/1246280/1246280_16061017110043391702.jpg?ca=6&ce=1&s=1024x768',
-        supervisorId: '1',
-        services: [1, 2, 3]),
-    Hotel(
-        name: 'Hotel',
-        address: 'HotelAdress',
-        supervisorId: '1',
-        services: [1, 2, 3]),
+class _UserReservationsView extends State<UserReservationsView> {
+  final List<ReservationPlaceholder> _reservations = [
+    ReservationPlaceholder(
+        hotelname: 'Super Hotel', adress: 'Boat city 98-323'),
+    ReservationPlaceholder(
+        hotelname: 'Super Hotel2', adress: 'Boat city 98-323'),
+    ReservationPlaceholder(
+        hotelname: 'Super Hotel3', adress: 'Boat city 98-323')
   ];
 
   @override
@@ -58,7 +46,7 @@ class _AvilableHotelsView extends State<AvilableHotelsView> {
             Padding(
               padding: const EdgeInsets.all(32.0),
               child: Text(
-                "Available Hotels",
+                "Current Reservations",
                 style: GoogleFonts.roboto(
                   fontSize: 24,
                   fontWeight: FontWeight.w900,
@@ -68,10 +56,10 @@ class _AvilableHotelsView extends State<AvilableHotelsView> {
             Container(
               height: hotelsHeight,
               child: ListView.builder(
-                itemCount: _hotels.length,
+                itemCount: _reservations.length,
                 itemBuilder: (context, index) {
-                  return HotelWidget(
-                    hotel: _hotels[index],
+                  return ReservationWidget(
+                    reservation: _reservations[index],
                   );
                 },
               ),
