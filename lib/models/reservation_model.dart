@@ -1,6 +1,6 @@
 class Reservation {
-  final int userId;
-  final int hotelId;
+  final String userId;
+  final String hotelId;
   final int roomNumber;
   final DateTime checkInDate;
   final DateTime checkOutDate;
@@ -26,8 +26,8 @@ class Reservation {
 
   factory Reservation.fromMap(Map<String, dynamic> map) {
     return Reservation(
-      map['userId'] as int,
-      map['hotelId'] as int,
+      map['userId'] as String,
+      map['hotelId'] as String,
       map['roomNumber'] as int,
       DateTime.parse(map['checkInDate']),
       DateTime.parse(map['checkOutDate']),
