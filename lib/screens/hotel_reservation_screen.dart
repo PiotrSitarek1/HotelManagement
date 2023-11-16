@@ -4,7 +4,7 @@ import 'package:hotel_manager/screens/sign_up_choice_screen.dart';
 import 'package:hotel_manager/screens/user_flow/user_bottom_navigation.dart';
 import 'package:hotel_manager/services/user_service.dart';
 import 'package:hotel_manager/utils/Roles.dart';
-import 'package:hotel_manager/utils/toast.dart';
+import 'package:hotel_manager/utils/utils.dart';
 import '../models/reservation_model.dart';
 import '../models/user_model.dart';
 import 'change_password_screen.dart';
