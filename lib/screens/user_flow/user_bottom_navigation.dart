@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+// import 'package:google_fonts/google_fonts.dart';
 import 'package:hotel_manager/screens/user_flow/avilable_hotels_screen.dart';
+import 'package:hotel_manager/screens/user_flow/user_reservations.dart';
 import 'package:hotel_manager/screens/user_settings_screen.dart';
 
 class UserBottomNavigationView extends StatefulWidget {
@@ -21,12 +22,7 @@ class _UserBottomNavigationView extends State<UserBottomNavigationView> {
 
   final List<Widget> _pages = [
     const AvilableHotelsView(),
-    Center(
-      child: Text(
-        'Reservations\n Page',
-        style: GoogleFonts.roboto(fontSize: 24),
-      ),
-    ),
+    const UserReservationsView(),
     const UserSettingsView()
   ];
 
