@@ -17,20 +17,20 @@ class _AvilableHotelsView extends State<AvilableHotelsView> {
         address: '123 Main Street',
         imageUrl:
             'https://pix8.agoda.net/hotelImages/124/1246280/1246280_16061017110043391702.jpg?ca=6&ce=1&s=1024x768',
-        supervisorId: '1',
-        services: [1, 2, 3]),
+        supervisorId: '1'),
+        //services: [1, 2, 3]),
     Hotel(
         name: 'Hotel 2',
         address: 'Another Street 13',
         imageUrl:
             'https://pix8.agoda.net/hotelImages/124/1246280/1246280_16061017110043391702.jpg?ca=6&ce=1&s=1024x768',
-        supervisorId: '1',
-        services: [1, 2, 3]),
+        supervisorId: '1'),
+        //services: [1, 2, 3]),
     Hotel(
         name: 'Hotel',
         address: 'HotelAdress',
-        supervisorId: '1',
-        services: [1, 2, 3]),
+        supervisorId: '1'),
+        //services: [1, 2, 3]),
   ];
 
   @override

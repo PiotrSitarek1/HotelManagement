@@ -4,6 +4,7 @@ import 'dart:io' show File;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hotel_manager/models/service_model.dart';
 import 'package:hotel_manager/screens/room_list_screen.dart';
 import 'package:hotel_manager/screens/service_list_screen.dart';
 import 'package:hotel_manager/screens/user_settings_screen.dart';
@@ -325,13 +326,16 @@ class _OwnerPanelScreenState extends State<OwnerPanelScreen> {
           await uploadImageToFirebaseStorage(_pickedImage!);
     }
 
+    List<Service>? services = await _hotelService.getServicesByHotelId(hotelID);
     Hotel updatedHotel = Hotel(
         name: hotelNameController.text,
         address: addressController.text,
         email: emailController.text,
         phoneNumber: phoneNumberController.text,
         supervisorId: uID,
-        imageUrl: imageUrl);
+        imageUrl: imageUrl,
+        services: services
+      );
 
     String result = await _hotelService.updateHotel(hotelID, updatedHotel);
     if (result == "SUCCESS") {

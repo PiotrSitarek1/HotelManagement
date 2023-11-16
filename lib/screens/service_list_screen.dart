@@ -44,7 +44,8 @@ class _ServiceListScreenState extends State<ServiceListScreen> {
               const SizedBox(height: 16),
               ElevatedButton(
                 onPressed: () {
-                  _addNewService(_serviceNameController.text, int.tryParse(_servicePriceController.text) ?? 0);
+                  _addNewService(_serviceNameController.text,
+                      int.tryParse(_servicePriceController.text) ?? 0);
                   Navigator.pop(context);
                 },
                 child: const Text('Save'),
@@ -65,11 +66,10 @@ class _ServiceListScreenState extends State<ServiceListScreen> {
 
   Future<void> _getHotelServices() async {
     final temp = await _hotelService.getServicesByHotelId(hotelID);
-    if(temp == null) return;
+    if (temp == null) return;
     setState(() {
       services = temp;
     });
-
   }
 
   @override
@@ -168,13 +168,16 @@ class _ServiceListScreenState extends State<ServiceListScreen> {
     return ListView.builder(
       itemCount: services.length,
       itemBuilder: (context, index) {
-        return buildServiceTile(
-            services[index], services[index].name);
+        return buildServiceTile(services[index], services[index].name);
       },
     );
   }
 
   Widget buildServiceTile(Service service, String serviceName) {
+    TextEditingController nameController = TextEditingController();
+    TextEditingController priceController = TextEditingController();
+    nameController.text = service.name;
+    priceController.text = service.price.toString();
     return Container(
       height: 80,
       margin: const EdgeInsets.symmetric(vertical: 2.0),
@@ -189,7 +192,6 @@ class _ServiceListScreenState extends State<ServiceListScreen> {
               SizedBox(
                 width: 150,
                 child: TextFormField(
-                  initialValue: service.name,
                   style: const TextStyle(fontSize: 14.0),
                   decoration: const InputDecoration(
                     labelText: 'Service Name',
@@ -197,16 +199,13 @@ class _ServiceListScreenState extends State<ServiceListScreen> {
                     fillColor: Colors.transparent,
                     border: InputBorder.none,
                   ),
-                  onChanged: (value) {
-                    _updateServiceName(serviceName, value);
-                  },
+                  controller: nameController,
                 ),
               ),
               const SizedBox(width: 10),
               SizedBox(
                 width: 100,
                 child: TextFormField(
-                  initialValue: service.price.toString(),
                   style: const TextStyle(fontSize: 14.0),
                   decoration: const InputDecoration(
                     labelText: 'Price',
@@ -215,10 +214,18 @@ class _ServiceListScreenState extends State<ServiceListScreen> {
                     border: InputBorder.none,
                   ),
                   keyboardType: TextInputType.number,
-                  onChanged: (value) {
-                    _updateServicePrice(serviceName, int.tryParse(value) ?? 0);
-                  },
+                  controller: priceController,
                 ),
+              ),
+              IconButton(
+                icon: const Icon(Icons.check),
+                onPressed: () {
+                  _updateService(
+                    serviceName,
+                    nameController.text,
+                    int.tryParse(priceController.text) ?? 0,
+                  );
+                },
               ),
             ],
           ),
@@ -227,46 +234,39 @@ class _ServiceListScreenState extends State<ServiceListScreen> {
     );
   }
 
-  Future<void> _updateServiceName(
-      String serviceName, String value) async {
-    String? serviceId =
-        await _hotelService.getServiceByHotelIdAndName(hotelID, serviceName);
-    if (serviceId == null) {
-      showToast("Something went wrong");
-    } else {
-      Service? oldService = await _hotelService.getServiceByHotelIdAndServiceId(
-          hotelID, serviceId);
-      if (oldService == null) {
-        showToast("Something went wrong");
-      } else {
-        oldService.name = value;
-        _hotelService.updateServiceInFirebase(hotelID, serviceId, oldService);
-      }
-    }
-  }
-
-  Future<void> _updateServicePrice(
-      String serviceName, int value) async {
-    String? serviceId =
-        await _hotelService.getServiceByHotelIdAndName(hotelID, serviceName);
-    if (serviceId == null) {
-      showToast("Something went wrong");
-    } else {
-      Service? oldService = await _hotelService.getServiceByHotelIdAndServiceId(
-          hotelID, serviceId);
-      if (oldService == null) {
-        showToast("Something went wrong");
-      } else {
-        oldService.price = value;
-        _hotelService.updateServiceInFirebase(hotelID, serviceId, oldService);
-      }
-    }
-  }
-
   Future<void> _addNewService(String serviceName, int servicePrice) async {
+    final service =
+        await _hotelService.getServiceByHotelIdAndName(hotelID, serviceName);
+    if (service != null) {
+      showToast("Service already added");
+      return;
+    }
     Service newService = Service(serviceName, servicePrice);
     await _hotelService.addService(hotelID, newService);
     showToast("New service added");
-    await _getHotelServices();
+    services.add(newService);
+    setState(() {
+      services = services;
+    });
+  }
+
+  Future<void> _updateService(
+      String oldServiceName, String serviceName, int servicePrice) async {
+    String? serviceId = await _hotelService.getServiceKeyByHotelIdAndName(
+        hotelID, oldServiceName);
+    if (serviceId == null) {
+      showToast("Something went wrong");
+    } else {
+      Service? oldService = await _hotelService.getServiceByHotelIdAndServiceId(
+          hotelID, serviceId);
+      if (oldService == null) {
+        showToast("Something went wrong");
+      } else {
+        oldService.price = servicePrice;
+        oldService.name = serviceName;
+        await _hotelService.updateService(hotelID, serviceId, oldService);
+        _getHotelServices();
+      }
+    }
   }
 }

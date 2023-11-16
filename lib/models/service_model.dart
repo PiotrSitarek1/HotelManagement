@@ -1,10 +1,8 @@
 class Service {
-  late final String name;
-  late final int price;
+  String name;
+  int price;
 
-  Service(String? name, int? price)
-      : name = name ?? 'Default',
-        price = price ?? 0;
+  Service(this.name,this.price);
 
   Map<String, dynamic> toMap() {
     return {'name': name, 'price': price};
@@ -12,7 +10,7 @@ class Service {
 
   factory Service.fromMap(Map<String, dynamic> map) {
     return Service(
-      map['name'] ?? 'Default',
+      map['name'] ?? '',
       map['price'] ?? 0,
     );
   }

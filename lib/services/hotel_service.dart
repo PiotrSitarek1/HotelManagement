@@ -72,19 +72,32 @@ class HotelService {
     return Service.fromMap(serviceData);
   }
 
-  Future<String?> getServiceByHotelIdAndName(
+  Future<Service?> getServiceByHotelIdAndName(
       String hotelId, String serviceName) async {
-    Hotel? hotel = await getHotelById(hotelId);
-    if (hotel != null) {
-      int index = hotel.services.indexWhere(
-        (service) => service.name == serviceName,
-      );
-      return index.toString();
-    } else {
-      return null;
-    }
+    Query query = _hotelRef
+        .child(hotelId)
+        .child('services')
+        .orderByChild('name')
+        .equalTo(serviceName);
+    DataSnapshot snapshot = await query.get();
+    if (snapshot.value == null) return null;
+    Map<String, dynamic> serviceData = json.decode(json.encode(snapshot.value));
+    String serviceId = serviceData.keys.first;
+    return Service.fromMap(serviceData[serviceId]);
   }
 
+  Future<String?> getServiceKeyByHotelIdAndName(
+      String hotelId, String serviceName) async {
+    Query query = _hotelRef
+        .child(hotelId)
+        .child('services')
+        .orderByChild('name')
+        .equalTo(serviceName);
+    DataSnapshot snapshot = await query.get();
+    if (snapshot.value == null) return null;
+    Map<String, dynamic> serviceData = json.decode(json.encode(snapshot.value));
+    return serviceData.keys.first;
+  }
   Future<String?> addService(
       String hotelId, Service newService) async {
     Map<String, dynamic> serviceMap = newService.toMap();
@@ -94,7 +107,7 @@ class HotelService {
     return newServiceRef.key;
   }
 
-  Future<void> updateServiceInFirebase(
+  Future<void> updateService(
       String hotelId, String serviceId, Service updatedService) async {
     DatabaseReference servicesRef =
         _hotelRef.child(hotelId).child('services').child(serviceId);
