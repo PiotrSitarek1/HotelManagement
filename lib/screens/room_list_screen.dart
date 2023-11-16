@@ -48,11 +48,16 @@ class _RoomListScreenState extends State<RoomListScreen> {
               ElevatedButton(
                 onPressed: () {
                   setState(() {
-                    rooms.add(Room(type: 'New Room', price: 0.0, roomNumber: 0, availability: true));
+                    rooms.add(Room(
+                        type: 'New Room',
+                        price: 0.0,
+                        roomNumber: 0,
+                        availability: true));
                   });
                 },
                 style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all<Color>(Colors.blueGrey),
+                  backgroundColor:
+                      MaterialStateProperty.all<Color>(Colors.blueGrey),
                   shape: MaterialStateProperty.all<OutlinedBorder>(
                     RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30.0),
@@ -65,7 +70,7 @@ class _RoomListScreenState extends State<RoomListScreen> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Icon(Icons.add), // You can replace this with your preferred icon
+                        const Icon(Icons.add),
                         const SizedBox(width: 8),
                         Text(
                           'Add New Room',
@@ -93,7 +98,7 @@ class _RoomListScreenState extends State<RoomListScreen> {
                 },
                 style: ButtonStyle(
                   backgroundColor:
-                  MaterialStateProperty.all<Color>(Colors.blueGrey),
+                      MaterialStateProperty.all<Color>(Colors.blueGrey),
                   shape: MaterialStateProperty.all<OutlinedBorder>(
                     RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30.0),

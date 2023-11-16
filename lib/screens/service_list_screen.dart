@@ -103,7 +103,8 @@ class _ServiceListScreenState extends State<ServiceListScreen> {
               ElevatedButton(
                 onPressed: _showAddServiceModal,
                 style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all<Color>(Colors.blueGrey),
+                  backgroundColor:
+                      MaterialStateProperty.all<Color>(Colors.blueGrey),
                   shape: MaterialStateProperty.all<OutlinedBorder>(
                     RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30.0),
@@ -142,7 +143,7 @@ class _ServiceListScreenState extends State<ServiceListScreen> {
                 },
                 style: ButtonStyle(
                   backgroundColor:
-                  MaterialStateProperty.all<Color>(Colors.blueGrey),
+                      MaterialStateProperty.all<Color>(Colors.blueGrey),
                   shape: MaterialStateProperty.all<OutlinedBorder>(
                     RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30.0),
