@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hotel_manager/screens/hotel_reservation_screen.dart';
 import 'package:hotel_manager/services/user_service.dart';
 import '../models/user_model.dart';
 import 'change_password_screen.dart';
@@ -29,7 +30,7 @@ class _UserSettingsViewState extends State<UserSettingsView> {
 
   void _navigateToChangePassword() {
     Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => const ChangePasswordView(),
+      builder: (context) => const ReservationView(),//todo: Change back to ChangePasswordView
     ));
   }
 
