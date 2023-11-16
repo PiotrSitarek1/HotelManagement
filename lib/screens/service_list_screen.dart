@@ -1,21 +1,76 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hotel_manager/utils/Utils.dart';
+import '../models/service_model.dart';
+import '../services/hotel_service.dart';
 import 'owner_panel_screen.dart';
 
 class ServiceListScreen extends StatefulWidget {
-  const ServiceListScreen({super.key});
+  final String hotelID;
+
+  const ServiceListScreen(this.hotelID, {super.key});
 
   @override
   _ServiceListScreenState createState() => _ServiceListScreenState();
 }
 
 class _ServiceListScreenState extends State<ServiceListScreen> {
-  // TODO: Here we want to fetch services that the user already has
-  List<Service> services = [
-    Service(name: 'Gym', price: 100.0),
-    Service(name: 'Cinema hall', price: 150.0),
-    Service(name: 'SPA', price: 250.0),
-  ];
+  late String hotelID;
+  final HotelService _hotelService = HotelService();
+  late List<Service> services = [];
+  final TextEditingController _serviceNameController = TextEditingController();
+  final TextEditingController _servicePriceController = TextEditingController();
+
+  void _showAddServiceModal() {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return Container(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                controller: _serviceNameController,
+                decoration: const InputDecoration(labelText: 'Service Name'),
+              ),
+              const SizedBox(height: 16),
+              TextField(
+                controller: _servicePriceController,
+                keyboardType:
+                    const TextInputType.numberWithOptions(decimal: true),
+                decoration: const InputDecoration(labelText: 'Service Price'),
+              ),
+              const SizedBox(height: 16),
+              ElevatedButton(
+                onPressed: () {
+                  _addNewService(_serviceNameController.text, int.tryParse(_servicePriceController.text) ?? 0);
+                  Navigator.pop(context);
+                },
+                child: const Text('Save'),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    hotelID = widget.hotelID;
+    _getHotelServices();
+  }
+
+  Future<void> _getHotelServices() async {
+    final temp = await _hotelService.getServicesByHotelId(hotelID);
+    if(temp == null) return;
+    setState(() {
+      services = temp;
+    });
+
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +102,6 @@ class _ServiceListScreenState extends State<ServiceListScreen> {
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {
-                  updateDatabase();
                   Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
@@ -56,7 +110,7 @@ class _ServiceListScreenState extends State<ServiceListScreen> {
                 },
                 style: ButtonStyle(
                   backgroundColor:
-                  MaterialStateProperty.all<Color>(Colors.blueGrey),
+                      MaterialStateProperty.all<Color>(Colors.blueGrey),
                   shape: MaterialStateProperty.all<OutlinedBorder>(
                     RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30.0),
@@ -77,6 +131,32 @@ class _ServiceListScreenState extends State<ServiceListScreen> {
                   ),
                 ),
               ),
+              const SizedBox(height: 10), // Adjust the spacing as needed
+              ElevatedButton(
+                onPressed: _showAddServiceModal,
+                style: ButtonStyle(
+                  backgroundColor:
+                      MaterialStateProperty.all<Color>(Colors.green),
+                  shape: MaterialStateProperty.all<OutlinedBorder>(
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30.0),
+                    ),
+                  ),
+                ),
+                child: SizedBox(
+                  width: 150,
+                  child: Center(
+                    child: Text(
+                      'PLUS',
+                      style: GoogleFonts.roboto(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
             ],
           ),
         ),
@@ -88,12 +168,13 @@ class _ServiceListScreenState extends State<ServiceListScreen> {
     return ListView.builder(
       itemCount: services.length,
       itemBuilder: (context, index) {
-        return buildServiceTile(services[index]);
+        return buildServiceTile(
+            services[index], services[index].name);
       },
     );
   }
 
-  Widget buildServiceTile(Service service) {
+  Widget buildServiceTile(Service service, String serviceName) {
     return Container(
       height: 80,
       margin: const EdgeInsets.symmetric(vertical: 2.0),
@@ -117,9 +198,7 @@ class _ServiceListScreenState extends State<ServiceListScreen> {
                     border: InputBorder.none,
                   ),
                   onChanged: (value) {
-                    setState(() {
-                      service.name = value;
-                    });
+                    _updateServiceName(serviceName, value);
                   },
                 ),
               ),
@@ -137,9 +216,7 @@ class _ServiceListScreenState extends State<ServiceListScreen> {
                   ),
                   keyboardType: TextInputType.number,
                   onChanged: (value) {
-                    setState(() {
-                      service.price = double.tryParse(value) ?? 0.0;
-                    });
+                    _updateServicePrice(serviceName, int.tryParse(value) ?? 0);
                   },
                 ),
               ),
@@ -150,17 +227,46 @@ class _ServiceListScreenState extends State<ServiceListScreen> {
     );
   }
 
-  void updateDatabase() {
-    for (var service in services) {
-      //print('Service Name: ${service.name}, Price: ${service.price}');
-      //TODO: Add database update logic here
+  Future<void> _updateServiceName(
+      String serviceName, String value) async {
+    String? serviceId =
+        await _hotelService.getServiceByHotelIdAndName(hotelID, serviceName);
+    if (serviceId == null) {
+      showToast("Something went wrong");
+    } else {
+      Service? oldService = await _hotelService.getServiceByHotelIdAndServiceId(
+          hotelID, serviceId);
+      if (oldService == null) {
+        showToast("Something went wrong");
+      } else {
+        oldService.name = value;
+        _hotelService.updateServiceInFirebase(hotelID, serviceId, oldService);
+      }
     }
   }
-}
 
-class Service {
-  String name;
-  double price;
+  Future<void> _updateServicePrice(
+      String serviceName, int value) async {
+    String? serviceId =
+        await _hotelService.getServiceByHotelIdAndName(hotelID, serviceName);
+    if (serviceId == null) {
+      showToast("Something went wrong");
+    } else {
+      Service? oldService = await _hotelService.getServiceByHotelIdAndServiceId(
+          hotelID, serviceId);
+      if (oldService == null) {
+        showToast("Something went wrong");
+      } else {
+        oldService.price = value;
+        _hotelService.updateServiceInFirebase(hotelID, serviceId, oldService);
+      }
+    }
+  }
 
-  Service({required this.name, required this.price});
+  Future<void> _addNewService(String serviceName, int servicePrice) async {
+    Service newService = Service(serviceName, servicePrice);
+    await _hotelService.addService(hotelID, newService);
+    showToast("New service added");
+    await _getHotelServices();
+  }
 }

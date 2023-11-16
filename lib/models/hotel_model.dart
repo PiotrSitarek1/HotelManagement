@@ -1,3 +1,5 @@
+import 'package:hotel_manager/models/service_model.dart';
+
 class Hotel {
   final String name;
   final String address;
@@ -5,7 +7,7 @@ class Hotel {
   late final String phoneNumber;
   late final String imageUrl;
   late final String supervisorId;
-  final List<int> services;
+  late final List<Service> services;
 
   Hotel({
     required this.name,
@@ -14,11 +16,12 @@ class Hotel {
     String? phoneNumber,
     String? imageUrl,
     String? supervisorId,
-    this.services = const [],
+    List<Service>? services,
   })  : email = email ?? '',
         phoneNumber = phoneNumber ?? '',
         supervisorId = supervisorId ?? '',
-        imageUrl = imageUrl ?? '';
+        imageUrl = imageUrl ?? '',
+        services = services ?? [];
 
   Map<String, dynamic> toMap() {
     return {
@@ -40,7 +43,9 @@ class Hotel {
       phoneNumber: map['phoneNumber'] ?? '',
       imageUrl: map['imageUrl'] ?? '',
       supervisorId: map['supervisorId'] ?? '',
-      services: List<int>.from(map['services'] ?? []),
+      services: (map['services'] != null && map['services'] is Iterable)
+          ? List<Service>.from(map['services'])
+          : [],
     );
   }
 }
