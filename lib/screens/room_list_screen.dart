@@ -12,9 +12,9 @@ class RoomListScreen extends StatefulWidget {
 class _RoomListScreenState extends State<RoomListScreen> {
   // TODO: Here we want to fetch rooms that user already has
   List<Room> rooms = [
-    Room(name: 'Standard', quantity: 10, cost: 100.0),
-    Room(name: 'Deluxe', quantity: 5, cost: 150.0),
-    Room(name: 'Suite', quantity: 2, cost: 250.0),
+    Room(type: 'Standard', price: 100.0, roomNumber: 101, availability: true),
+    Room(type: 'Deluxe', price: 150.0, roomNumber: 201, availability: true),
+    Room(type: 'Suite', price: 250.0, roomNumber: 301, availability: false),
   ];
 
   @override
@@ -47,16 +47,53 @@ class _RoomListScreenState extends State<RoomListScreen> {
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {
+                  setState(() {
+                    rooms.add(Room(type: 'New Room', price: 0.0, roomNumber: 0, availability: true));
+                  });
+                },
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all<Color>(Colors.blueGrey),
+                  shape: MaterialStateProperty.all<OutlinedBorder>(
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30.0),
+                    ),
+                  ),
+                ),
+                child: SizedBox(
+                  width: 190,
+                  child: Center(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(Icons.add), // You can replace this with your preferred icon
+                        const SizedBox(width: 8),
+                        Text(
+                          'Add New Room',
+                          style: GoogleFonts.roboto(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 10),
+              ElevatedButton(
+                onPressed: () {
                   updateDatabase();
                   Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => const OwnerPanelScreen()),
+                      builder: (context) => const OwnerPanelScreen(),
+                    ),
                   );
                 },
                 style: ButtonStyle(
                   backgroundColor:
-                      MaterialStateProperty.all<Color>(Colors.blueGrey),
+                  MaterialStateProperty.all<Color>(Colors.blueGrey),
                   shape: MaterialStateProperty.all<OutlinedBorder>(
                     RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30.0),
@@ -106,57 +143,30 @@ class _RoomListScreenState extends State<RoomListScreen> {
           title: Row(
             children: [
               SizedBox(
-                width: 100,
+                width: 80,
                 child: TextFormField(
-                  initialValue: room.name,
+                  initialValue: room.type,
                   style: const TextStyle(fontSize: 14.0),
                   decoration: const InputDecoration(
-                    labelText: 'Room Name',
+                    labelText: 'Type',
                     filled: true,
                     fillColor: Colors.transparent,
                     border: InputBorder.none,
                   ),
                   onChanged: (value) {
                     setState(() {
-                      room.name = value;
+                      room.type = value;
                     });
                   },
                 ),
               ),
-              const SizedBox(width: 10),
               SizedBox(
-                width: 120,
-                child: Row(
-                  children: [
-                    IconButton(
-                      icon: const Icon(Icons.remove),
-                      onPressed: () {
-                        setState(() {
-                          room.quantity =
-                              (room.quantity > 0) ? room.quantity - 1 : 0;
-                        });
-                      },
-                    ),
-                    Text('${room.quantity}'),
-                    IconButton(
-                      icon: const Icon(Icons.add),
-                      onPressed: () {
-                        setState(() {
-                          room.quantity = room.quantity + 1;
-                        });
-                      },
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(width: 7),
-              SizedBox(
-                width: 70,
+                width: 80,
                 child: TextFormField(
-                  initialValue: room.cost.toString(),
+                  initialValue: room.price.toString(),
                   style: const TextStyle(fontSize: 14.0),
                   decoration: const InputDecoration(
-                    labelText: 'Cost',
+                    labelText: 'Price',
                     filled: true,
                     fillColor: Colors.transparent,
                     border: InputBorder.none,
@@ -164,7 +174,45 @@ class _RoomListScreenState extends State<RoomListScreen> {
                   keyboardType: TextInputType.number,
                   onChanged: (value) {
                     setState(() {
-                      room.cost = double.tryParse(value) ?? 0.0;
+                      room.price = double.tryParse(value) ?? 0.0;
+                    });
+                  },
+                ),
+              ),
+              SizedBox(
+                width: 70,
+                child: TextFormField(
+                  initialValue: room.roomNumber.toString(),
+                  style: const TextStyle(fontSize: 14.0),
+                  decoration: const InputDecoration(
+                    labelText: 'Room nr',
+                    filled: true,
+                    fillColor: Colors.transparent,
+                    border: InputBorder.none,
+                  ),
+                  keyboardType: TextInputType.number,
+                  onChanged: (value) {
+                    setState(() {
+                      room.roomNumber = int.tryParse(value) ?? 0;
+                    });
+                  },
+                ),
+              ),
+              SizedBox(
+                width: 80,
+                child: TextFormField(
+                  initialValue: room.availability.toString(),
+                  style: const TextStyle(fontSize: 14.0),
+                  decoration: const InputDecoration(
+                    labelText: 'Availability',
+                    filled: true,
+                    fillColor: Colors.transparent,
+                    border: InputBorder.none,
+                  ),
+                  keyboardType: TextInputType.text,
+                  onChanged: (value) {
+                    setState(() {
+                      room.availability = value.toLowerCase() == 'true';
                     });
                   },
                 ),
@@ -185,9 +233,15 @@ class _RoomListScreenState extends State<RoomListScreen> {
 }
 
 class Room {
-  String name;
-  int quantity;
-  double cost;
+  String type;
+  double price;
+  int roomNumber;
+  bool availability;
 
-  Room({required this.name, required this.quantity, required this.cost});
+  Room({
+    required this.type,
+    required this.price,
+    required this.roomNumber,
+    required this.availability,
+  });
 }
