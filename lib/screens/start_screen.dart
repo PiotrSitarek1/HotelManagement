@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hotel_manager/screens/login_menu_screen.dart';
+import 'package:hotel_manager/screens/user_flow/user_bottom_navigation.dart';
 import 'package:hotel_manager/screens/user_settings_screen.dart';
 
 import '../services/user_auth.dart';
+import 'owner_panel_screen.dart';
 
 class StartView extends StatefulWidget {
   const StartView({Key? key});
@@ -105,14 +107,14 @@ class _StartViewState extends State<StartView> {
   Future<void> _navigateToUserLogin() async {
     await _userAuth.signIn("user@gmail.com", "user123");
     Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => const UserSettingsView(),
+      builder: (context) => const UserBottomNavigationView(),
     ));
   }
 
   Future<void> _navigateToOwnerLogin() async {
     await _userAuth.signIn("owner@gmail.com", "owner123");
     Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => const UserSettingsView(),
+      builder: (context) => const OwnerPanelScreen(),
     ));
   }
 }

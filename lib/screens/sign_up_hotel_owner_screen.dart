@@ -1,9 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hotel_manager/models/hotel_model.dart';
-import 'package:hotel_manager/screens/user_settings_screen.dart';
+import 'package:hotel_manager/screens/owner_panel_screen.dart';
 import 'package:hotel_manager/services/hotel_service.dart';
-import 'package:hotel_manager/utils/toast.dart';
+import 'package:hotel_manager/utils/Utils.dart';
 import '../models/user_model.dart';
 import '../services/user_auth.dart';
 import '../services/user_service.dart';
@@ -51,9 +51,9 @@ class _RegisterOwnerViewState extends State<RegisterOwnerView> {
     ));
   }
 
-  void _navigateToUserSettings() {
+  void _navigateToOwnerFlow() {
     Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => const UserSettingsView(),
+      builder: (context) => const OwnerPanelScreen(),
     ));
   }
 
@@ -78,7 +78,7 @@ class _RegisterOwnerViewState extends State<RegisterOwnerView> {
       _userService.addUser(userCredential.user!.uid, newUser);
       showToast("User and Hotel registered - Hotel needs to be configured");
 
-      _navigateToUserSettings();
+      _navigateToOwnerFlow();
     } else {
       showToast("Registration failed");
     }

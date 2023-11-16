@@ -74,7 +74,7 @@ class HotelWidget extends StatelessWidget {
                           Text(hotel.address ?? 'Hotel_Adress',
                               style: GoogleFonts.roboto(
                                   fontSize: 14, color: Colors.white)),
-                          Text(hotel.contact ?? 'Hotel_Contact',
+                          Text(hotel.email ?? 'Hotel_Contact',
 
                               style: GoogleFonts.roboto(
                                   fontSize: 14, color: Colors.white)),

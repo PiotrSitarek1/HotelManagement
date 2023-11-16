@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:firebase_database/firebase_database.dart';
@@ -29,18 +30,20 @@ class HotelService {
   }
 
   Future<Hotel?> getHotelById(String hotelId) async {
-    DataSnapshot snapshot = await _hotelRef.child(hotelId).once() as DataSnapshot;
-    if (snapshot.value != null && snapshot.value is Map<dynamic, dynamic>) {
-      Map<dynamic, dynamic> hotelMap = snapshot.value as Map<dynamic, dynamic>;
-      return Hotel.fromMap(hotelMap.cast<String, dynamic>());
-    }
-
-    return null;
+    DataSnapshot snapshot = await _hotelRef.child(hotelId).get();
+    if (snapshot.value == null) return null;
+    Map<String, dynamic> userData = json.decode(json.encode(snapshot.value));
+    return Hotel.fromMap(userData);
   }
 
-  Future<void> updateHotel(String hotelId, Hotel updatedHotel) async {
-    Map<String, dynamic> hotelMap = updatedHotel.toMap();
-    await _hotelRef.child(hotelId).update(hotelMap);
+  Future<String> updateHotel(String hotelId, Hotel updatedHotel) async {
+    try {
+      Map<String, dynamic> hotelMap = updatedHotel.toMap();
+      await _hotelRef.child(hotelId).update(hotelMap);
+      return "SUCCESS";
+    }catch(e){
+      return e.toString();
+    }
   }
 
   Future<void> deleteHotel(String hotelId) async {

@@ -1,9 +1,18 @@
 // owner_panel_screen.dart
+import 'dart:io' show File;
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hotel_manager/screens/room_list_screen.dart';
 import 'package:hotel_manager/screens/service_list_screen.dart';
 import 'package:hotel_manager/screens/user_settings_screen.dart';
+import 'package:hotel_manager/services/hotel_service.dart';
+import 'package:hotel_manager/services/user_service.dart';
+import 'package:hotel_manager/utils/Utils.dart';
+import 'package:image_picker/image_picker.dart';
+
+import '../models/hotel_model.dart';
 
 class OwnerPanelScreen extends StatefulWidget {
   const OwnerPanelScreen({Key? key}) : super(key: key);
@@ -13,11 +22,52 @@ class OwnerPanelScreen extends StatefulWidget {
 }
 
 class _OwnerPanelScreenState extends State<OwnerPanelScreen> {
-  //TODO: Add default values of user data
   TextEditingController hotelNameController = TextEditingController();
   TextEditingController addressController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController phoneNumberController = TextEditingController();
+  late String uID;
+  late String hotelID;
+  final HotelService _hotelService = HotelService();
+  File ? _pickedImage;
+
+  @override
+  void initState(){
+    super.initState();
+    User? user = FirebaseAuth.instance.currentUser;
+    uID = user!.uid;
+    _getHotelData();
+  }
+
+  void _getHotelData() async {
+    String? hotelID = await UserService().getHotelByUserUID(uID);
+    if (hotelID == null || hotelID == "0" || hotelID == "USER_NOT_FOUND") {
+      showToast("Error occurred while reading hotel");
+    } else {
+      Hotel? hotel = await _hotelService.getHotelById(hotelID);
+      if (hotel == null) {
+        showToast("Error occurred while reading hotel");
+      } else {
+        this.hotelID = hotelID;
+        hotelNameController.text = hotel.name;
+        addressController.text = hotel.address;
+        emailController.text = hotel.email;
+        phoneNumberController.text = hotel.phoneNumber;
+
+        String hotelImageUrl = hotel.imageUrl;
+        if (hotelImageUrl != "") {
+          File? downloadedImage =
+              await downloadImageFile(hotelImageUrl);
+
+          if (downloadedImage != null) {
+            setState(() {
+              _pickedImage = downloadedImage;
+            });
+          }
+        }
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -66,16 +116,23 @@ class _OwnerPanelScreenState extends State<OwnerPanelScreen> {
                   Row(
                     children: [
                       const SizedBox(width: 15),
-                      const Icon(
-                        Icons.hotel,
-                        size: 72,
-                        color: Colors.white70,
-                      ),
+                      _pickedImage != null
+                          ? Image.file(
+                              _pickedImage!,
+                              width: 72,
+                              height: 72,
+                              fit: BoxFit.cover,
+                            )
+                          : const Icon(
+                              Icons.hotel,
+                              size: 72,
+                              color: Colors.white70,
+                            ),
                       const SizedBox(width: 7),
                       TextButton(
-                        onPressed: _changeProfilePicture,
+                        onPressed: _changeHotelPicture,
                         child: Text(
-                          'Change Profile Picture',
+                          'Change Hotel Picture',
                           style: GoogleFonts.roboto(
                               fontSize: 14,
                               fontWeight: FontWeight.bold,
@@ -237,6 +294,7 @@ class _OwnerPanelScreenState extends State<OwnerPanelScreen> {
                           ),
                         ),
                       ),
+
                     ),
                   ),
                 ],
@@ -248,12 +306,39 @@ class _OwnerPanelScreenState extends State<OwnerPanelScreen> {
     );
   }
 
-  void _changeProfilePicture() {
-    // TODO: Add logic to change the profile picture
-    // Implement image picker and update the user's profile picture.
+  Future<void> _changeHotelPicture() async {
+    final pickedFile =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (pickedFile == null) {
+      showToast("No image selected");
+      return;
+    }
+    setState(() {
+      _pickedImage = File(pickedFile.path);
+    });
   }
 
-  void _saveChanges() {
-    // TODO: Add logic to save changes to the database
+  Future<void> _saveChanges() async {
+    String imageUrl = "";
+    if (_pickedImage != null) {
+      imageUrl =
+          await uploadImageToFirebaseStorage(_pickedImage!);
+    }
+
+    Hotel updatedHotel = Hotel(
+        name: hotelNameController.text,
+        address: addressController.text,
+        email: emailController.text,
+        phoneNumber: phoneNumberController.text,
+        supervisorId: uID,
+        imageUrl: imageUrl);
+
+    String result = await _hotelService.updateHotel(hotelID, updatedHotel);
+    if (result == "SUCCESS") {
+      showToast("Hotel updated successfully");
+      _getHotelData();
+    } else {
+      showToast("Unexpected error: $result");
+    }
   }
 }
