@@ -30,7 +30,13 @@ class _UserSettingsViewState extends State<UserSettingsView> {
 
   void _navigateToChangePassword() {
     Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => const ReservationView(),//todo: Change back to ChangePasswordView
+      builder: (context) => const ChangePasswordView(),
+    ));
+  }
+
+  void _navigateToReservationView() {
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => const ReservationView(),//todo: DELETE when reservation view made
     ));
   }
 
@@ -160,6 +166,15 @@ class _UserSettingsViewState extends State<UserSettingsView> {
                   TextButton(
                     onPressed: _navigateToChangePassword,
                     child: Text('Change Password',
+                        style: GoogleFonts.roboto(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            color: customBlueAccent)),
+                  ),
+                  const SizedBox(height: 16),
+                  TextButton(
+                    onPressed: _navigateToReservationView,
+                    child: Text('DELETE LATER',
                         style: GoogleFonts.roboto(
                             fontSize: 14,
                             fontWeight: FontWeight.bold,
