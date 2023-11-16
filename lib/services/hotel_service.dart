@@ -1,13 +1,10 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
-import 'dart:ffi';
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:hotel_manager/utils/toast.dart';
 import 'package:path_provider/path_provider.dart';
 import '../models/hotel_model.dart';
 
@@ -85,9 +82,14 @@ class HotelService {
       final bytes = await ref.getData();
 
       if (bytes != null) {
-        final tempDir = await getTemporaryDirectory();
-        final tempFile = File('${tempDir.path}/temp_image.jpg');
-        await tempFile.writeAsBytes(Uint8List.fromList(bytes));
+        final appDir = await getApplicationDocumentsDirectory();
+        final imagesDir = Directory("${appDir.path}/images");
+        if (!imagesDir.existsSync()) {
+          imagesDir.createSync(recursive: true);
+        }
+        String imageName = DateTime.now().millisecondsSinceEpoch.toString();
+        final tempFile = File("${imagesDir.path}/$imageName.jpg");
+        await ref.writeToFile(tempFile);
         return tempFile;
       } else {
         return null;
