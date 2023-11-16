@@ -11,11 +11,10 @@ class AvilableHotelsView extends StatefulWidget {
 }
 
 class _AvilableHotelsView extends State<AvilableHotelsView> {
-  /*final List<Hotel> _hotels = [
+  final List<Hotel> _hotels = [
     Hotel(
         name: 'Hotel1',
         address: '123 Main Street',
-        contact: '999-999-999',
         imageUrl:
             'https://pix8.agoda.net/hotelImages/124/1246280/1246280_16061017110043391702.jpg?ca=6&ce=1&s=1024x768',
         supervisorId: '1',
@@ -23,7 +22,6 @@ class _AvilableHotelsView extends State<AvilableHotelsView> {
     Hotel(
         name: 'Hotel 2',
         address: 'Another Street 13',
-        contact: '234-234-234',
         imageUrl:
             'https://pix8.agoda.net/hotelImages/124/1246280/1246280_16061017110043391702.jpg?ca=6&ce=1&s=1024x768',
         supervisorId: '1',
@@ -33,12 +31,17 @@ class _AvilableHotelsView extends State<AvilableHotelsView> {
         address: 'HotelAdress',
         supervisorId: '1',
         services: [1, 2, 3]),
-
-
-  ];*/
+  ];
 
   @override
   Widget build(BuildContext context) {
+    final currHeight = MediaQuery.of(context).size.height;
+    final hotelsHeight = currHeight -
+        kToolbarHeight -
+        20 -
+        kBottomNavigationBarHeight -
+        MediaQuery.of(context).padding.top;
+
     return Scaffold(
       appBar: null,
       body: Container(
@@ -62,17 +65,17 @@ class _AvilableHotelsView extends State<AvilableHotelsView> {
                 ),
               ),
             ),
-            // Container(
-            //   height: 520,
-            //   child: ListView.builder(
-            //     itemCount: _hotels.length,
-            //     itemBuilder: (context, index) {
-            //       return HotelWidget(
-            //         hotel: _hotels[index],
-            //       );
-            //     },
-            //   ),
-            // ),
+            Container(
+              height: hotelsHeight,
+              child: ListView.builder(
+                itemCount: _hotels.length,
+                itemBuilder: (context, index) {
+                  return HotelWidget(
+                    hotel: _hotels[index],
+                  );
+                },
+              ),
+            ),
           ],
         ),
       ),
