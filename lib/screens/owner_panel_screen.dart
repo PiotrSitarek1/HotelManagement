@@ -8,7 +8,7 @@ import 'package:hotel_manager/screens/room_list_screen.dart';
 import 'package:hotel_manager/screens/user_settings_screen.dart';
 import 'package:hotel_manager/services/hotel_service.dart';
 import 'package:hotel_manager/services/user_service.dart';
-import 'package:hotel_manager/utils/toast.dart';
+import 'package:hotel_manager/utils/Utils.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../models/hotel_model.dart';
@@ -56,7 +56,7 @@ class _OwnerPanelScreenState extends State<OwnerPanelScreen> {
         String hotelImageUrl = hotel.imageUrl;
         if (hotelImageUrl != "") {
           File? downloadedImage =
-              await _hotelService.downloadImageFile(hotelImageUrl);
+              await downloadImageFile(hotelImageUrl);
 
           if (downloadedImage != null) {
             setState(() {
@@ -292,7 +292,7 @@ class _OwnerPanelScreenState extends State<OwnerPanelScreen> {
     String imageUrl = "";
     if (_pickedImage != null) {
       imageUrl =
-          await _hotelService.uploadImageToFirebaseStorage(_pickedImage!);
+          await uploadImageToFirebaseStorage(_pickedImage!);
     }
 
     Hotel updatedHotel = Hotel(

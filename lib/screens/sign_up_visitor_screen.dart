@@ -4,7 +4,7 @@ import 'package:hotel_manager/screens/user_settings_screen.dart';
 import 'package:hotel_manager/services/user_auth.dart';
 import 'package:hotel_manager/services/user_service.dart';
 import 'package:hotel_manager/utils/Roles.dart';
-import '../utils/toast.dart';
+import '../utils/Utils.dart';
 import 'login_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:hotel_manager/models/user_model.dart';

@@ -1,11 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
-import 'dart:io';
 
 import 'package:firebase_database/firebase_database.dart';
-import 'package:firebase_storage/firebase_storage.dart';
-import 'package:path_provider/path_provider.dart';
 import '../models/hotel_model.dart';
 
 
@@ -61,41 +58,6 @@ class HotelService {
       print("$fieldToUpdate updated successfully.");
     } catch (error) {
       print("Failed to update $fieldToUpdate: $error");
-    }
-  }
-
-  Future<String> uploadImageToFirebaseStorage(File file) async {
-    String imageName = DateTime.now().millisecondsSinceEpoch.toString();
-    final reference =
-        FirebaseStorage.instance.ref().child('images/$imageName.jpg');
-    final uploadTask = reference.putFile(file);
-
-    await uploadTask.whenComplete(() => null);
-
-    String imageUrl = await reference.getDownloadURL();
-    return imageUrl;
-  }
-
-  Future<File?> downloadImageFile(String imageUrl) async {
-    try {
-      final ref = FirebaseStorage.instance.refFromURL(imageUrl);
-      final bytes = await ref.getData();
-
-      if (bytes != null) {
-        final appDir = await getApplicationDocumentsDirectory();
-        final imagesDir = Directory("${appDir.path}/images");
-        if (!imagesDir.existsSync()) {
-          imagesDir.createSync(recursive: true);
-        }
-        String imageName = DateTime.now().millisecondsSinceEpoch.toString();
-        final tempFile = File("${imagesDir.path}/$imageName.jpg");
-        await ref.writeToFile(tempFile);
-        return tempFile;
-      } else {
-        return null;
-      }
-    } catch (e) {
-      return null;
     }
   }
 }

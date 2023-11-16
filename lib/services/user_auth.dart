@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 
-import '../utils/toast.dart';
+import '../utils/Utils.dart';
 
 enum AuthStatus {
   successful,

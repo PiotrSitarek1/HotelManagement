@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../services/user_auth.dart';
-import '../utils/toast.dart';
+import '../utils/Utils.dart';
 
 class ChangePasswordView extends StatefulWidget {
   const ChangePasswordView({Key? key});
