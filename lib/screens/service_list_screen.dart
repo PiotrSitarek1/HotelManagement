@@ -101,6 +101,39 @@ class _ServiceListScreenState extends State<ServiceListScreen> {
               ),
               const SizedBox(height: 20),
               ElevatedButton(
+                onPressed: _showAddServiceModal,
+                style: ButtonStyle(
+                  backgroundColor:
+                      MaterialStateProperty.all<Color>(Colors.blueGrey),
+                  shape: MaterialStateProperty.all<OutlinedBorder>(
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30.0),
+                    ),
+                  ),
+                ),
+                child: SizedBox(
+                  width: 190,
+                  child: Center(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(Icons.add),
+                        const SizedBox(width: 8),
+                        Text(
+                          'Add New Service',
+                          style: GoogleFonts.roboto(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 10),
+              ElevatedButton(
                 onPressed: () {
                   Navigator.pushReplacement(
                     context,
@@ -122,32 +155,6 @@ class _ServiceListScreenState extends State<ServiceListScreen> {
                   child: Center(
                     child: Text(
                       'Save Changes',
-                      style: GoogleFonts.roboto(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 10), // Adjust the spacing as needed
-              ElevatedButton(
-                onPressed: _showAddServiceModal,
-                style: ButtonStyle(
-                  backgroundColor:
-                      MaterialStateProperty.all<Color>(Colors.green),
-                  shape: MaterialStateProperty.all<OutlinedBorder>(
-                    RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30.0),
-                    ),
-                  ),
-                ),
-                child: SizedBox(
-                  width: 150,
-                  child: Center(
-                    child: Text(
-                      'PLUS',
                       style: GoogleFonts.roboto(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
