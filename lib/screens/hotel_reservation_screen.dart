@@ -20,11 +20,8 @@ class ReservationView extends StatefulWidget {
 }
 
 class _ReservationViewState extends State<ReservationView> {
-  final UserAuth _userAuth = UserAuth();
   final UserService _userService = UserService();
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
   final ReservationServices _reservationServices = ReservationServices();
   User? user = FirebaseAuth.instance.currentUser;
   late String uID;
