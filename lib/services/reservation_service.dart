@@ -74,7 +74,11 @@ class ReservationServices {
           String address = value2['address'];
           String name = value2['name'];
 
-          reservationsFromSingleHotel.add(ReservationPlaceholder(hotelname: name, adress: address));
+          String image = value2['imageUrl'];
+          String date = entry.value['checkInDate'];
+          String dateEnd = entry.value['checkOutDate'];
+
+          reservationsFromSingleHotel.add(ReservationPlaceholder(hotelname: name, adress: address, date:date, dateEnd: dateEnd, imageUrl: image));
 
         }
       }
