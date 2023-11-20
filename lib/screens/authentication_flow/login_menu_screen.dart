@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:hotel_manager/screens/change_password_screen.dart';
-import 'package:hotel_manager/screens/login_screen.dart';
-import 'package:hotel_manager/screens/sign_up_choice_screen.dart';
+import 'package:hotel_manager/screens/authentication_flow/change_password_screen.dart';
+import 'package:hotel_manager/screens/authentication_flow/login_screen.dart';
+import 'package:hotel_manager/screens/authentication_flow/sign_up_choice_screen.dart';
 
 class LoginMenuView extends StatefulWidget {
   const LoginMenuView({Key? key});

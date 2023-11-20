@@ -2,11 +2,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hotel_manager/components/reservation_widget.dart';
-// import 'package:hotel_manager/models/reservation_model.dart';
 import 'package:hotel_manager/screens/user_flow/reservation_placeholder.dart';
 import 'package:hotel_manager/utils/Utils.dart';
 
-import '../../models/user_model.dart';
+// import '../../models/user_model.dart';
 import '../../services/reservation_service.dart';
 import '../../services/user_service.dart';
 
@@ -18,7 +17,7 @@ class UserReservationsView extends StatefulWidget {
 }
 
 class _UserReservationsView extends State<UserReservationsView> {
-  _UserReservationsView(){
+  _UserReservationsView() {
     setReservations();
   }
 
@@ -29,25 +28,23 @@ class _UserReservationsView extends State<UserReservationsView> {
   User? user = FirebaseAuth.instance.currentUser;
   late String uID;
 
-  void setReservations(){
+  void setReservations() {
     //_reservations.add(ReservationPlaceholder(hotelname: 'asd', adress: 'Bot Night 82-134'));
     addReservations();
-
   }
-  void addReservations() async{
-    uID = user!.uid;
-    List<ReservationPlaceholder>? _newReservations = await _reservationServices.getBasicHotelInformationForUser(uID);
-    if(_newReservations != null){
 
+  void addReservations() async {
+    uID = user!.uid;
+    List<ReservationPlaceholder>? _newReservations =
+        await _reservationServices.getBasicHotelInformationForUser(uID);
+    if (_newReservations != null) {
       //showToast("Posiadasz ${_newReservations.length} rezerwcji");
       setState(() {
         _reservations.addAll(_newReservations);
       });
-    }
-    else{
+    } else {
       showToast("Brak aktywnych rezerwacji");
     }
-
   }
 
   @override

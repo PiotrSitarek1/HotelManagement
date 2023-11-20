@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hotel_manager/utils/Utils.dart';
-import '../models/service_model.dart';
-import '../services/hotel_service.dart';
+import '/models/service_model.dart';
+import '/services/hotel_service.dart';
 import 'owner_panel_screen.dart';
 
 class ServiceListScreen extends StatefulWidget {
