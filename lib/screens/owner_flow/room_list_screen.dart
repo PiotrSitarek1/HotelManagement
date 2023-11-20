@@ -1,10 +1,7 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hotel_manager/models/room_model.dart';
 import 'package:hotel_manager/services/room_service.dart';
-import '../../services/hotel_service.dart';
-import '../../services/user_service.dart';
 import '../../utils/Utils.dart';
 import 'owner_panel_screen.dart';
 
@@ -172,7 +169,6 @@ class _RoomListScreenState extends State<RoomListScreen> {
               SizedBox(
                 width: 80,
                 child: TextFormField(
-                  initialValue: room.type,
                   style: const TextStyle(fontSize: 14.0),
                   decoration: const InputDecoration(
                     labelText: 'Type',
@@ -184,9 +180,8 @@ class _RoomListScreenState extends State<RoomListScreen> {
                 ),
               ),
               SizedBox(
-                width: 80,
+                width: 50,
                 child: TextFormField(
-                  initialValue: room.price.toString(),
                   style: const TextStyle(fontSize: 14.0),
                   decoration: const InputDecoration(
                     labelText: 'Price',
@@ -199,7 +194,7 @@ class _RoomListScreenState extends State<RoomListScreen> {
                 ),
               ),
               SizedBox(
-                width: 70,
+                width: 50,
                 child: TextFormField(
                   style: const TextStyle(fontSize: 14.0),
                   decoration: const InputDecoration(
@@ -213,7 +208,7 @@ class _RoomListScreenState extends State<RoomListScreen> {
                 ),
               ),
               SizedBox(
-                width: 80,
+                width: 50,
                 child: DropdownButtonFormField(
                   value: room.availability.toString(),
                   items: const [
@@ -237,28 +232,13 @@ class _RoomListScreenState extends State<RoomListScreen> {
                   ),
                 ),
               ),
-              const SizedBox(width: 10),
-              SizedBox(
-                width: 100,
-                child: TextFormField(
-                  style: const TextStyle(fontSize: 14.0),
-                  decoration: const InputDecoration(
-                    labelText: 'Price',
-                    filled: true,
-                    fillColor: Colors.transparent,
-                    border: InputBorder.none,
-                  ),
-                  keyboardType: TextInputType.number,
-                  controller: priceController,
-                ),
-              ),
               IconButton(
                 icon: const Icon(Icons.check),
                 onPressed: () {
                   updateDatabase(
                       room.number,
                       int.tryParse(numberController.text) ?? 0,
-                      double.tryParse(priceController.text) ?? 0.0,
+                      int.tryParse(priceController.text) ?? 0,
                       typeController.text,
                       bool.tryParse(availabilityController.text) ?? false,
                   );
@@ -271,7 +251,7 @@ class _RoomListScreenState extends State<RoomListScreen> {
     );
   }
   // TODO: implement adding rooms
-  Future<void> updateDatabase(int oldNumber, int newNumber, double price,
+  Future<void> updateDatabase(int oldNumber, int newNumber, int price,
       String type, bool availability) async {
 
     String? roomId = await _roomService.getRoomKeyByNumber(oldNumber.toString());

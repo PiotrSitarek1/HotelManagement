@@ -2,7 +2,7 @@
 class Room {
   String hotelId;
   String type;
-  double price;
+  int price;
   int number;
   bool availability;
 
@@ -22,7 +22,7 @@ class Room {
     return Room(
       map['hotelId'] ?? '',
       map['type'] ?? '',
-      map['price'] ?? 0.0,
+      map['price'] ?? 0,
       map['number'] ?? 0,
       map['availability'] ?? true,
     );

@@ -39,14 +39,11 @@ class RoomService {
           await _roomRef.orderByChild("hotelId").equalTo(hotelId).get();
       if (snapshot.value == null) return null;
       Map<String, dynamic> roomsData = json.decode(json.encode(snapshot.value));
-
       List<Room> rooms = [];
-
       roomsData.forEach((key, value) {
         Map<String, dynamic> roomData = value;
         rooms.add(Room.fromMap(roomData));
       });
-
       return rooms;
     } catch (e) {
       log('Error: $e');
