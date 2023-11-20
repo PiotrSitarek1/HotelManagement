@@ -101,7 +101,7 @@ class _RoomListScreenState extends State<RoomListScreen> {
               const SizedBox(height: 10),
               ElevatedButton(
                 onPressed: () {
-                  updateDatabase();
+                  //updateDatabase();
                   Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
