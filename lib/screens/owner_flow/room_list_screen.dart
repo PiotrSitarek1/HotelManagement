@@ -1,21 +1,41 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hotel_manager/models/room_model.dart';
+import 'package:hotel_manager/services/room_service.dart';
+import '../../services/hotel_service.dart';
+import '../../services/user_service.dart';
+import '../../utils/Utils.dart';
 import 'owner_panel_screen.dart';
 
 class RoomListScreen extends StatefulWidget {
-  const RoomListScreen({super.key});
+  final String hotelID;
+
+  const RoomListScreen(this.hotelID, {super.key});
 
   @override
   _RoomListScreenState createState() => _RoomListScreenState();
 }
 
 class _RoomListScreenState extends State<RoomListScreen> {
-  // TODO: Here we want to fetch rooms that user already has
-  List<Room> rooms = [
-    Room(type: 'Standard', price: 100.0, roomNumber: 101, availability: true),
-    Room(type: 'Deluxe', price: 150.0, roomNumber: 201, availability: true),
-    Room(type: 'Suite', price: 250.0, roomNumber: 301, availability: false),
-  ];
+  late String hotelID;
+  final RoomService _roomService = RoomService();
+  late List<Room> rooms = [];
+
+
+  @override
+  void initState() {
+    super.initState();
+    hotelID = widget.hotelID;
+    _getRooms();
+  }
+  Future<void> _getRooms() async {
+    final temp = await _roomService.getRoomsByHotelId(hotelID);
+    if (temp == null) return;
+    setState(() {
+      rooms =  temp;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,14 +66,7 @@ class _RoomListScreenState extends State<RoomListScreen> {
               ),
               const SizedBox(height: 20),
               ElevatedButton(
-                onPressed: () {
-                  setState(() {
-                    rooms.add(Room(
-                        type: 'New Room',
-                        price: 0.0,
-                        roomNumber: 0,
-                        availability: true));
-                  });
+                onPressed: () { // TODO: ADD NEW ROOM
                 },
                 style: ButtonStyle(
                   backgroundColor:
@@ -136,6 +149,15 @@ class _RoomListScreenState extends State<RoomListScreen> {
   }
 
   Widget buildRoomTile(Room room) {
+    TextEditingController numberController = TextEditingController();
+    TextEditingController priceController = TextEditingController();
+    TextEditingController typeController = TextEditingController();
+    TextEditingController availabilityController = TextEditingController();
+    numberController.text = room.number.toString();
+    priceController.text = room.price.toString();
+    typeController.text = room.type.toString();
+    availabilityController.text = room.availability.toString();
+
     return Container(
       height: 80,
       margin: const EdgeInsets.symmetric(vertical: 2.0),
@@ -158,11 +180,7 @@ class _RoomListScreenState extends State<RoomListScreen> {
                     fillColor: Colors.transparent,
                     border: InputBorder.none,
                   ),
-                  onChanged: (value) {
-                    setState(() {
-                      room.type = value;
-                    });
-                  },
+                  controller: typeController,
                 ),
               ),
               SizedBox(
@@ -177,17 +195,12 @@ class _RoomListScreenState extends State<RoomListScreen> {
                     border: InputBorder.none,
                   ),
                   keyboardType: TextInputType.number,
-                  onChanged: (value) {
-                    setState(() {
-                      room.price = double.tryParse(value) ?? 0.0;
-                    });
-                  },
+                  controller: priceController,
                 ),
               ),
               SizedBox(
                 width: 70,
                 child: TextFormField(
-                  initialValue: room.roomNumber.toString(),
                   style: const TextStyle(fontSize: 14.0),
                   decoration: const InputDecoration(
                     labelText: 'Room nr',
@@ -196,31 +209,60 @@ class _RoomListScreenState extends State<RoomListScreen> {
                     border: InputBorder.none,
                   ),
                   keyboardType: TextInputType.number,
-                  onChanged: (value) {
-                    setState(() {
-                      room.roomNumber = int.tryParse(value) ?? 0;
-                    });
-                  },
+                  controller: numberController,
                 ),
               ),
               SizedBox(
                 width: 80,
-                child: TextFormField(
-                  initialValue: room.availability.toString(),
-                  style: const TextStyle(fontSize: 14.0),
+                child: DropdownButtonFormField(
+                  value: room.availability.toString(),
+                  items: const [
+                    DropdownMenuItem(
+                      value: 'true',
+                      child: Text('True'),
+                    ),
+                    DropdownMenuItem(
+                      value: 'false',
+                      child: Text('False'),
+                    ),
+                  ],
+                  onChanged: (value) {
+                    availabilityController.text = value!;
+                  },
                   decoration: const InputDecoration(
                     labelText: 'Availability',
                     filled: true,
                     fillColor: Colors.transparent,
                     border: InputBorder.none,
                   ),
-                  keyboardType: TextInputType.text,
-                  onChanged: (value) {
-                    setState(() {
-                      room.availability = value.toLowerCase() == 'true';
-                    });
-                  },
                 ),
+              ),
+              const SizedBox(width: 10),
+              SizedBox(
+                width: 100,
+                child: TextFormField(
+                  style: const TextStyle(fontSize: 14.0),
+                  decoration: const InputDecoration(
+                    labelText: 'Price',
+                    filled: true,
+                    fillColor: Colors.transparent,
+                    border: InputBorder.none,
+                  ),
+                  keyboardType: TextInputType.number,
+                  controller: priceController,
+                ),
+              ),
+              IconButton(
+                icon: const Icon(Icons.check),
+                onPressed: () {
+                  updateDatabase(
+                      room.number,
+                      int.tryParse(numberController.text) ?? 0,
+                      double.tryParse(priceController.text) ?? 0.0,
+                      typeController.text,
+                      bool.tryParse(availabilityController.text) ?? false,
+                  );
+                },
               ),
             ],
           ),
@@ -228,25 +270,22 @@ class _RoomListScreenState extends State<RoomListScreen> {
       ),
     );
   }
+  // TODO: implement adding rooms
+  Future<void> updateDatabase(int oldNumber, int newNumber, double price,
+      String type, bool availability) async {
 
-  void updateDatabase() {
-    for (var room in rooms) {
-      //print('Room Name: ${room.name}, Quantity: ${room.quantity}, Cost: ${room.cost}');
-      //TODO: Add database update logic here
+    String? roomId = await _roomService.getRoomKeyByNumber(oldNumber.toString());
+
+    Room? oldRoom = await _roomService.getRoomById(roomId!);
+    if (oldRoom == null) {
+      showToast("Something went wrong");
+    } else {
+      oldRoom.number = newNumber;
+      oldRoom.availability = availability;
+      oldRoom.type = type;
+      oldRoom.price = price;
+      await _roomService.updateRoom(roomId, oldRoom);
+      _getRooms();
     }
   }
-}
-
-class Room {
-  String type;
-  double price;
-  int roomNumber;
-  bool availability;
-
-  Room({
-    required this.type,
-    required this.price,
-    required this.roomNumber,
-    required this.availability,
-  });
 }

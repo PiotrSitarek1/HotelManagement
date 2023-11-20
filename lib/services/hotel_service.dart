@@ -17,18 +17,6 @@ class HotelService {
     return newHotelRef.key;
   }
 
-  Future<void> fetchAllHotels() async {
-    DatabaseEvent databaseEvent = await _hotelRef.once();
-    if (databaseEvent.snapshot.value != null &&
-        databaseEvent.snapshot.value is Map<dynamic, dynamic>) {
-      Map<dynamic, dynamic> hotelsMap =
-      databaseEvent.snapshot.value as Map<dynamic, dynamic>;
-      hotelsMap.forEach((key, value) {
-        log('hotel ID: $key, hotel Data: $value');
-      });
-    }
-  }
-
   Future<Hotel?> getHotelById(String hotelId) async {
     DataSnapshot snapshot = await _hotelRef.child(hotelId).get();
     if (snapshot.value == null) return null;

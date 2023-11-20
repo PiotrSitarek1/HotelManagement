@@ -217,7 +217,7 @@ class _OwnerPanelScreenState extends State<OwnerPanelScreen> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const RoomListScreen(),
+                          builder: (context) => RoomListScreen(hotelID),
                         ),
                       );
                     },
