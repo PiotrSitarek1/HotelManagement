@@ -321,18 +321,14 @@ class _OwnerPanelScreenState extends State<OwnerPanelScreen> {
     if (_pickedImage != null) {
       imageUrl = await uploadImageToFirebaseStorage(_pickedImage!);
     }
-
-    List<Service>? services = await _hotelService.getServicesByHotelId(hotelID);
-    Hotel updatedHotel = Hotel(
-        name: hotelNameController.text,
-        address: addressController.text,
-        email: emailController.text,
-        phoneNumber: phoneNumberController.text,
-        supervisorId: uID,
-        imageUrl: imageUrl,
-        services: services);
-
-    String result = await _hotelService.updateHotel(hotelID, updatedHotel);
+    String result = await _hotelService.updateHotelFields(
+        hotelID,
+        hotelNameController.text,
+        addressController.text,
+        emailController.text,
+        phoneNumberController.text,
+        uID,
+        imageUrl);
     if (result == "SUCCESS") {
       showToast("Hotel updated successfully");
       _getHotelData();
