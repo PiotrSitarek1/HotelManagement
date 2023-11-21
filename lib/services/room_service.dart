@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:firebase_database/firebase_database.dart';
 import 'package:hotel_manager/models/room_model.dart';
@@ -32,49 +31,32 @@ class RoomService {
     }
   }
 
-  // TODO: TO BE TESTED
   Future<List<Room>?> getRoomsByHotelId(String hotelId) async {
-    try {
-      DataSnapshot snapshot =
-          await _roomRef.orderByChild("hotelId").equalTo(hotelId).get();
-      if (snapshot.value == null) return null;
-      Map<String, dynamic> roomsData = json.decode(json.encode(snapshot.value));
-      List<Room> rooms = [];
-      roomsData.forEach((key, value) {
-        Map<String, dynamic> roomData = value;
-        rooms.add(Room.fromMap(roomData));
-      });
-      return rooms;
-    } catch (e) {
-      log('Error: $e');
-      return null;
-    }
+    Query query = _roomRef.orderByChild('hotelId').equalTo(hotelId);
+    DataSnapshot snapshot = await query.get();
+    if (snapshot.value == null) return null;
+    Map<String, dynamic> roomData = json.decode(json.encode(snapshot.value));
+    List<Room> rooms = [];
+    roomData.forEach((key, value) {
+      rooms.add(Room.fromMap(value));
+    });
+    return rooms;
   }
 
-  Future<Room?> getRoomByNumber(String roomNum) async {
-    try {
-      DataSnapshot snapshot =
-          await _roomRef.orderByChild("number").equalTo(roomNum).get();
-      if (snapshot.value == null) return null;
-      Map<String, dynamic> roomsData = json.decode(json.encode(snapshot.value));
-      String roomId = roomsData.keys.first;
-      return Room.fromMap(roomsData[roomId]);
-    } catch (e) {
-      log('Error: $e');
-      return null;
-    }
+  Future<Room?> getRoomByNumber(int roomNum) async {
+    Query query = _roomRef.orderByChild('number').equalTo(roomNum);
+    DataSnapshot snapshot = await query.get();
+    if (snapshot.value == null) return null;
+    Map<String, dynamic> roomData = json.decode(json.encode(snapshot.value));
+    String roomId = roomData.keys.first;
+    return Room.fromMap(roomData[roomId]);
   }
 
-  Future<String?> getRoomKeyByNumber(String roomNum) async {
-    try {
-      DataSnapshot snapshot =
-      await _roomRef.orderByChild("number").equalTo(roomNum).get();
-      if (snapshot.value == null) return null;
-      Map<String, dynamic> roomsData = json.decode(json.encode(snapshot.value));
-      return roomsData.keys.first;
-    } catch (e) {
-      log('Error: $e');
-      return null;
-    }
+  Future<String?> getRoomKeyByNumber(int roomNum) async {
+    Query query = _roomRef.orderByChild('number').equalTo(roomNum);
+    DataSnapshot snapshot = await query.get();
+    if (snapshot.value == null) return null;
+    Map<String, dynamic> roomData = json.decode(json.encode(snapshot.value));
+    return roomData.keys.first;
   }
 }
