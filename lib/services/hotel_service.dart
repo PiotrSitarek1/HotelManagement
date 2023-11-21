@@ -46,6 +46,32 @@ class HotelService {
     }
   }
 
+  Future<String> updateHotelFields(
+      String hotelId,
+      String newName,
+      String newAddress,
+      String newEmail,
+      String newPhone,
+      String uID,
+      String imageUrl) async {
+    try {
+      Map<String, dynamic> updateFields = {
+        "name": newName,
+        "address": newAddress,
+        "email": newEmail,
+        "phoneNumber": newPhone,
+        "supervisorId": uID,
+        "imageUrl": imageUrl,
+      };
+
+      await _hotelRef.child(hotelId).update(updateFields);
+
+      return "SUCCESS";
+    } catch (e) {
+      return e.toString();
+    }
+  }
+
   Future<void> deleteHotel(String hotelId) async {
     await _hotelRef.child(hotelId).remove();
   }
