@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:firebase_database/firebase_database.dart';
 import 'package:hotel_manager/models/service_model.dart';
@@ -15,6 +14,18 @@ class HotelService {
     DatabaseReference newHotelRef = _hotelRef.push();
     await newHotelRef.set(hotelMap);
     return newHotelRef.key;
+  }
+
+  Future<List<Hotel>?> getAllHotels() async {
+    DataSnapshot snapshot = await _hotelRef.get();
+    if (snapshot.value == null) return null;
+    List<Hotel> hotelsList = [];
+    Map<String, dynamic> hotelsData = json.decode(json.encode(snapshot.value));
+    hotelsData.forEach((key, value) {
+      Hotel hotel = Hotel.fromMap(value);
+      hotelsList.add(hotel);
+    });
+    return hotelsList;
   }
 
   Future<Hotel?> getHotelById(String hotelId) async {

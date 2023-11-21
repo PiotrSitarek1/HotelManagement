@@ -28,9 +28,20 @@ class UserService {
     }
   }
 
-  Future<void> updateUser(String userId, UserDb updatedUser) async {
-    Map<String, dynamic> userMap = updatedUser.toMap();
-    await _userRef.child(userId).update(userMap);
+  Future<String> updateUserFields(String userId, String firstname,
+      String lastname, String username, String imageUrl) async {
+    try {
+      Map<String, dynamic> updateFields = {
+        "firstname": firstname,
+        "lastname": lastname,
+        "username": username,
+        "imageUrl": imageUrl,
+      };
+      await _userRef.child(userId).update(updateFields);
+      return "SUCCESS";
+    } catch (e) {
+      return e.toString();
+    }
   }
 
   Future<void> deleteUser(String userId) async {

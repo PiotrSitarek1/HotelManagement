@@ -21,7 +21,7 @@ class _UserBottomNavigationView extends State<UserBottomNavigationView> {
   }
 
   final List<Widget> _pages = [
-    const AvilableHotelsView(),
+    const AvailableHotelsView(),
     const UserReservationsView(),
     const UserSettingsView()
   ];

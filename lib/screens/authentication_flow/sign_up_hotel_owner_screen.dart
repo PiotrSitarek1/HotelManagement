@@ -69,12 +69,12 @@ class _RegisterOwnerViewState extends State<RegisterOwnerView> {
         return;
       }
       UserDb newUser = UserDb(
-          firstNameController.text,
-          firstNameController.text,
-          lastNameController.text,
-          Role.supervisor,
-          hotelKey,
-          false);
+          username: firstNameController.text,
+          firstname: firstNameController.text,
+          lastname: lastNameController.text,
+          role: Role.supervisor,
+          hotelId: hotelKey,
+          activated: false);
       _userService.addUser(userCredential.user!.uid, newUser);
       showToast("User and Hotel registered - Hotel needs to be configured");
 
