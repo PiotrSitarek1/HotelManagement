@@ -3,35 +3,24 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:hotel_manager/components/hotel_widget.dart';
 import 'package:hotel_manager/models/hotel_model.dart';
 
-class AvilableHotelsView extends StatefulWidget {
-  const AvilableHotelsView({super.key});
+import '../../services/hotel_service.dart';
+
+class AvailableHotelsView extends StatefulWidget {
+  const AvailableHotelsView({super.key});
 
   @override
-  _AvilableHotelsView createState() => _AvilableHotelsView();
+  _AvailableHotelsView createState() => _AvailableHotelsView();
 }
 
-class _AvilableHotelsView extends State<AvilableHotelsView> {
-  final List<Hotel> _hotels = [
-    Hotel(
-        name: 'Hotel1',
-        address: '123 Main Street',
-        imageUrl:
-            'https://pix8.agoda.net/hotelImages/124/1246280/1246280_16061017110043391702.jpg?ca=6&ce=1&s=1024x768',
-        supervisorId: '1'),
-        //services: [1, 2, 3]),
-    Hotel(
-        name: 'Hotel 2',
-        address: 'Another Street 13',
-        imageUrl:
-            'https://pix8.agoda.net/hotelImages/124/1246280/1246280_16061017110043391702.jpg?ca=6&ce=1&s=1024x768',
-        supervisorId: '1'),
-        //services: [1, 2, 3]),
-    Hotel(
-        name: 'Hotel',
-        address: 'HotelAdress',
-        supervisorId: '1'),
-        //services: [1, 2, 3]),
-  ];
+class _AvailableHotelsView extends State<AvailableHotelsView> {
+  final HotelService _hotelService = HotelService();
+  late List<Hotel> _hotels = [];
+
+  @override
+  void initState(){
+    super.initState();
+    getHotels();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -65,7 +54,7 @@ class _AvilableHotelsView extends State<AvilableHotelsView> {
                 ),
               ),
             ),
-            Container(
+            SizedBox(
               height: hotelsHeight,
               child: ListView.builder(
                 itemCount: _hotels.length,
@@ -80,5 +69,13 @@ class _AvilableHotelsView extends State<AvilableHotelsView> {
         ),
       ),
     );
+  }
+
+  Future<void> getHotels() async{
+    final temp = await _hotelService.getAllHotels();
+    if(temp == null) return;
+    setState(() {
+      _hotels = temp;
+    });
   }
 }

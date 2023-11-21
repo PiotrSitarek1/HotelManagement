@@ -49,8 +49,13 @@ class _RegisterVisitorViewState extends State<RegisterVisitorView> {
     UserCredential? userCredential = await _userAuth.signUp(
         emailController.text.trim(), passwordController.text.trim());
     if (userCredential != null) {
-      UserDb user = UserDb(firstNameController.text, firstNameController.text,
-          lastNameController.text, Role.user, "0", true);
+      UserDb user = UserDb(
+          username: firstNameController.text,
+          firstname: firstNameController.text,
+          lastname: lastNameController.text,
+          role: Role.user,
+          hotelId: "0",
+          activated: true);
       _userService.addUser(userCredential.user!.uid, user);
       showToast("Registered");
       _navigateToUserSettings();

@@ -1,10 +1,14 @@
+import 'dart:io';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hotel_manager/screens/owner_flow/hotel_reservation_screen.dart';
 import 'package:hotel_manager/services/user_service.dart';
+import 'package:image_picker/image_picker.dart';
 import '../models/user_model.dart';
+import '../utils/Utils.dart';
 import 'authentication_flow/change_password_screen.dart';
 
 class UserSettingsView extends StatefulWidget {
@@ -18,7 +22,9 @@ class _UserSettingsViewState extends State<UserSettingsView> {
   final UserService _userService = UserService();
   final TextEditingController firstNameController = TextEditingController();
   final TextEditingController lastNameController = TextEditingController();
+  final TextEditingController userNameController = TextEditingController();
   late String uID;
+  File? _pickedImage;
 
   @override
   void initState() {
@@ -42,21 +48,55 @@ class _UserSettingsViewState extends State<UserSettingsView> {
   }
 
   Future<void> _getPersonalData() async {
-    // TODO: Read more fields
     UserDb? userDb = await _userService.getUserByUID(uID);
-    firstNameController.text = userDb!.firstname;
-    lastNameController.text = userDb.lastname;
+    if (userDb == null) {
+      showToast("Error occurred while reading user");
+    } else {
+      firstNameController.text = userDb.firstname;
+      lastNameController.text = userDb.lastname;
+      userNameController.text = userDb.username;
+
+      String userImageUrl = userDb.imageUrl;
+      if (userImageUrl != "") {
+        File? downloadedImage = await downloadImageFile(userImageUrl);
+        if (downloadedImage != null) {
+          setState(() {
+            _pickedImage = downloadedImage;
+          });
+        }
+      }
+    }
   }
 
-  void _changePersonalData() {
-    // TODO: Add logic to change personal data
-    final firstName = firstNameController.text;
-    final lastName = lastNameController.text;
+  Future<void> _changePersonalData() async {
+    String imageUrl = "";
+    if (_pickedImage != null) {
+      imageUrl = await uploadImageToFirebaseStorage(_pickedImage!);
+    }
+    String result = await _userService.updateUserFields(
+        uID,
+        firstNameController.text,
+        lastNameController.text,
+        userNameController.text,
+        imageUrl);
+    if (result == "SUCCESS") {
+      showToast("User updated successfully");
+      _getPersonalData();
+    } else {
+      showToast("Unexpected error: $result");
+    }
   }
 
-  void _changeProfilePicture() {
-    // TODO: Add logic to change the profile picture
-    // Implement image picker and update the user's profile picture.
+  Future<void> _changeProfilePicture() async {
+    final pickedFile =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (pickedFile == null) {
+      showToast("No image selected");
+      return;
+    }
+    setState(() {
+      _pickedImage = File(pickedFile.path);
+    });
   }
 
   @override
@@ -111,11 +151,18 @@ class _UserSettingsViewState extends State<UserSettingsView> {
                   Row(
                     children: [
                       const SizedBox(width: 15),
-                      const Icon(
-                        IconData(0xe043, fontFamily: 'MaterialIcons'),
-                        color: CupertinoColors.lightBackgroundGray,
-                        size: 72,
-                      ),
+                      _pickedImage != null
+                          ? Image.file(
+                              _pickedImage!,
+                              width: 72,
+                              height: 72,
+                              fit: BoxFit.cover,
+                            )
+                          : const Icon(
+                              IconData(0xe043, fontFamily: 'MaterialIcons'),
+                              size: 72,
+                              color: Colors.white70,
+                            ),
                       const SizedBox(width: 7),
                       TextButton(
                         onPressed: _changeProfilePicture,
@@ -157,6 +204,23 @@ class _UserSettingsViewState extends State<UserSettingsView> {
                       controller: lastNameController,
                       decoration: const InputDecoration(
                         labelText: 'Last Name',
+                        border: InputBorder.none,
+                        contentPadding: EdgeInsets.all(12.0),
+                      ),
+                      style: const TextStyle(color: Colors.black),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  Container(
+                    height: 50,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(borderRadius),
+                    ),
+                    child: TextFormField(
+                      controller: userNameController,
+                      decoration: const InputDecoration(
+                        labelText: 'Username',
                         border: InputBorder.none,
                         contentPadding: EdgeInsets.all(12.0),
                       ),

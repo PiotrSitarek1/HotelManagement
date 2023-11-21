@@ -12,7 +12,7 @@ class HotelWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     String imageUrl = hotel.imageUrl;
 
-    if (imageUrl == null || Uri.tryParse(imageUrl)?.isAbsolute == false) {
+    if (Uri.tryParse(imageUrl)?.isAbsolute == false) {
       imageUrl =
           'https://img.freepik.com/darmowe-wektory/plaskie-tlo-fasady-hotelu_23-2148157379.jpg?size=338&ext=jpg&ga=GA1.1.1826414947.1699747200&semt=sph';
     }
@@ -58,17 +58,17 @@ class HotelWidget extends StatelessWidget {
                           Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Text(
-                              hotel.name ?? 'Hotel_Name',
+                              hotel.name,
                               style: GoogleFonts.roboto(
                                   fontSize: 16,
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold),
                             ),
                           ),
-                          Text(hotel.address ?? 'Hotel_Adress',
+                          Text(hotel.address,
                               style: GoogleFonts.roboto(
                                   fontSize: 14, color: Colors.white)),
-                          Text(hotel.email ?? 'Hotel_Contact',
+                          Text(hotel.email,
                               style: GoogleFonts.roboto(
                                   fontSize: 14, color: Colors.white)),
                           Container(
