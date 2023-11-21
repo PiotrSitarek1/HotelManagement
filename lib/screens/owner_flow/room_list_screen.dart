@@ -1,21 +1,122 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hotel_manager/models/room_model.dart';
+import 'package:hotel_manager/services/room_service.dart';
+import '../../utils/Utils.dart';
 import 'owner_panel_screen.dart';
 
 class RoomListScreen extends StatefulWidget {
-  const RoomListScreen({super.key});
+  final String hotelID;
+
+  const RoomListScreen(this.hotelID, {super.key});
 
   @override
   _RoomListScreenState createState() => _RoomListScreenState();
 }
 
 class _RoomListScreenState extends State<RoomListScreen> {
-  // TODO: Here we want to fetch rooms that user already has
-  List<Room> rooms = [
-    Room(type: 'Standard', price: 100.0, roomNumber: 101, availability: true),
-    Room(type: 'Deluxe', price: 150.0, roomNumber: 201, availability: true),
-    Room(type: 'Suite', price: 250.0, roomNumber: 301, availability: false),
-  ];
+  late String hotelID;
+  final RoomService _roomService = RoomService();
+  late List<Room> rooms = [];
+  TextEditingController numberController = TextEditingController();
+  TextEditingController priceController = TextEditingController();
+  TextEditingController typeController = TextEditingController();
+  TextEditingController availabilityController = TextEditingController();
+
+  void _showAddRoomModal() {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return Container(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                controller: numberController,
+                keyboardType: TextInputType.number,
+                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                decoration: const InputDecoration(labelText: 'Number'),
+              ),
+              const SizedBox(height: 16),
+              TextField(
+                controller: priceController,
+                keyboardType:
+                    const TextInputType.numberWithOptions(decimal: false),
+                decoration: const InputDecoration(labelText: 'Price'),
+              ),
+              const SizedBox(height: 16),
+              TextField(
+                controller: typeController,
+                decoration: const InputDecoration(labelText: 'Type'),
+              ),
+              const SizedBox(height: 16),
+              SizedBox(
+                width: 60,
+                child: PopupMenuButton<String>(
+                  initialValue: "false",
+                  onSelected: (String value) {
+                    availabilityController.text = value;
+                  },
+                  itemBuilder: (BuildContext context) {
+                    return [
+                      const PopupMenuItem(
+                        value: 'true',
+                        child: Text('True'),
+                      ),
+                      const PopupMenuItem(
+                        value: 'false',
+                        child: Text('False'),
+                      ),
+                    ];
+                  },
+                  child: TextFormField(
+                    style: const TextStyle(fontSize: 14.0),
+                    decoration: const InputDecoration(
+                      labelText: 'Availability',
+                      filled: true,
+                      fillColor: Colors.transparent,
+                      border: InputBorder.none,
+                    ),
+                    controller: availabilityController,
+                    enabled: false,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+              ElevatedButton(
+                onPressed: () {
+                  _addNewRoom(
+                      int.tryParse(numberController.text) ?? 0,
+                      int.tryParse(priceController.text) ?? 0,
+                      typeController.text,
+                      bool.tryParse(availabilityController.text) ?? false);
+                  Navigator.pop(context);
+                },
+                child: const Text('Save'),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    hotelID = widget.hotelID;
+    _getRooms();
+  }
+
+  Future<void> _getRooms() async {
+    final temp = await _roomService.getRoomsByHotelId(hotelID);
+    if (temp == null) return;
+    setState(() {
+      rooms = temp;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,15 +147,7 @@ class _RoomListScreenState extends State<RoomListScreen> {
               ),
               const SizedBox(height: 20),
               ElevatedButton(
-                onPressed: () {
-                  setState(() {
-                    rooms.add(Room(
-                        type: 'New Room',
-                        price: 0.0,
-                        roomNumber: 0,
-                        availability: true));
-                  });
-                },
+                onPressed: _showAddRoomModal,
                 style: ButtonStyle(
                   backgroundColor:
                       MaterialStateProperty.all<Color>(Colors.blueGrey),
@@ -88,7 +181,7 @@ class _RoomListScreenState extends State<RoomListScreen> {
               const SizedBox(height: 10),
               ElevatedButton(
                 onPressed: () {
-                  updateDatabase();
+                  //updateDatabase();
                   Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
@@ -136,9 +229,17 @@ class _RoomListScreenState extends State<RoomListScreen> {
   }
 
   Widget buildRoomTile(Room room) {
+    TextEditingController numberControl = TextEditingController();
+    TextEditingController priceControl = TextEditingController();
+    TextEditingController typeControl = TextEditingController();
+    TextEditingController availabilityControl = TextEditingController();
+    numberControl.text = room.number.toString();
+    priceControl.text = room.price.toString();
+    typeControl.text = room.type.toString();
+    availabilityControl.text = room.availability.toString();
     return Container(
       height: 80,
-      margin: const EdgeInsets.symmetric(vertical: 2.0),
+      margin: const EdgeInsets.symmetric(vertical: 1.0),
       child: Card(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(30.0),
@@ -150,7 +251,6 @@ class _RoomListScreenState extends State<RoomListScreen> {
               SizedBox(
                 width: 80,
                 child: TextFormField(
-                  initialValue: room.type,
                   style: const TextStyle(fontSize: 14.0),
                   decoration: const InputDecoration(
                     labelText: 'Type',
@@ -158,17 +258,12 @@ class _RoomListScreenState extends State<RoomListScreen> {
                     fillColor: Colors.transparent,
                     border: InputBorder.none,
                   ),
-                  onChanged: (value) {
-                    setState(() {
-                      room.type = value;
-                    });
-                  },
+                  controller: typeControl,
                 ),
               ),
               SizedBox(
-                width: 80,
+                width: 55,
                 child: TextFormField(
-                  initialValue: room.price.toString(),
                   style: const TextStyle(fontSize: 14.0),
                   decoration: const InputDecoration(
                     labelText: 'Price',
@@ -177,17 +272,12 @@ class _RoomListScreenState extends State<RoomListScreen> {
                     border: InputBorder.none,
                   ),
                   keyboardType: TextInputType.number,
-                  onChanged: (value) {
-                    setState(() {
-                      room.price = double.tryParse(value) ?? 0.0;
-                    });
-                  },
+                  controller: priceControl,
                 ),
               ),
               SizedBox(
-                width: 70,
+                width: 60,
                 child: TextFormField(
-                  initialValue: room.roomNumber.toString(),
                   style: const TextStyle(fontSize: 14.0),
                   decoration: const InputDecoration(
                     labelText: 'Room nr',
@@ -196,31 +286,52 @@ class _RoomListScreenState extends State<RoomListScreen> {
                     border: InputBorder.none,
                   ),
                   keyboardType: TextInputType.number,
-                  onChanged: (value) {
-                    setState(() {
-                      room.roomNumber = int.tryParse(value) ?? 0;
-                    });
-                  },
+                  controller: numberControl,
                 ),
               ),
               SizedBox(
-                width: 80,
-                child: TextFormField(
+                width: 60,
+                child: PopupMenuButton<String>(
                   initialValue: room.availability.toString(),
-                  style: const TextStyle(fontSize: 14.0),
-                  decoration: const InputDecoration(
-                    labelText: 'Availability',
-                    filled: true,
-                    fillColor: Colors.transparent,
-                    border: InputBorder.none,
-                  ),
-                  keyboardType: TextInputType.text,
-                  onChanged: (value) {
-                    setState(() {
-                      room.availability = value.toLowerCase() == 'true';
-                    });
+                  onSelected: (String value) {
+                    availabilityControl.text = value;
                   },
+                  itemBuilder: (BuildContext context) {
+                    return [
+                      const PopupMenuItem(
+                        value: 'true',
+                        child: Text('True'),
+                      ),
+                      const PopupMenuItem(
+                        value: 'false',
+                        child: Text('False'),
+                      ),
+                    ];
+                  },
+                  child: TextFormField(
+                    style: const TextStyle(fontSize: 14.0),
+                    decoration: const InputDecoration(
+                      labelText: 'Availability',
+                      filled: true,
+                      fillColor: Colors.transparent,
+                      border: InputBorder.none,
+                    ),
+                    controller: availabilityControl,
+                    enabled: false,
+                  ),
                 ),
+              ),
+              IconButton(
+                icon: const Icon(Icons.check),
+                onPressed: () {
+                  updateRoom(
+                    room.number,
+                    int.tryParse(numberControl.text) ?? 0,
+                    int.tryParse(priceControl.text) ?? 0,
+                    typeControl.text,
+                    bool.tryParse(availabilityControl.text) ?? false,
+                  );
+                },
               ),
             ],
           ),
@@ -229,24 +340,40 @@ class _RoomListScreenState extends State<RoomListScreen> {
     );
   }
 
-  void updateDatabase() {
-    for (var room in rooms) {
-      //print('Room Name: ${room.name}, Quantity: ${room.quantity}, Cost: ${room.cost}');
-      //TODO: Add database update logic here
+  Future<void> _addNewRoom(
+      int number, int price, String type, bool availability) async {
+    final room = await _roomService.getRoomByNumber(number);
+    if (room != null) {
+      showToast("Room already added or number already picked");
+      return;
+    }
+    Room newRoom = Room(hotelID, type, price, number, availability);
+    await _roomService.addRoom(newRoom);
+    showToast("New room added");
+    rooms.add(newRoom);
+    setState(() {
+      rooms = rooms;
+    });
+  }
+
+  Future<void> updateRoom(int oldNumber, int newNumber, int price, String type,
+      bool availability) async {
+    final room = await _roomService.getRoomByNumber(newNumber);
+    if (room != null && room.number != oldNumber) {
+      showToast("Number already picked");
+      return;
+    }
+    String? roomId = await _roomService.getRoomKeyByNumber(oldNumber);
+    Room? oldRoom = await _roomService.getRoomById(roomId!);
+    if (oldRoom == null) {
+      showToast("Something went wrong");
+    } else {
+      oldRoom.number = newNumber;
+      oldRoom.availability = availability;
+      oldRoom.type = type;
+      oldRoom.price = price;
+      await _roomService.updateRoom(roomId, oldRoom);
+      _getRooms();
     }
   }
-}
-
-class Room {
-  String type;
-  double price;
-  int roomNumber;
-  bool availability;
-
-  Room({
-    required this.type,
-    required this.price,
-    required this.roomNumber,
-    required this.availability,
-  });
 }

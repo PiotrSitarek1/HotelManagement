@@ -1,10 +1,10 @@
 
 class Room {
-  final int hotelId;
-  final String type;
-  final double price;
-  final int number;
-  final bool availability;
+  String hotelId;
+  String type;
+  int price;
+  int number;
+  bool availability;
 
   Room(this.hotelId, this.type, this.price, this.number, this.availability);
 
@@ -20,11 +20,11 @@ class Room {
 
   factory Room.fromMap(Map<String, dynamic> map) {
     return Room(
-      map['hotelId'] as int,
-      map['type'] as String,
-      (map['price'] as num).toDouble(),
-      map['number'] as int,
-      map['availability'] as bool,
+      map['hotelId'] ?? '',
+      map['type'] ?? '',
+      map['price'] ?? 0,
+      map['number'] ?? 0,
+      map['availability'] ?? true,
     );
   }
 }
