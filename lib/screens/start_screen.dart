@@ -4,6 +4,7 @@ import 'package:hotel_manager/screens/authentication_flow/login_menu_screen.dart
 import 'package:hotel_manager/screens/user_flow/user_bottom_navigation.dart';
 
 import '/services/user_auth.dart';
+import 'owner_flow/owner_botton_navigation.dart';
 import 'owner_flow/owner_panel_screen.dart';
 
 class StartView extends StatefulWidget {
@@ -114,7 +115,7 @@ class _StartViewState extends State<StartView> {
   Future<void> _navigateToOwnerLogin() async {
     await _userAuth.signIn("owner@gmail.com", "owner123");
     Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => const OwnerPanelScreen(),
+      builder: (context) => const OwnerBottomNavigationView(),
     ));
   }
 }

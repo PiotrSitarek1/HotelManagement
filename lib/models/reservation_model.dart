@@ -4,7 +4,7 @@ class Reservation {
   final int roomNumber;
   final DateTime checkInDate;
   final DateTime checkOutDate;
-  final String status;
+  late final String status;
   final bool cancellationAllowed;
   final List<int> services;
 
@@ -29,8 +29,8 @@ class Reservation {
       map['userId'] as String,
       map['hotelId'] as String,
       map['roomNumber'] as int,
-      DateTime.parse(map['checkInDate']),
-      DateTime.parse(map['checkOutDate']),
+      map['checkInDate'] as DateTime,
+      map['checkOutDate'] as DateTime,
       map['status'] as String,
       map['cancellationAllowed'] as bool,
       List<int>.from(map['services'] ?? []),
