@@ -18,7 +18,6 @@ class _CurrentReservationsScreenState extends State<CurrentReservationsScreen> {
   late String hotelID;
   late String uID;
   late List<Reservation> reservations;
-  late List<String> reservationsKeys;
 
   @override
   void initState() {
@@ -26,7 +25,6 @@ class _CurrentReservationsScreenState extends State<CurrentReservationsScreen> {
     User? user = FirebaseAuth.instance.currentUser;
     uID = user!.uid;
     reservations = [];
-    reservationsKeys = [];
   }
 
   @override
@@ -65,11 +63,20 @@ class _CurrentReservationsScreenState extends State<CurrentReservationsScreen> {
                     } else {
                       final reservationsMap = snapshot.data!;
                       reservations.clear();
-                      reservationsKeys.clear();
 
                       reservationsMap.forEach((key, value) {
-                        reservations.add(value);
-                        reservationsKeys.add(key);
+                        Reservation reservation = Reservation.fromMap({
+                          'userId': value['userId'],
+                          'hotelId': value['hotelId'],
+                          'roomNumber': value['roomNumber'],
+                          'checkInDate': DateTime.parse(value['checkInDate']),
+                          'checkOutDate': DateTime.parse(value['checkOutDate']),
+                          'status': value['status'],
+                          'cancellationAllowed': value['cancellationAllowed'],
+                          'services': List<int>.from(value['services'] ?? []),
+                        });
+
+                        reservations.add(reservation);
                       });
 
                       return Column(
@@ -89,8 +96,7 @@ class _CurrentReservationsScreenState extends State<CurrentReservationsScreen> {
                               itemCount: reservations.length,
                               itemBuilder: (context, index) {
                                 final reservation = reservations[index];
-                                final reservationKey = reservationsKeys[index];
-                                return buildReservationTile(reservationKey,reservation);
+                                return buildReservationTile(reservation);
                               },
                             ),
                           ),
@@ -107,7 +113,7 @@ class _CurrentReservationsScreenState extends State<CurrentReservationsScreen> {
     );
   }
 
-  Widget buildReservationTile(String key, Reservation reservation) {
+  Widget buildReservationTile(Reservation reservation) {
     return Container(
       height: 80,
       margin: const EdgeInsets.symmetric(vertical: 1.0),
@@ -122,7 +128,7 @@ class _CurrentReservationsScreenState extends State<CurrentReservationsScreen> {
               SizedBox(
                 width: 90,
                 child: Text(
-                  'Room ${reservation.roomNumber}',
+                  'Room ${reservation.roomNumber ?? 'N/A'}',
                   style: GoogleFonts.roboto(
                     fontSize: 14.0,
                     fontWeight: FontWeight.bold,
@@ -133,7 +139,7 @@ class _CurrentReservationsScreenState extends State<CurrentReservationsScreen> {
               SizedBox(
                 width: 60,
                 child: Text(
-                  'Status: ${reservation.status}',
+                  'Status: ${reservation.status ?? 'N/A'}',
                   style: GoogleFonts.roboto(fontSize: 14.0),
                 ),
               ),
@@ -151,7 +157,7 @@ class _CurrentReservationsScreenState extends State<CurrentReservationsScreen> {
                 child: Checkbox(
                   value: reservation.status == 'Active',
                   onChanged: (value) async {
-                    await _acceptReservation(key,reservation, value ?? false);
+                    await _acceptReservation(reservation, value ?? false);
                   },
                 ),
               ),
@@ -172,11 +178,9 @@ class _CurrentReservationsScreenState extends State<CurrentReservationsScreen> {
   }
 
   Future<void> _acceptReservation(
-      String reservationId, Reservation reservation, bool newValue) async {
+      Reservation reservation, bool newValue) async {
     try {
       reservation.status = newValue ? 'Active' : 'Pending';
-      await _reservationServices.updateReservationStatus(
-          reservationId, newValue ? 'Active' : 'Pending');
       setState(() {});
 
       ScaffoldMessenger.of(context).showSnackBar(
