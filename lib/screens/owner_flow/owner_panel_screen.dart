@@ -1,10 +1,8 @@
-// owner_panel_screen.dart
 import 'dart:io' show File;
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:hotel_manager/models/service_model.dart';
 import 'package:hotel_manager/screens/owner_flow/room_list_screen.dart';
 import 'package:hotel_manager/screens/owner_flow/service_list_screen.dart';
 import 'package:hotel_manager/screens/user_settings_screen.dart';
@@ -72,7 +70,6 @@ class _OwnerPanelScreenState extends State<OwnerPanelScreen> {
   @override
   Widget build(BuildContext context) {
     Color customBluePrimary = Colors.blueGrey;
-    Color customBlueAccent = const Color.fromARGB(255, 5, 35, 75);
 
     return Scaffold(
       appBar: null,
@@ -142,46 +139,10 @@ class _OwnerPanelScreenState extends State<OwnerPanelScreen> {
                     ],
                   ),
                   const SizedBox(height: 10),
-                  TextFormField(
-                    controller: hotelNameController,
-                    decoration: const InputDecoration(
-                      labelText: 'Hotel Name',
-                      labelStyle: TextStyle(color: Colors.white),
-                      border: InputBorder.none,
-                      contentPadding: EdgeInsets.all(12.0),
-                    ),
-                    style: const TextStyle(color: Colors.white),
-                  ),
-                  TextFormField(
-                    controller: addressController,
-                    decoration: const InputDecoration(
-                      labelText: 'Address',
-                      labelStyle: TextStyle(color: Colors.white),
-                      border: InputBorder.none,
-                      contentPadding: EdgeInsets.all(12.0),
-                    ),
-                    style: const TextStyle(color: Colors.white),
-                  ),
-                  TextFormField(
-                    controller: emailController,
-                    decoration: const InputDecoration(
-                      labelText: 'Email',
-                      labelStyle: TextStyle(color: Colors.white),
-                      border: InputBorder.none,
-                      contentPadding: EdgeInsets.all(12.0),
-                    ),
-                    style: const TextStyle(color: Colors.white),
-                  ),
-                  TextFormField(
-                    controller: phoneNumberController,
-                    decoration: const InputDecoration(
-                      labelText: 'Phone Number',
-                      labelStyle: TextStyle(color: Colors.white),
-                      border: InputBorder.none,
-                      contentPadding: EdgeInsets.all(12.0),
-                    ),
-                    style: const TextStyle(color: Colors.white),
-                  ),
+                  buildTextFormField('Hotel Name', hotelNameController),
+                  buildTextFormField('Address', addressController),
+                  buildTextFormField('Email', emailController),
+                  buildTextFormField('Phone Number', phoneNumberController),
                   const SizedBox(height: 20),
                   GestureDetector(
                     onTap: () {
@@ -289,7 +250,7 @@ class _OwnerPanelScreenState extends State<OwnerPanelScreen> {
                           style: GoogleFonts.roboto(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
-                            color: customBlueAccent,
+                            color: Colors.black,
                           ),
                         ),
                       ),
@@ -335,5 +296,29 @@ class _OwnerPanelScreenState extends State<OwnerPanelScreen> {
     } else {
       showToast("Unexpected error: $result");
     }
+  }
+
+  Container buildTextFormField(
+      String labelText, TextEditingController controller) {
+    return Container(
+      height: 50,
+      margin: const EdgeInsets.symmetric(vertical: 10.0),
+      decoration: BoxDecoration(
+        color: Colors.white70,
+        borderRadius: BorderRadius.circular(20.0),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+        child: TextFormField(
+          controller: controller,
+          decoration: InputDecoration(
+            labelText: labelText,
+            labelStyle: const TextStyle(color: Colors.black),
+            border: InputBorder.none,
+          ),
+          style: const TextStyle(color: Colors.black),
+        ),
+      ),
+    );
   }
 }

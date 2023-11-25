@@ -56,7 +56,19 @@ class _CurrentReservationsScreenState extends State<CurrentReservationsScreen> {
                   ),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const CircularProgressIndicator();
+                      return Stack(
+                        children: [
+                          Image.asset(
+                            "assets/images/blank_background.png",
+                            fit: BoxFit.cover,
+                            width: double.infinity,
+                            height: double.infinity,
+                          ),
+                          const Center(
+                            child: CircularProgressIndicator(),
+                          ),
+                        ],
+                      );
                     } else if (snapshot.hasError) {
                       return Text('Error: ${snapshot.error}');
                     } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
@@ -75,22 +87,30 @@ class _CurrentReservationsScreenState extends State<CurrentReservationsScreen> {
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            'Current Reservations',
-                            style: GoogleFonts.roboto(
-                              fontSize: 20.0,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                            ),
+                          const SizedBox(height: 40),
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Center(
+                                child: Text(
+                                  'Current Reservations',
+                                  style: GoogleFonts.roboto(
+                                    fontSize: 25.0,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
-                          const SizedBox(height: 10),
                           Expanded(
                             child: ListView.builder(
                               itemCount: reservations.length,
                               itemBuilder: (context, index) {
                                 final reservation = reservations[index];
                                 final reservationKey = reservationsKeys[index];
-                                return buildReservationTile(reservationKey,reservation);
+                                return buildReservationTile(
+                                    reservationKey, reservation);
                               },
                             ),
                           ),
@@ -151,7 +171,7 @@ class _CurrentReservationsScreenState extends State<CurrentReservationsScreen> {
                 child: Checkbox(
                   value: reservation.status == 'Active',
                   onChanged: (value) async {
-                    await _acceptReservation(key,reservation, value ?? false);
+                    await _acceptReservation(key, reservation, value ?? false);
                   },
                 ),
               ),
