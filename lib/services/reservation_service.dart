@@ -26,20 +26,18 @@ class ReservationServices {
     return Reservation.fromMap(reservationData);
   }
 
-  Future<Map<String, dynamic>?> getReservationFromSingleHotel(String hotelID) async {
-    DataSnapshot snapshot = await _reservationRef.get();
-    if(snapshot.value == null) return null;
-    Map<String, dynamic> reservationData = json.decode(json.encode(snapshot.value));
-    Map<String, dynamic> reservationsFromSingleHotel = {};
-    reservationData.forEach((key, value) {
-      if(value['hotelId'] == hotelID){
-        reservationsFromSingleHotel[key] = value;
-      }
+  Future<Map<String, Reservation>?> getReservationFromSingleHotel(
+      String hotelID) async {
+    Query query = _reservationRef.orderByChild('hotelId').equalTo(hotelID);
+    DataSnapshot snapshot = await query.get();
+    if (snapshot.value == null) return null;
+    Map<String, dynamic> reservationsData =
+        json.decode(json.encode(snapshot.value));
+    Map<String, Reservation> reservations = {};
+    reservationsData.forEach((key, value) {
+      reservations[key] = Reservation.fromMap(value);
     });
-    if(reservationsFromSingleHotel.isNotEmpty){
-      return reservationsFromSingleHotel;
-    }
-    return null;
+    return reservations;
   }
 
   Future<Map<String, dynamic>?> getReservationForUser(String uID) async {
@@ -101,5 +99,12 @@ class ReservationServices {
   Future<void> updateReservation(String reservationId, Reservation reservation) async {
     Map<String, dynamic> userMap = reservation.toMap();
     await _reservationRef.child(reservationId).update(userMap);
+  }
+
+  Future<String> updateReservationStatus(
+      String reservationId, String status) async {
+    Map<String, dynamic> updateFields = {"status": status};
+    await _reservationRef.child(reservationId).update(updateFields);
+    return "SUCCESS";
   }
 }
