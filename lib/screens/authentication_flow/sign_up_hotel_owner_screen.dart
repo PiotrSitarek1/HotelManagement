@@ -1,9 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hotel_manager/models/hotel_model.dart';
-import 'package:hotel_manager/screens/owner_flow/owner_panel_screen.dart';
 import 'package:hotel_manager/services/hotel_service.dart';
 import 'package:hotel_manager/utils/Utils.dart';
+import '../owner_flow/owner_botton_navigation.dart';
 import '/models/user_model.dart';
 import '/services/user_auth.dart';
 import '/services/user_service.dart';
@@ -53,7 +53,7 @@ class _RegisterOwnerViewState extends State<RegisterOwnerView> {
 
   void _navigateToOwnerFlow() {
     Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => const OwnerPanelScreen(),
+      builder: (context) => const OwnerBottomNavigationView(),
     ));
   }
 
