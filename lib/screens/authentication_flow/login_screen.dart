@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:hotel_manager/screens/owner_flow/owner_panel_screen.dart';
+import 'package:hotel_manager/screens/owner_flow/owner_botton_navigation.dart';
 import 'package:hotel_manager/screens/authentication_flow/sign_up_choice_screen.dart';
 import 'package:hotel_manager/screens/user_flow/user_bottom_navigation.dart';
 import 'package:hotel_manager/services/user_service.dart';
@@ -60,7 +60,7 @@ class _LoginViewState extends State<LoginView> {
 
   void _navigateToLoggedOwner() {
     Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => const OwnerPanelScreen(),
+      builder: (context) => const OwnerBottomNavigationView(),
     ));
   }
 
