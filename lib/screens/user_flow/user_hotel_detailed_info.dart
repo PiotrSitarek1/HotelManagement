@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hotel_manager/components/service_widget.dart';
 import 'package:hotel_manager/models/service_model.dart';
+import 'package:hotel_manager/screens/user_flow/hotel_rooms_list_screen.dart';
 import 'package:hotel_manager/screens/user_flow/user_bottom_navigation.dart';
 
 class UserHotelDetailedInfoScreen extends StatefulWidget {
@@ -23,6 +24,14 @@ class _UserHotelDetailedInfoScreen extends State<UserHotelDetailedInfoScreen> {
     Navigator.of(context).push(MaterialPageRoute(
       builder: (context) => const UserBottomNavigationView(),
     ));
+  }
+
+  void _NavigateToRooms() {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const HotelRoomsListView(),
+        ));
   }
 
   @override
@@ -135,7 +144,8 @@ class _UserHotelDetailedInfoScreen extends State<UserHotelDetailedInfoScreen> {
                 ),
               ),
             ),
-            ElevatedButton(onPressed: () {}, child: const Text('Show Rooms'))
+            ElevatedButton(
+                onPressed: _NavigateToRooms, child: const Text('Show Rooms'))
           ],
         ),
       ),
