@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 import 'package:hotel_manager/components/room_widget.dart';
 import 'package:hotel_manager/models/room_model.dart';
+import 'package:hotel_manager/screens/user_flow/user_booking_screen.dart';
 import 'package:hotel_manager/services/room_service.dart';
 
 class HotelRoomsListView extends StatefulWidget {
@@ -18,7 +19,7 @@ class _HotelRoomsListView extends State<HotelRoomsListView> {
   final List<Room> _rooms2 = [
     Room('hotel_1', 'Single', 100, 10, true),
     Room('hotel_1', 'Double', 150, 20, false),
-    Room('hotel_1', 'Suite', 250, 5, true),
+    Room('hotel_1', 'Biggo', 250, 5, true),
   ];
   @override
   void initState() {
@@ -71,7 +72,7 @@ class _HotelRoomsListView extends State<HotelRoomsListView> {
                     child: ListView.builder(
                       itemCount: _rooms2.length,
                       itemBuilder: (context, index) {
-                        return roomWidget(
+                        return RoomWidget(
                           room: _rooms2[index], //todo zamienic na rooms
                         );
                       },
