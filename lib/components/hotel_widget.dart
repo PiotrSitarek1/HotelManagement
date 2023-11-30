@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hotel_manager/screens/user_flow/user_hotel_detailed_info.dart';
 
 import '../models/hotel_model.dart';
 
@@ -10,6 +11,14 @@ class HotelWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    void _NavigateToHotelDetails() {
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => UserHotelDetailedInfoScreen(),
+          ));
+    }
+
     String imageUrl = hotel.imageUrl;
 
     if (Uri.tryParse(imageUrl)?.isAbsolute == false) {
@@ -73,7 +82,7 @@ class HotelWidget extends StatelessWidget {
                                   fontSize: 14, color: Colors.white)),
                           Container(
                             child: ElevatedButton(
-                                onPressed: () {},
+                                onPressed: _NavigateToHotelDetails,
                                 child: Text(
                                   "More Information",
                                   style: GoogleFonts.roboto(
