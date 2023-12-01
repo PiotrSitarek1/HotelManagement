@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -5,22 +6,40 @@ import 'package:hotel_manager/components/room_widget.dart';
 import 'package:hotel_manager/models/room_model.dart';
 import 'package:hotel_manager/screens/user_flow/user_booking_screen.dart';
 import 'package:hotel_manager/services/room_service.dart';
+import 'package:hotel_manager/services/user_service.dart';
+import 'package:hotel_manager/utils/Utils.dart';
+
+import '../../models/hotel_model.dart';
+import '../../models/user_model.dart';
 
 class HotelRoomsListView extends StatefulWidget {
-  const HotelRoomsListView({super.key});
+  final Hotel hotel;
+  const HotelRoomsListView({Key? key, required this.hotel}) : super(key: key);
 
   @override
-  _HotelRoomsListView createState() => _HotelRoomsListView();
+  _HotelRoomsListView createState() => _HotelRoomsListView(hotel);
 }
 
 class _HotelRoomsListView extends State<HotelRoomsListView> {
+  final UserService _userService = UserService();
+  final Hotel hotel;
+  _HotelRoomsListView(this.hotel){
+    setRooms();
+  }
+
   final RoomService _roomService = RoomService();
   late List<Room> _rooms = [];
-  final List<Room> _rooms2 = [
+  List<Room> _rooms2 = [
     Room('hotel_1', 'Single', 100, 10, true),
     Room('hotel_1', 'Double', 150, 20, false),
     Room('hotel_1', 'Biggo', 250, 5, true),
   ];
+
+  void setRooms() async {
+    String? hotelId = await _userService.getHotelByUserUID(hotel.supervisorId);
+    _rooms2 = (await _roomService.getRoomsByHotelId(hotelId!))!;
+  }
+
   @override
   void initState() {
     super.initState();
@@ -70,10 +89,10 @@ class _HotelRoomsListView extends State<HotelRoomsListView> {
                   child: SizedBox(
                     height: hotelsHeight,
                     child: ListView.builder(
-                      itemCount: _rooms2.length,
+                      itemCount: _rooms.length,
                       itemBuilder: (context, index) {
                         return RoomWidget(
-                          room: _rooms2[index], //todo zamienic na rooms
+                          room: _rooms[index],
                         );
                       },
                     ),
@@ -88,8 +107,9 @@ class _HotelRoomsListView extends State<HotelRoomsListView> {
   }
 
   Future<void> getRooms() async {
-    final temp = await _roomService
-        .getRoomsByHotelId('id'); //todo przekazać hotel do tego widoku
+    String? hotelId = await _userService.getHotelByUserUID(hotel.supervisorId);
+    final temp = await _roomService.getRoomsByHotelId(hotelId!);
+
     if (temp == null) return;
     setState(() {
       _rooms = temp;

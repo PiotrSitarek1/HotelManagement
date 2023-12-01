@@ -15,7 +15,7 @@ class HotelWidget extends StatelessWidget {
       Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => UserHotelDetailedInfoScreen(),
+            builder: (context) => UserHotelDetailedInfoScreen(hotel: hotel),
           ));
     }
 

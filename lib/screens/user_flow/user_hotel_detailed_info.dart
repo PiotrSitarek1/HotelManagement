@@ -1,24 +1,57 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hotel_manager/components/service_widget.dart';
+import 'package:hotel_manager/models/hotel_model.dart';
 import 'package:hotel_manager/models/service_model.dart';
 import 'package:hotel_manager/screens/user_flow/hotel_rooms_list_screen.dart';
 import 'package:hotel_manager/screens/user_flow/user_bottom_navigation.dart';
+import 'package:hotel_manager/services/hotel_service.dart';
+import 'package:hotel_manager/services/user_service.dart';
+import 'package:hotel_manager/utils/Utils.dart';
+
+import '../../models/user_model.dart';
 
 class UserHotelDetailedInfoScreen extends StatefulWidget {
-  const UserHotelDetailedInfoScreen({Key? key}) : super(key: key);
+  final Hotel hotel;
+
+  const UserHotelDetailedInfoScreen({Key? key, required this.hotel}) : super(key: key);
 
   @override
-  _UserHotelDetailedInfoScreen createState() => _UserHotelDetailedInfoScreen();
+  _UserHotelDetailedInfoScreen createState() => _UserHotelDetailedInfoScreen(hotel);
 }
 
 class _UserHotelDetailedInfoScreen extends State<UserHotelDetailedInfoScreen> {
-  final List<Service> _services = [
-    Service('Spa', 50),
-    Service('Gym', 75),
-    Service('Billard', 100),
-    Service('Restaurant', 50),
-  ];
+  String hotelName = "", adress = "", email = "", phoneNum = "", imageUrl = "";
+  final Hotel hotel;
+  _UserHotelDetailedInfoScreen(this.hotel);
+  HotelService _hotelService = HotelService();
+
+  final List<Service> _services = [];
+
+
+
+  setHotelData() async{
+    UserService owner = UserService();
+    String? hotelId = await owner.getHotelByUserUID(hotel.supervisorId);
+    if (hotelId == null) return;
+
+    final temp = await _hotelService.getServicesByHotelId(hotelId);
+    if (temp == null) return;
+    _services.clear();
+    _services.addAll(temp);
+
+    setState(() {
+      hotelName = hotel.name;
+      adress = hotel.address;
+      email = hotel.email;
+      phoneNum = hotel.phoneNumber;
+      imageUrl = hotel.imageUrl;
+
+      for(int i = 0; i < hotel.services.length; i++) {
+        _services.add(Service(hotel.services[i].name, hotel.services[i].price));
+      }
+    });
+  }
 
   void _navigateToHotelsList() {
     Navigator.of(context).push(MaterialPageRoute(
@@ -30,12 +63,15 @@ class _UserHotelDetailedInfoScreen extends State<UserHotelDetailedInfoScreen> {
     Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => const HotelRoomsListView(),
+          builder: (context) => HotelRoomsListView(hotel: hotel),
         ));
   }
 
   @override
   Widget build(BuildContext context) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      setHotelData();
+    });
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
     const imageUrl =
@@ -83,12 +119,12 @@ class _UserHotelDetailedInfoScreen extends State<UserHotelDetailedInfoScreen> {
                           child: Column(
                         children: [
                           Text(
-                            'Hotel Name',
+                            hotelName,
                             style: GoogleFonts.roboto(
                                 fontSize: 24, fontWeight: FontWeight.w900),
                           ),
                           Text(
-                            'Adress',
+                            adress,
                             style: GoogleFonts.roboto(
                                 color: Colors.white,
                                 fontSize: 16,
@@ -102,12 +138,12 @@ class _UserHotelDetailedInfoScreen extends State<UserHotelDetailedInfoScreen> {
                                 fontWeight: FontWeight.bold),
                           ),
                           Text(
-                            'Email@email.com',
+                            email,
                             style: GoogleFonts.roboto(
                                 color: Colors.white, fontSize: 16),
                           ),
                           Text(
-                            ' 425 425 425',
+                            phoneNum,
                             style: GoogleFonts.roboto(
                                 color: Colors.white, fontSize: 16),
                           ),

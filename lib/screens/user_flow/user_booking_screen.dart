@@ -1,33 +1,77 @@
 // import 'dart:html';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import 'package:hotel_manager/components/room_widget.dart';
 import 'package:hotel_manager/components/service_widget_highlight.dart';
+import 'package:hotel_manager/models/reservation_model.dart';
 import 'package:hotel_manager/models/room_model.dart';
 import 'package:hotel_manager/models/service_model.dart';
-import 'package:hotel_manager/services/room_service.dart';
+import 'package:hotel_manager/services/hotel_service.dart';
+import 'package:hotel_manager/services/reservation_service.dart';
+import 'package:hotel_manager/services/user_auth.dart';
+
+import '../../models/hotel_model.dart';
+import '../../models/user_model.dart';
+import '../../services/user_service.dart';
 
 class UserBookingView extends StatefulWidget {
-  const UserBookingView({super.key});
+  final Room room;
+  const UserBookingView({Key? key, required this.room}) : super(key: key);
 
   @override
-  _UserBookingView createState() => _UserBookingView();
+  _UserBookingView createState() => _UserBookingView(room);
 }
 
 class _UserBookingView extends State<UserBookingView> {
-  final int _totalPrice = 999;
-  final List<Service> _services = [
-    Service('Spa', 50),
-    Service('Gym', 75),
-    Service('Billard', 100),
-    Service('Restaurant', 50),
-  ];
+  final UserService _userService = UserService();
+  final UserAuth _userAuth = UserAuth();
+  final ReservationServices _reservationServices = ReservationServices();
+  User? user = FirebaseAuth.instance.currentUser;
+  final HotelService _hotelService = HotelService();
+  int _totalPrice = 0;
+  String hotelName = "", adress = "", contact = "", ownersName = "", ownersLastName = "";
+  final List<Service> _services = [];
+  final Room room;
+  _UserBookingView(this.room);
+
+  Future<void> setData() async{
+    Hotel? tempHotel = await _hotelService.getHotelById(room.hotelId);
+    if(tempHotel == null) return;
+    UserDb? owner = await _userService.getUserByUID(tempHotel.supervisorId);
+    if(owner == null) return;
+    final temp = await _hotelService.getServicesByHotelId(room.hotelId);
+    setState(() {
+      hotelName = tempHotel.name;
+      adress = tempHotel.address;
+      contact = tempHotel.email;
+      ownersName = owner.firstname;
+      ownersLastName = owner.lastname;
+
+      if (temp == null) return;
+      _services.clear();
+      _services.addAll(temp);
+
+      _totalPrice = room.price;
+      for(int i = 0; i < _services.length; i++){
+         _totalPrice += _services[i].price;
+       }
+    });
+
+  }
+
+  void ReserveRoom(){
+    _hotelService.getHotelById(room.hotelId);
+    String uID = user!.uid;
+    Reservation reservation = Reservation(uID, room.hotelId, room.number, DateTime.now(), DateTime.now(), "Pending", true, []);
+    _reservationServices.addReservation(reservation);
+  }
 
   @override
   void initState() {
     super.initState();
+    setData();
   }
 
   // void _showDatePicker() {
@@ -85,16 +129,16 @@ class _UserBookingView extends State<UserBookingView> {
                         color: Colors.white.withOpacity(0.5),
                         child: Column(children: [
                           Text(
-                            'Hotel Name',
+                            hotelName,
                             style: GoogleFonts.roboto(
                                 fontSize: 20, fontWeight: FontWeight.bold),
                           ),
                           Text(
-                            'Adress',
+                            adress,
                             style: GoogleFonts.roboto(fontSize: 18),
                           ),
                           Text(
-                            'Contact',
+                            contact,
                             style: GoogleFonts.roboto(fontSize: 18),
                           )
                         ]),
@@ -142,11 +186,11 @@ class _UserBookingView extends State<UserBookingView> {
                                 fontSize: 20, fontWeight: FontWeight.bold),
                           ),
                           Text(
-                            'Lorem',
+                            ownersName,
                             style: GoogleFonts.roboto(fontSize: 18),
                           ),
                           Text(
-                            'Ipsum',
+                            ownersLastName,
                             style: GoogleFonts.roboto(fontSize: 18),
                           )
                         ]),
@@ -222,7 +266,7 @@ class _UserBookingView extends State<UserBookingView> {
                 ),
               ),
               ElevatedButton(
-                  onPressed: () {},
+                  onPressed: ReserveRoom,
                   child: Text(
                     'Reserve',
                     style: GoogleFonts.roboto(

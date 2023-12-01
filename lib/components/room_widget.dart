@@ -14,7 +14,7 @@ class RoomWidget extends StatelessWidget {
       Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => UserBookingView(),
+            builder: (context) => UserBookingView(room: room),
           ));
     }
 
