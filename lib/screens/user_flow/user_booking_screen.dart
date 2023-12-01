@@ -1,8 +1,8 @@
-// import 'dart:html';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:date_picker_plus/date_picker_plus.dart';
+import 'package:intl/intl.dart';
 
 import 'package:hotel_manager/components/service_widget_highlight.dart';
 import 'package:hotel_manager/models/reservation_model.dart';
@@ -25,22 +25,27 @@ class UserBookingView extends StatefulWidget {
 }
 
 class _UserBookingView extends State<UserBookingView> {
+  DateTime? reservationDate = DateTime.now();
   final UserService _userService = UserService();
   final UserAuth _userAuth = UserAuth();
   final ReservationServices _reservationServices = ReservationServices();
   User? user = FirebaseAuth.instance.currentUser;
   final HotelService _hotelService = HotelService();
   int _totalPrice = 0;
-  String hotelName = "", adress = "", contact = "", ownersName = "", ownersLastName = "";
+  String hotelName = "",
+      adress = "",
+      contact = "",
+      ownersName = "",
+      ownersLastName = "";
   final List<Service> _services = [];
   final Room room;
   _UserBookingView(this.room);
 
-  Future<void> setData() async{
+  Future<void> setData() async {
     Hotel? tempHotel = await _hotelService.getHotelById(room.hotelId);
-    if(tempHotel == null) return;
+    if (tempHotel == null) return;
     UserDb? owner = await _userService.getUserByUID(tempHotel.supervisorId);
-    if(owner == null) return;
+    if (owner == null) return;
     final temp = await _hotelService.getServicesByHotelId(room.hotelId);
     setState(() {
       hotelName = tempHotel.name;
@@ -54,17 +59,17 @@ class _UserBookingView extends State<UserBookingView> {
       _services.addAll(temp);
 
       _totalPrice = room.price;
-      for(int i = 0; i < _services.length; i++){
-         _totalPrice += _services[i].price;
-       }
+      for (int i = 0; i < _services.length; i++) {
+        _totalPrice += _services[i].price;
+      }
     });
-
   }
 
-  void ReserveRoom(){
+  void ReserveRoom() {
     _hotelService.getHotelById(room.hotelId);
     String uID = user!.uid;
-    Reservation reservation = Reservation(uID, room.hotelId, room.number, DateTime.now(), DateTime.now(), "Pending", true, []);
+    Reservation reservation = Reservation(uID, room.hotelId, room.number,
+        DateTime.now(), DateTime.now(), "Pending", true, []);
     _reservationServices.addReservation(reservation);
   }
 
@@ -74,13 +79,16 @@ class _UserBookingView extends State<UserBookingView> {
     setData();
   }
 
-  // void _showDatePicker() {
-  //   showDatePicker(
-  //       context: context,
-  //       initialDate: DateTime.now(),
-  //       firstDate: DateTime(2022, 12, 12),
-  //       lastDate: DateTime(2100, 12, 12));
-  // }
+  void _showDatePicker() {
+    showDatePickerDialog(
+      context: context,
+      initialDate: DateTime.now(),
+      minDate: DateTime(2021, 1, 1),
+      maxDate: DateTime(2024, 12, 31),
+    );
+  }
+
+  TappedChange tp = TappedChange();
 
   @override
   Widget build(BuildContext context) {
@@ -220,7 +228,10 @@ class _UserBookingView extends State<UserBookingView> {
                               const SizedBox(
                                 width: 32,
                               ),
-                              Text('Date: 03.12.2023',
+                              Text(
+                                  DateFormat(
+                                    'dd.MM.yyyy',
+                                  ).format(reservationDate!),
                                   style: GoogleFonts.roboto(
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold)),
@@ -228,8 +239,20 @@ class _UserBookingView extends State<UserBookingView> {
                                 width: 16,
                               ),
                               GestureDetector(
-                                onTap: () {
-                                  //_showDatePicker;
+                                onTap: () async {
+                                  final date = await showDatePickerDialog(
+                                    context: context,
+                                    initialDate: DateTime.now(),
+                                    maxDate: DateTime.now()
+                                        .add(const Duration(days: 365 * 3)),
+                                    minDate: DateTime.now()
+                                        .subtract(const Duration(days: 31)),
+                                  );
+                                  if (date != null) {
+                                    setState(() {
+                                      reservationDate = date;
+                                    });
+                                  }
                                 },
                                 child: Text(
                                   "Edit",
@@ -247,18 +270,23 @@ class _UserBookingView extends State<UserBookingView> {
                               itemCount: _services.length,
                               itemBuilder: (context, index) {
                                 return ServiceWidgetHighlight(
-                                    service: _services[index]);
+                                    tp: tp, service: _services[index]);
                               },
                             ),
                           ),
-                          Text(
-                            'Total Price : ${_totalPrice}', //Todo count the total price, room + services
-                            textAlign: TextAlign.right,
-                            style: GoogleFonts.roboto(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          )
+                          ListenableBuilder(
+                            listenable: tp,
+                            builder: (BuildContext context, Widget? child) {
+                              _totalPrice += tp.price;
+                              return Text(
+                                'Total Price: ${_totalPrice}',
+                                style: GoogleFonts.roboto(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              );
+                            },
+                          ),
                         ],
                       ),
                     ),
@@ -271,7 +299,7 @@ class _UserBookingView extends State<UserBookingView> {
                     'Reserve',
                     style: GoogleFonts.roboto(
                         fontSize: 20, fontWeight: FontWeight.bold),
-                  ))
+                  )),
             ],
           ),
         ),
