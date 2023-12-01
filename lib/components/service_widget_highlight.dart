@@ -5,13 +5,38 @@ import 'package:hotel_manager/models/service_model.dart';
 // ignore: must_be_immutable
 class ServiceWidgetHighlight extends StatefulWidget {
   final Service service;
+  final TappedChange tp;
   bool _checked = false;
   Color _colorContainer = Colors.white.withOpacity(0.9);
+  bool get checked => _checked;
 
-  ServiceWidgetHighlight({required this.service, Key? key}) : super(key: key);
+  ServiceWidgetHighlight({required this.service, required this.tp, Key? key})
+      : super(key: key);
 
   @override
   _ServiceWidgetHighlight createState() => _ServiceWidgetHighlight();
+}
+
+class TappedChange with ChangeNotifier {
+  bool _tapped = false;
+  bool get tapped => _tapped;
+  int _price = 0;
+  int get price => _price;
+  void _toggletapped() {
+    _tapped = !tapped;
+    notifyListeners();
+    debugPrint('Tapped');
+  }
+
+  void _setPriceOfTapped(int newPrice) {
+    if (!_tapped) {
+      newPrice = newPrice * -1;
+    }
+    _price = newPrice;
+    notifyListeners();
+    debugPrint('new Price set');
+    print(_price);
+  }
 }
 
 class _ServiceWidgetHighlight extends State<ServiceWidgetHighlight> {
@@ -24,6 +49,8 @@ class _ServiceWidgetHighlight extends State<ServiceWidgetHighlight> {
         onTap: () {
           setState(() {
             widget._checked = !widget._checked;
+            widget.tp._toggletapped();
+            widget.tp._setPriceOfTapped(widget.service.price);
             widget._colorContainer =
                 widget._checked ? Colors.green : Colors.white.withOpacity(0.9);
           });
