@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:date_picker_plus/date_picker_plus.dart';
+import 'package:intl/intl.dart';
 
 import 'package:hotel_manager/components/service_widget_highlight.dart';
 import 'package:hotel_manager/models/reservation_model.dart';
@@ -23,6 +25,7 @@ class UserBookingView extends StatefulWidget {
 }
 
 class _UserBookingView extends State<UserBookingView> {
+  DateTime? reservationDate = DateTime.now();
   final UserService _userService = UserService();
   final UserAuth _userAuth = UserAuth();
   final ReservationServices _reservationServices = ReservationServices();
@@ -77,14 +80,16 @@ class _UserBookingView extends State<UserBookingView> {
   }
 
   void _showDatePicker() {
-    showDatePicker(
-        context: context,
-        initialDate: DateTime.now(),
-        firstDate: DateTime(2022, 12, 12),
-        lastDate: DateTime(2100, 12, 12));
+    showDatePickerDialog(
+      context: context,
+      initialDate: DateTime.now(),
+      minDate: DateTime(2021, 1, 1),
+      maxDate: DateTime(2024, 12, 31),
+    );
   }
 
   TappedChange tp = TappedChange();
+
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
@@ -223,7 +228,10 @@ class _UserBookingView extends State<UserBookingView> {
                               const SizedBox(
                                 width: 32,
                               ),
-                              Text('Date: 03.12.2023',
+                              Text(
+                                  DateFormat(
+                                    'dd.MM.yyyy',
+                                  ).format(reservationDate!),
                                   style: GoogleFonts.roboto(
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold)),
@@ -231,9 +239,20 @@ class _UserBookingView extends State<UserBookingView> {
                                 width: 16,
                               ),
                               GestureDetector(
-                                onTap: () {
-                                  _showDatePicker;
-                                  debugPrint('DatePicker Clicked');
+                                onTap: () async {
+                                  final date = await showDatePickerDialog(
+                                    context: context,
+                                    initialDate: DateTime.now(),
+                                    maxDate: DateTime.now()
+                                        .add(const Duration(days: 365 * 3)),
+                                    minDate: DateTime.now()
+                                        .subtract(const Duration(days: 31)),
+                                  );
+                                  if (date != null) {
+                                    setState(() {
+                                      reservationDate = date;
+                                    });
+                                  }
                                 },
                                 child: Text(
                                   "Edit",
