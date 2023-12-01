@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hotel_manager/models/reservation_model.dart';
 import 'package:hotel_manager/services/reservation_service.dart';
+import 'package:hotel_manager/services/room_service.dart';
 import 'package:hotel_manager/services/user_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+
+import '../../models/room_model.dart';
 
 class CurrentReservationsScreen extends StatefulWidget {
   const CurrentReservationsScreen({Key? key}) : super(key: key);
@@ -15,6 +18,7 @@ class CurrentReservationsScreen extends StatefulWidget {
 
 class _CurrentReservationsScreenState extends State<CurrentReservationsScreen> {
   final ReservationServices _reservationServices = ReservationServices();
+  final RoomService roomService = RoomService();
   late String hotelID;
   late String uID;
   late List<Reservation> reservations;
@@ -195,6 +199,7 @@ class _CurrentReservationsScreenState extends State<CurrentReservationsScreen> {
       String reservationId, Reservation reservation, bool newValue) async {
     try {
       reservation.status = newValue ? 'Active' : 'Pending';
+      setRoom(reservation, newValue);
       await _reservationServices.updateReservationStatus(
           reservationId, newValue ? 'Active' : 'Pending');
       setState(() {});
@@ -212,5 +217,13 @@ class _CurrentReservationsScreenState extends State<CurrentReservationsScreen> {
         ),
       );
     }
+  }
+  void setRoom(Reservation reservation, bool isActive) async {
+    Room? room = await roomService.getRoomByNumber(reservation.roomNumber);
+    String? roomId = await roomService.getRoomKeyByNumber(reservation.roomNumber);
+    if(room == null || roomId == null) return;
+    room.availability = !isActive;
+    roomService.updateRoom(roomId, room);
+    return;
   }
 }
