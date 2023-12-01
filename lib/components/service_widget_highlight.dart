@@ -28,14 +28,24 @@ class TappedChange with ChangeNotifier {
     debugPrint('Tapped');
   }
 
-  void _setPriceOfTapped(int newPrice) {
-    if (!_tapped) {
-      newPrice = newPrice * -1;
-    }
+  // void _setPriceOfTapped(int newPrice) {
+  //   if (!_tapped) {
+  //     newPrice = newPrice * -1;
+  //   }
+  //   _price = newPrice;
+  //   notifyListeners();
+  //   debugPrint('new Price set');
+  //   print(_price);
+  // }
+
+  void _addPrice(int newPrice) {
     _price = newPrice;
     notifyListeners();
-    debugPrint('new Price set');
-    print(_price);
+  }
+
+  void _subtractPrice(int newPrice) {
+    _price = -newPrice;
+    notifyListeners();
   }
 }
 
@@ -50,7 +60,12 @@ class _ServiceWidgetHighlight extends State<ServiceWidgetHighlight> {
           setState(() {
             widget._checked = !widget._checked;
             widget.tp._toggletapped();
-            widget.tp._setPriceOfTapped(widget.service.price);
+            if (widget._checked) {
+              widget.tp._addPrice(widget.service.price);
+            } else {
+              widget.tp._subtractPrice(widget.service.price);
+            }
+
             widget._colorContainer =
                 widget._checked ? Colors.green : Colors.white.withOpacity(0.9);
           });
