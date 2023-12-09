@@ -5,7 +5,6 @@ import 'package:hotel_manager/screens/user_flow/user_bottom_navigation.dart';
 
 import '/services/user_auth.dart';
 import 'owner_flow/owner_botton_navigation.dart';
-import 'owner_flow/owner_panel_screen.dart';
 
 class StartView extends StatefulWidget {
   const StartView({Key? key});

@@ -5,9 +5,8 @@ import 'package:hotel_manager/components/reservation_widget.dart';
 import 'package:hotel_manager/screens/user_flow/reservation_placeholder.dart';
 import 'package:hotel_manager/utils/Utils.dart';
 
-// import '../../models/user_model.dart';
 import '../../services/reservation_service.dart';
-import '../../services/user_service.dart';
+//import '../../services/user_service.dart';
 
 class UserReservationsView extends StatefulWidget {
   const UserReservationsView({super.key});
@@ -23,7 +22,7 @@ class _UserReservationsView extends State<UserReservationsView> {
 
   final List<ReservationPlaceholder> _reservations = [];
 
-  final UserService _userService = UserService();
+  //final UserService _userService = UserService();
   final ReservationServices _reservationServices = ReservationServices();
   User? user = FirebaseAuth.instance.currentUser;
   late String uID;

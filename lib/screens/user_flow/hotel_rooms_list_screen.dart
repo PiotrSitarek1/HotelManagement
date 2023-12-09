@@ -1,16 +1,15 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'package:hotel_manager/components/room_widget.dart';
 import 'package:hotel_manager/models/room_model.dart';
-import 'package:hotel_manager/screens/user_flow/user_booking_screen.dart';
+// import 'package:hotel_manager/screens/user_flow/user_booking_screen.dart';
 import 'package:hotel_manager/services/room_service.dart';
 import 'package:hotel_manager/services/user_service.dart';
-import 'package:hotel_manager/utils/Utils.dart';
+// import 'package:hotel_manager/utils/Utils.dart';
 
 import '../../models/hotel_model.dart';
-import '../../models/user_model.dart';
+//import '../../models/user_model.dart';
 
 class HotelRoomsListView extends StatefulWidget {
   final Hotel hotel;
@@ -23,7 +22,7 @@ class HotelRoomsListView extends StatefulWidget {
 class _HotelRoomsListView extends State<HotelRoomsListView> {
   final UserService _userService = UserService();
   final Hotel hotel;
-  _HotelRoomsListView(this.hotel){
+  _HotelRoomsListView(this.hotel) {
     setRooms();
   }
 
