@@ -1,4 +1,3 @@
-//todo it's gonna be throwen away after implementing backend
 class ReservationPlaceholder {
   String date = '';
   String dateEnd = '';
@@ -6,8 +5,10 @@ class ReservationPlaceholder {
   String hotelname = '';
   String adress = '';
   String services = '';
-  String status = '';
 
+  //Todo
+  String status = '';
+  String contact = '';
   int roomNumber;
 
   ReservationPlaceholder({
