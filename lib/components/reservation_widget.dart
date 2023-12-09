@@ -1,21 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hotel_manager/models/reservation_model.dart';
 import 'package:hotel_manager/screens/user_flow/reservation_placeholder.dart';
+import 'package:intl/intl.dart';
 
-class ReservationWidget extends StatelessWidget {
+class ReservationWidget extends StatefulWidget {
   final ReservationPlaceholder reservation;
 
-  const ReservationWidget({super.key, required this.reservation});
+  ReservationWidget({required this.reservation, Key? key}) : super(key: key);
 
   @override
+  State<ReservationWidget> createState() => _ReservationWidgetState();
+}
+
+class _ReservationWidgetState extends State<ReservationWidget> {
+  @override
   Widget build(BuildContext context) {
-    String imageUrl = reservation.imageUrl;
+    String imageUrl = widget.reservation.imageUrl;
 
     if (imageUrl == '' || Uri.tryParse(imageUrl)?.isAbsolute == false) {
       imageUrl =
           'https://img.freepik.com/darmowe-wektory/plaskie-tlo-fasady-hotelu_23-2148157379.jpg?size=338&ext=jpg&ga=GA1.1.1826414947.1699747200&semt=sph';
     }
-
+    DateTime checkInDate = DateTime.parse(widget.reservation.date);
+    DateTime checkOutDate = DateTime.parse(widget.reservation.dateEnd);
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: ClipRRect(
@@ -51,7 +59,7 @@ class ReservationWidget extends StatelessWidget {
                         Padding(
                           padding: const EdgeInsets.all(16.0),
                           child: Text(
-                            reservation.hotelname,
+                            widget.reservation.hotelname,
                             style: GoogleFonts.roboto(
                                 fontSize: 16,
                                 color: Colors.white,
@@ -61,19 +69,34 @@ class ReservationWidget extends StatelessWidget {
                         Padding(
                           padding: const EdgeInsets.all(16.0),
                           child: Text(
-                            reservation.adress,
+                            widget.reservation.adress,
                             style: GoogleFonts.roboto(
                                 fontSize: 16,
                                 color: Colors.white,
                                 fontWeight: FontWeight.normal),
                           ),
                         ),
-                        Padding(
-                            padding: const EdgeInsets.all(16.0),
-                            child: ElevatedButton(
-                              onPressed: () {},
-                              child: Text('Details'),
-                            )),
+                        Text(
+                          'Reservation Time:',
+                          style: GoogleFonts.roboto(
+                              fontSize: 14,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold),
+                        ),
+                        Text(
+                          '${DateFormat('yyyy-MM-dd hh:mm').format(checkInDate)}',
+                          style: GoogleFonts.roboto(
+                            fontSize: 14,
+                            color: Colors.white,
+                          ),
+                        ),
+                        Text(
+                          '${DateFormat('yyyy-MM-dd hh:mm').format(checkOutDate)}',
+                          style: GoogleFonts.roboto(
+                            fontSize: 14,
+                            color: Colors.white,
+                          ),
+                        ),
                       ],
                     ),
                     ClipRRect(
