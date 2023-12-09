@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:hotel_manager/screens/owner_flow/current_reservations_screen.dart';
+import 'package:hotel_manager/screens/owner_flow/pending_reservations_screen.dart';
+import 'package:hotel_manager/screens/owner_flow/reservations_screen.dart';
 import 'package:hotel_manager/screens/owner_flow/owner_panel_screen.dart';
 
 class OwnerBottomNavigationView extends StatefulWidget {
@@ -19,7 +20,8 @@ class _OwnerBottomNavigationView extends State<OwnerBottomNavigationView> {
   }
 
   final List<Widget> _pages = [
-    const CurrentReservationsScreen(),
+    const PendingReservationsScreen(),
+    const ReservationsScreen(),
     const OwnerPanelScreen()
   ];
 
@@ -40,6 +42,8 @@ class _OwnerBottomNavigationView extends State<OwnerBottomNavigationView> {
         currentIndex: _selectedIndex,
         onTap: _navigateBottomNavigationBar,
         items: const [
+          BottomNavigationBarItem(
+              icon: Icon(Icons.pending_actions), label: 'Pending'),
           BottomNavigationBarItem(
               icon: Icon(Icons.event), label: 'Reservations'),
           BottomNavigationBarItem(

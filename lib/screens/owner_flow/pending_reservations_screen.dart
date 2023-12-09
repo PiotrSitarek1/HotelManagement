@@ -1,22 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hotel_manager/models/reservation_model.dart';
+import 'package:hotel_manager/screens/owner_flow/reservation_details_screen.dart';
 import 'package:hotel_manager/services/reservation_service.dart';
 import 'package:hotel_manager/services/room_service.dart';
 import 'package:hotel_manager/services/user_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-import '../../models/room_model.dart';
-
-class CurrentReservationsScreen extends StatefulWidget {
-  const CurrentReservationsScreen({Key? key}) : super(key: key);
+class PendingReservationsScreen extends StatefulWidget {
+  const PendingReservationsScreen({Key? key}) : super(key: key);
 
   @override
-  _CurrentReservationsScreenState createState() =>
-      _CurrentReservationsScreenState();
+  _PendingReservationsScreenState createState() =>
+      _PendingReservationsScreenState();
 }
 
-class _CurrentReservationsScreenState extends State<CurrentReservationsScreen> {
+class _PendingReservationsScreenState extends State<PendingReservationsScreen> {
   final ReservationServices _reservationServices = ReservationServices();
   final RoomService roomService = RoomService();
   late String hotelID;
@@ -55,9 +54,9 @@ class _CurrentReservationsScreenState extends State<CurrentReservationsScreen> {
                 return Text('Error: ${snapshot.error}');
               } else {
                 return FutureBuilder<Map<String, dynamic>?>(
-                  future: _reservationServices.getReservationFromSingleHotel(
-                    hotelID,
-                  ),
+                  future: _reservationServices
+                      .getSpecificReservationsFromSingleHotel(
+                          hotelID, 'Pending'),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return Stack(
@@ -97,7 +96,7 @@ class _CurrentReservationsScreenState extends State<CurrentReservationsScreen> {
                             children: [
                               Center(
                                 child: Text(
-                                  'Current Reservations',
+                                  'Pending Reservations',
                                   style: GoogleFonts.roboto(
                                     fontSize: 25.0,
                                     fontWeight: FontWeight.bold,
@@ -132,54 +131,55 @@ class _CurrentReservationsScreenState extends State<CurrentReservationsScreen> {
   }
 
   Widget buildReservationTile(String key, Reservation reservation) {
-    return Container(
-      height: 80,
-      margin: const EdgeInsets.symmetric(vertical: 1.0),
-      child: Card(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(30.0),
-        ),
-        color: Colors.white.withOpacity(0.9),
-        child: ListTile(
-          title: Row(
-            children: [
-              SizedBox(
-                width: 90,
-                child: Text(
-                  'Room ${reservation.roomNumber}',
-                  style: GoogleFonts.roboto(
-                    fontSize: 14.0,
-                    fontWeight: FontWeight.bold,
+    return InkWell(
+      onTap: () {
+        // Navigate to reservation details screen
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ReservationDetailsScreen(
+                reservation: reservation, reservationId: key),
+          ),
+        );
+      },
+      child: Container(
+        height: 80,
+        margin: const EdgeInsets.symmetric(vertical: 1.0),
+        child: Card(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(30.0),
+          ),
+          color: Colors.white.withOpacity(0.9),
+          child: ListTile(
+            title: Row(
+              children: [
+                const SizedBox(width: 15),
+                SizedBox(
+                  width: 100,
+                  child: Text(
+                    'Room ${reservation.roomNumber}',
+                    style: GoogleFonts.roboto(
+                      fontSize: 14.0,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
-              ),
-              const SizedBox(width: 5),
-              SizedBox(
-                width: 60,
-                child: Text(
-                  'Status: ${reservation.status}',
-                  style: GoogleFonts.roboto(fontSize: 14.0),
+                SizedBox(
+                  width: 80,
+                  child: Text(
+                    'Check-In:\n${_formatDate(reservation.checkInDate)}',
+                    style: GoogleFonts.roboto(fontSize: 13.0),
+                  ),
                 ),
-              ),
-              const SizedBox(width: 10),
-              SizedBox(
-                width: 90,
-                child: Text(
-                  'Check-In:\n${_formatDate(reservation.checkInDate)}\n'
-                  'Check-Out:\n${_formatDate(reservation.checkOutDate)}',
-                  style: GoogleFonts.roboto(fontSize: 10.0),
+                SizedBox(
+                  width: 80,
+                  child: Text(
+                    'Check-Out:\n${_formatDate(reservation.checkOutDate)}',
+                    style: GoogleFonts.roboto(fontSize: 13.0),
+                  ),
                 ),
-              ),
-              SizedBox(
-                width: 40,
-                child: Checkbox(
-                  value: reservation.status == 'Active',
-                  onChanged: (value) async {
-                    await _acceptReservation(key, reservation, value ?? false);
-                  },
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -193,37 +193,5 @@ class _CurrentReservationsScreenState extends State<CurrentReservationsScreen> {
   Future<String> _getHotelId() async {
     hotelID = (await UserService().getHotelByUserUID(uID))!;
     return hotelID;
-  }
-
-  Future<void> _acceptReservation(
-      String reservationId, Reservation reservation, bool newValue) async {
-    try {
-      reservation.status = newValue ? 'Active' : 'Pending';
-      setRoom(reservation, newValue);
-      await _reservationServices.updateReservationStatus(
-          reservationId, newValue ? 'Active' : 'Pending');
-      setState(() {});
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-            content: Text('Reservation accepted successfully.'),
-            backgroundColor: Colors.grey),
-      );
-    } catch (error) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Error accepting reservation: $error'),
-          backgroundColor: Colors.grey,
-        ),
-      );
-    }
-  }
-  void setRoom(Reservation reservation, bool isActive) async {
-    Room? room = await roomService.getRoomByNumber(reservation.roomNumber);
-    String? roomId = await roomService.getRoomKeyByNumber(reservation.roomNumber);
-    if(room == null || roomId == null) return;
-    room.availability = !isActive;
-    roomService.updateRoom(roomId, room);
-    return;
   }
 }
