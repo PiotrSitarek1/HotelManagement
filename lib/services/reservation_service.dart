@@ -40,6 +40,27 @@ class ReservationServices {
     return reservations;
   }
 
+  Future<Map<String, Reservation>?> getSpecificReservationsFromSingleHotel(
+      String hotelID, String statusValue) async {
+    Query query = _reservationRef.orderByChild('hotelId').equalTo(hotelID);
+    DataSnapshot snapshot = await query.get();
+    if (snapshot.value == null) return null;
+
+    Map<String, dynamic> reservationsData =
+    json.decode(json.encode(snapshot.value));
+
+    Map<String, Reservation> reservations = {};
+
+    reservationsData.forEach((key, value) {
+      Reservation reservation = Reservation.fromMap(value);
+      if (reservation.status == statusValue) {
+        reservations[key] = reservation;
+      }
+    });
+
+    return reservations;
+  }
+
   Future<Map<String, dynamic>?> getReservationForUser(String uID) async {
     DataSnapshot snapshot = await _reservationRef.get();
     if(snapshot.value == null) return null;
