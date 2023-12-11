@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hotel_manager/components/hotel_widget.dart';
 import 'package:hotel_manager/models/hotel_model.dart';
-// import 'package:hotel_manager/utils/Utils.dart';
 
 import '../../services/hotel_service.dart';
 
@@ -75,8 +74,10 @@ class _AvailableHotelsView extends State<AvailableHotelsView> {
   Future<void> getHotels() async {
     final temp = await _hotelService.getAllHotels();
     if (temp == null) return;
-    setState(() {
-      _hotels = temp;
-    });
+    if(mounted){
+      setState(() {
+        _hotels = temp;
+      });
+    }
   }
 }
