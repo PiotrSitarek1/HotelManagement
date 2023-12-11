@@ -7,7 +7,7 @@ import '../../models/user_model.dart';
 import '../../services/reservation_service.dart';
 import '../../services/room_service.dart';
 import '../../services/user_service.dart';
-import 'owner_botton_navigation.dart';
+import 'owner_bottom_navigation.dart';
 
 class ReservationDetailsScreen extends StatelessWidget {
   final ReservationServices _reservationServices = ReservationServices();
@@ -171,8 +171,7 @@ class ReservationDetailsScreen extends StatelessWidget {
                           );
                         },
                         style: ElevatedButton.styleFrom(
-                          primary: Colors.red,
-                          onPrimary: Colors.white,
+                          foregroundColor: Colors.white, backgroundColor: Colors.red,
                         ),
                         child: const Text('Decline'),
                       ),
