@@ -58,9 +58,11 @@ class _OwnerPanelScreenState extends State<OwnerPanelScreen> {
           File? downloadedImage = await downloadImageFile(hotelImageUrl);
 
           if (downloadedImage != null) {
-            setState(() {
-              _pickedImage = downloadedImage;
-            });
+            if(mounted) {
+              setState(() {
+                _pickedImage = downloadedImage;
+              });
+            }
           }
         }
       }

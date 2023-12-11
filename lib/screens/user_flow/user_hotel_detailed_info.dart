@@ -4,7 +4,6 @@ import 'package:hotel_manager/components/service_widget.dart';
 import 'package:hotel_manager/models/hotel_model.dart';
 import 'package:hotel_manager/models/service_model.dart';
 import 'package:hotel_manager/screens/user_flow/hotel_rooms_list_screen.dart';
-import 'package:hotel_manager/screens/user_flow/user_bottom_navigation.dart';
 import 'package:hotel_manager/services/hotel_service.dart';
 import 'package:hotel_manager/services/user_service.dart';
 
@@ -37,23 +36,19 @@ class _UserHotelDetailedInfoScreen extends State<UserHotelDetailedInfoScreen> {
     _services.clear();
     _services.addAll(temp);
 
-    setState(() {
-      hotelName = hotel.name;
-      adress = hotel.address;
-      email = hotel.email;
-      phoneNum = hotel.phoneNumber;
-      imageUrl = hotel.imageUrl;
+    if(mounted){
+      setState(() {
+        hotelName = hotel.name;
+        adress = hotel.address;
+        email = hotel.email;
+        phoneNum = hotel.phoneNumber;
+        imageUrl = hotel.imageUrl;
 
-      for (int i = 0; i < hotel.services.length; i++) {
-        _services.add(Service(hotel.services[i].name, hotel.services[i].price));
-      }
-    });
-  }
-
-  void _navigateToHotelsList() {
-    Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => const UserBottomNavigationView(),
-    ));
+        for(int i = 0; i < hotel.services.length; i++) {
+          _services.add(Service(hotel.services[i].name, hotel.services[i].price));
+        }
+      });
+    }
   }
 
   void _NavigateToRooms() {

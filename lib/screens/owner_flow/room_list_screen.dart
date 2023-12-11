@@ -28,10 +28,12 @@ class _RoomListScreenState extends State<RoomListScreen> {
     showModalBottomSheet(
       context: context,
       builder: (BuildContext context) {
-        return Container(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
+        return Padding(
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.of(context).viewInsets.bottom,
+          ).add(const EdgeInsets.all(16.0)),
+          child: ListView(
+            shrinkWrap: true,
             children: [
               TextField(
                 controller: numberController,
@@ -43,7 +45,7 @@ class _RoomListScreenState extends State<RoomListScreen> {
               TextField(
                 controller: priceController,
                 keyboardType:
-                    const TextInputType.numberWithOptions(decimal: false),
+                const TextInputType.numberWithOptions(decimal: false),
                 decoration: const InputDecoration(labelText: 'Price'),
               ),
               const SizedBox(height: 16),
@@ -88,10 +90,11 @@ class _RoomListScreenState extends State<RoomListScreen> {
               ElevatedButton(
                 onPressed: () {
                   _addNewRoom(
-                      int.tryParse(numberController.text) ?? 0,
-                      int.tryParse(priceController.text) ?? 0,
-                      typeController.text,
-                      bool.tryParse(availabilityController.text) ?? false);
+                    int.tryParse(numberController.text) ?? 0,
+                    int.tryParse(priceController.text) ?? 0,
+                    typeController.text,
+                    bool.tryParse(availabilityController.text) ?? false,
+                  );
                   Navigator.pop(context);
                 },
                 child: const Text('Save'),
@@ -113,9 +116,11 @@ class _RoomListScreenState extends State<RoomListScreen> {
   Future<void> _getRooms() async {
     final temp = await _roomService.getRoomsByHotelId(hotelID);
     if (temp == null) return;
-    setState(() {
-      rooms = temp;
-    });
+    if(mounted){
+      setState(() {
+        rooms = temp;
+      });
+    }
   }
 
   @override

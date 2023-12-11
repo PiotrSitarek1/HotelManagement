@@ -3,13 +3,10 @@ import 'package:google_fonts/google_fonts.dart';
 
 import 'package:hotel_manager/components/room_widget.dart';
 import 'package:hotel_manager/models/room_model.dart';
-// import 'package:hotel_manager/screens/user_flow/user_booking_screen.dart';
 import 'package:hotel_manager/services/room_service.dart';
 import 'package:hotel_manager/services/user_service.dart';
-// import 'package:hotel_manager/utils/Utils.dart';
 
 import '../../models/hotel_model.dart';
-//import '../../models/user_model.dart';
 
 class HotelRoomsListView extends StatefulWidget {
   final Hotel hotel;
@@ -110,8 +107,10 @@ class _HotelRoomsListView extends State<HotelRoomsListView> {
     final temp = await _roomService.getRoomsByHotelId(hotelId!);
 
     if (temp == null) return;
-    setState(() {
-      _rooms = temp;
-    });
+    if(mounted) {
+      setState(() {
+        _rooms = temp;
+      });
+    }
   }
 }

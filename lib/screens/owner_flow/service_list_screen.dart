@@ -25,37 +25,47 @@ class _ServiceListScreenState extends State<ServiceListScreen> {
     showModalBottomSheet(
       context: context,
       builder: (BuildContext context) {
-        return Container(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextField(
-                controller: _serviceNameController,
-                decoration: const InputDecoration(labelText: 'Service Name'),
-              ),
-              const SizedBox(height: 16),
-              TextField(
-                controller: _servicePriceController,
-                keyboardType:
-                    const TextInputType.numberWithOptions(decimal: true),
-                decoration: const InputDecoration(labelText: 'Service Price'),
-              ),
-              const SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: () {
-                  _addNewService(_serviceNameController.text,
-                      int.tryParse(_servicePriceController.text) ?? 0);
-                  Navigator.pop(context);
-                },
-                child: const Text('Save'),
-              ),
-            ],
+        return SingleChildScrollView(
+          child: Container(
+            constraints: BoxConstraints(
+              maxHeight: MediaQuery.of(context).size.height * 0.8,
+            ),
+            padding: EdgeInsets.only(
+              bottom: MediaQuery.of(context).viewInsets.bottom,
+            ).add(const EdgeInsets.all(16.0)),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextField(
+                  controller: _serviceNameController,
+                  decoration: const InputDecoration(labelText: 'Service Name'),
+                ),
+                const SizedBox(height: 16),
+                TextField(
+                  controller: _servicePriceController,
+                  keyboardType:
+                  const TextInputType.numberWithOptions(decimal: true),
+                  decoration: const InputDecoration(labelText: 'Service Price'),
+                ),
+                const SizedBox(height: 16),
+                ElevatedButton(
+                  onPressed: () {
+                    _addNewService(
+                      _serviceNameController.text,
+                      int.tryParse(_servicePriceController.text) ?? 0,
+                    );
+                    Navigator.pop(context);
+                  },
+                  child: const Text('Save'),
+                ),
+              ],
+            ),
           ),
         );
       },
     );
   }
+
 
   @override
   void initState() {

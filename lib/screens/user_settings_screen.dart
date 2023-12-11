@@ -60,9 +60,11 @@ class _UserSettingsViewState extends State<UserSettingsView> {
       if (userImageUrl != "") {
         File? downloadedImage = await downloadImageFile(userImageUrl);
         if (downloadedImage != null) {
-          setState(() {
-            _pickedImage = downloadedImage;
-          });
+          if(mounted){
+            setState(() {
+              _pickedImage = downloadedImage;
+            });
+          }
         }
       }
     }

@@ -10,7 +10,6 @@ import 'package:hotel_manager/models/room_model.dart';
 import 'package:hotel_manager/models/service_model.dart';
 import 'package:hotel_manager/services/hotel_service.dart';
 import 'package:hotel_manager/services/reservation_service.dart';
-//import 'package:hotel_manager/services/user_auth.dart';
 
 import '../../models/hotel_model.dart';
 import '../../models/user_model.dart';
@@ -27,7 +26,6 @@ class UserBookingView extends StatefulWidget {
 class _UserBookingView extends State<UserBookingView> {
   DateTime? reservationDate = DateTime.now();
   final UserService _userService = UserService();
-  //final UserAuth _userAuth = UserAuth();
   final ReservationServices _reservationServices = ReservationServices();
   User? user = FirebaseAuth.instance.currentUser;
   final HotelService _hotelService = HotelService();
@@ -47,30 +45,33 @@ class _UserBookingView extends State<UserBookingView> {
     UserDb? owner = await _userService.getUserByUID(tempHotel.supervisorId);
     if (owner == null) return;
     final temp = await _hotelService.getServicesByHotelId(room.hotelId);
-    setState(() {
-      hotelName = tempHotel.name;
-      adress = tempHotel.address;
-      contact = tempHotel.email;
-      ownersName = owner.firstname;
-      ownersLastName = owner.lastname;
+    if (mounted) {
+      setState(() {
+        hotelName = tempHotel.name;
+        adress = tempHotel.address;
+        contact = tempHotel.email;
+        ownersName = owner.firstname;
+        ownersLastName = owner.lastname;
 
-      if (temp == null) return;
-      _services.clear();
-      _services.addAll(temp);
+        if (temp == null) return;
+        _services.clear();
+        _services.addAll(temp);
 
-      _totalPrice = room.price;
-      for (int i = 0; i < _services.length; i++) {
-        _totalPrice += _services[i].price;
-      }
-    });
+        _totalPrice = room.price;
+        for (int i = 0; i < _services.length; i++) {
+          _totalPrice += _services[i].price;
+        }
+      });
+    }
   }
 
-  void ReserveRoom() {
+  void reserveRoom() {
     _hotelService.getHotelById(room.hotelId);
     String uID = user!.uid;
     Reservation reservation = Reservation(uID, room.hotelId, room.number,
         DateTime.now(), DateTime.now(), "Pending", true, []);
     _reservationServices.addReservation(reservation);
+    Navigator.pop(context);
   }
 
   @override
@@ -294,7 +295,7 @@ class _UserBookingView extends State<UserBookingView> {
                 ),
               ),
               ElevatedButton(
-                  onPressed: ReserveRoom,
+                  onPressed: reserveRoom,
                   child: Text(
                     'Reserve',
                     style: GoogleFonts.roboto(
