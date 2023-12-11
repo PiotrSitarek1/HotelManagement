@@ -10,7 +10,7 @@ import 'package:hotel_manager/models/room_model.dart';
 import 'package:hotel_manager/models/service_model.dart';
 import 'package:hotel_manager/services/hotel_service.dart';
 import 'package:hotel_manager/services/reservation_service.dart';
-import 'package:hotel_manager/services/user_auth.dart';
+//import 'package:hotel_manager/services/user_auth.dart';
 
 import '../../models/hotel_model.dart';
 import '../../models/user_model.dart';
@@ -27,7 +27,7 @@ class UserBookingView extends StatefulWidget {
 class _UserBookingView extends State<UserBookingView> {
   DateTime? reservationDate = DateTime.now();
   final UserService _userService = UserService();
-  final UserAuth _userAuth = UserAuth();
+  //final UserAuth _userAuth = UserAuth();
   final ReservationServices _reservationServices = ReservationServices();
   User? user = FirebaseAuth.instance.currentUser;
   final HotelService _hotelService = HotelService();

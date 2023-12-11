@@ -7,17 +7,16 @@ import 'package:hotel_manager/screens/user_flow/hotel_rooms_list_screen.dart';
 import 'package:hotel_manager/screens/user_flow/user_bottom_navigation.dart';
 import 'package:hotel_manager/services/hotel_service.dart';
 import 'package:hotel_manager/services/user_service.dart';
-import 'package:hotel_manager/utils/Utils.dart';
-
-import '../../models/user_model.dart';
 
 class UserHotelDetailedInfoScreen extends StatefulWidget {
   final Hotel hotel;
 
-  const UserHotelDetailedInfoScreen({Key? key, required this.hotel}) : super(key: key);
+  const UserHotelDetailedInfoScreen({Key? key, required this.hotel})
+      : super(key: key);
 
   @override
-  _UserHotelDetailedInfoScreen createState() => _UserHotelDetailedInfoScreen(hotel);
+  _UserHotelDetailedInfoScreen createState() =>
+      _UserHotelDetailedInfoScreen(hotel);
 }
 
 class _UserHotelDetailedInfoScreen extends State<UserHotelDetailedInfoScreen> {
@@ -28,9 +27,7 @@ class _UserHotelDetailedInfoScreen extends State<UserHotelDetailedInfoScreen> {
 
   final List<Service> _services = [];
 
-
-
-  setHotelData() async{
+  setHotelData() async {
     UserService owner = UserService();
     String? hotelId = await owner.getHotelByUserUID(hotel.supervisorId);
     if (hotelId == null) return;
@@ -47,7 +44,7 @@ class _UserHotelDetailedInfoScreen extends State<UserHotelDetailedInfoScreen> {
       phoneNum = hotel.phoneNumber;
       imageUrl = hotel.imageUrl;
 
-      for(int i = 0; i < hotel.services.length; i++) {
+      for (int i = 0; i < hotel.services.length; i++) {
         _services.add(Service(hotel.services[i].name, hotel.services[i].price));
       }
     });

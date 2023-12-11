@@ -10,7 +10,7 @@ class ReservationServices {
   final DatabaseReference _reservationRef =
       FirebaseDatabase.instance.ref().child('reservations');
   final DatabaseReference _hotelRef =
-  FirebaseDatabase.instance.ref().child('hotel');
+      FirebaseDatabase.instance.ref().child('hotel');
 
   Future<void> addReservation(Reservation reservation) async {
     Map<String, dynamic> reservationMap = reservation.toMap();
@@ -21,8 +21,9 @@ class ReservationServices {
 
   Future<Reservation?> getReservationByUID(String rID) async {
     DataSnapshot snapshot = await _reservationRef.child(rID).get();
-    if(snapshot.value == null) return null;
-    Map<String, dynamic> reservationData = json.decode(json.encode(snapshot.value));
+    if (snapshot.value == null) return null;
+    Map<String, dynamic> reservationData =
+        json.decode(json.encode(snapshot.value));
     return Reservation.fromMap(reservationData);
   }
 
@@ -47,7 +48,7 @@ class ReservationServices {
     if (snapshot.value == null) return null;
 
     Map<String, dynamic> reservationsData =
-    json.decode(json.encode(snapshot.value));
+        json.decode(json.encode(snapshot.value));
 
     Map<String, Reservation> reservations = {};
 
@@ -63,46 +64,55 @@ class ReservationServices {
 
   Future<Map<String, dynamic>?> getReservationForUser(String uID) async {
     DataSnapshot snapshot = await _reservationRef.get();
-    if(snapshot.value == null) return null;
-    Map<String, dynamic> reservationData = json.decode(json.encode(snapshot.value));
+    if (snapshot.value == null) return null;
+    Map<String, dynamic> reservationData =
+        json.decode(json.encode(snapshot.value));
     Map<String, dynamic> reservationsFromSingleHotel = {};
     reservationData.forEach((key, value) {
-      if(value['userId'] == uID){
+      if (value['userId'] == uID) {
         reservationsFromSingleHotel[key] = value;
       }
     });
-    if(reservationsFromSingleHotel.isNotEmpty){
+    if (reservationsFromSingleHotel.isNotEmpty) {
       return reservationsFromSingleHotel;
     }
     return null;
   }
 
-
-  Future<List<ReservationPlaceholder>?> getBasicHotelInformationForUser(String uID) async {
+  Future<List<ReservationPlaceholder>?> getBasicHotelInformationForUser(
+      String uID) async {
     DataSnapshot snapshot = await _reservationRef.get();
-    if(snapshot.value == null) return null;
-    Map<String, dynamic> reservationData = json.decode(json.encode(snapshot.value));
+    if (snapshot.value == null) return null;
+    Map<String, dynamic> reservationData =
+        json.decode(json.encode(snapshot.value));
 
     List<ReservationPlaceholder> reservationsFromSingleHotel = [];
-    await Future.forEach(reservationData.entries, (MapEntry<dynamic, dynamic> entry) async {
-      if(entry.value['userId'] == uID){
-        DataSnapshot hotelSnapshot =  await _hotelRef.child(entry.value['hotelId']).get();
+    await Future.forEach(reservationData.entries,
+        (MapEntry<dynamic, dynamic> entry) async {
+      if (entry.value['userId'] == uID) {
+        DataSnapshot hotelSnapshot =
+            await _hotelRef.child(entry.value['hotelId']).get();
         var value2 = hotelSnapshot.value;
-        if(value2 is Map) {
-
+        if (value2 is Map) {
           String address = value2['address'];
           String name = value2['name'];
 
           String image = value2['imageUrl'];
           String date = entry.value['checkInDate'];
           String dateEnd = entry.value['checkOutDate'];
+          int roomNum = entry.value['roomNumber'];
 
-          reservationsFromSingleHotel.add(ReservationPlaceholder(hotelname: name, adress: address, date:date, dateEnd: dateEnd, imageUrl: image));
-
+          reservationsFromSingleHotel.add(ReservationPlaceholder(
+              hotelname: name,
+              adress: address,
+              date: date,
+              dateEnd: dateEnd,
+              imageUrl: image,
+              roomNumber: roomNum));
         }
       }
     });
-    if(reservationsFromSingleHotel.isNotEmpty){
+    if (reservationsFromSingleHotel.isNotEmpty) {
       return reservationsFromSingleHotel;
     }
     return null;
@@ -117,7 +127,8 @@ class ReservationServices {
     await _reservationRef.child(reservationId).remove();
   }
 
-  Future<void> updateReservation(String reservationId, Reservation reservation) async {
+  Future<void> updateReservation(
+      String reservationId, Reservation reservation) async {
     Map<String, dynamic> userMap = reservation.toMap();
     await _reservationRef.child(reservationId).update(userMap);
   }
