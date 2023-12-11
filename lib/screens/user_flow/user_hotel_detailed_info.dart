@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hotel_manager/components/service_widget.dart';
@@ -6,6 +8,8 @@ import 'package:hotel_manager/models/service_model.dart';
 import 'package:hotel_manager/screens/user_flow/hotel_rooms_list_screen.dart';
 import 'package:hotel_manager/services/hotel_service.dart';
 import 'package:hotel_manager/services/user_service.dart';
+
+import '../../utils/Utils.dart';
 
 class UserHotelDetailedInfoScreen extends StatefulWidget {
   final Hotel hotel;
@@ -23,6 +27,7 @@ class _UserHotelDetailedInfoScreen extends State<UserHotelDetailedInfoScreen> {
   final Hotel hotel;
   _UserHotelDetailedInfoScreen(this.hotel);
   HotelService _hotelService = HotelService();
+  File? _image;
 
   final List<Service> _services = [];
 
@@ -43,11 +48,11 @@ class _UserHotelDetailedInfoScreen extends State<UserHotelDetailedInfoScreen> {
         email = hotel.email;
         phoneNum = hotel.phoneNumber;
         imageUrl = hotel.imageUrl;
-
         for(int i = 0; i < hotel.services.length; i++) {
           _services.add(Service(hotel.services[i].name, hotel.services[i].price));
         }
       });
+      setImage();
     }
   }
 
@@ -59,15 +64,29 @@ class _UserHotelDetailedInfoScreen extends State<UserHotelDetailedInfoScreen> {
         ));
   }
 
+  Future<void> setImage() async {
+    if (imageUrl != "") {
+      File? downloadedImage = await downloadImageFile(imageUrl);
+      if (downloadedImage != null) {
+        if(mounted){
+          setState(() {
+            _image = downloadedImage;
+          });
+        }
+      }
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    setHotelData();
+  }
+
   @override
   Widget build(BuildContext context) {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      setHotelData();
-    });
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
-    const imageUrl =
-        "https://pix8.agoda.net/hotelImages/124/1246280/1246280_16061017110043391702.jpg?ca=6&ce=1&s=1024x768";
     Color customBlueAccent = Color.fromARGB(186, 5, 35, 75);
     return Scaffold(
       appBar: null,
@@ -94,10 +113,18 @@ class _UserHotelDetailedInfoScreen extends State<UserHotelDetailedInfoScreen> {
                       width: (screenWidth - 20) / 2,
                       height: (screenHeight) / 3,
                       padding: const EdgeInsets.all(8),
-                      child: const Image(
-                        image: NetworkImage(imageUrl),
-                        fit: BoxFit.cover,
-                      ),
+                      child: _image != null
+                          ? Image.file(
+                              _image!,
+                              width: 72,
+                              height: 72,
+                              fit: BoxFit.cover,
+                            )
+                          : const Icon(
+                              IconData(0xe043, fontFamily: 'MaterialIcons'),
+                              size: 72,
+                              color: Colors.white70,
+                            ),
                     ),
                   ),
                   ClipRRect(

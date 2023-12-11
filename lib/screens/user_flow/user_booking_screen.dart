@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -14,6 +16,7 @@ import 'package:hotel_manager/services/reservation_service.dart';
 import '../../models/hotel_model.dart';
 import '../../models/user_model.dart';
 import '../../services/user_service.dart';
+import '../../utils/Utils.dart';
 
 class UserBookingView extends StatefulWidget {
   final Room room;
@@ -38,6 +41,8 @@ class _UserBookingView extends State<UserBookingView> {
   final List<Service> _services = [];
   final Room room;
   _UserBookingView(this.room);
+  File? _hotelImage;
+  File? _profileImage;
 
   Future<void> setData() async {
     Hotel? tempHotel = await _hotelService.getHotelById(room.hotelId);
@@ -62,6 +67,25 @@ class _UserBookingView extends State<UserBookingView> {
           _totalPrice += _services[i].price;
         }
       });
+      setImage(owner.imageUrl, false);
+      setImage(tempHotel.imageUrl, true);
+    }
+  }
+
+  Future<void> setImage(String imageUrl, bool isHotelImage) async {
+    if (imageUrl != "") {
+      File? downloadedImage = await downloadImageFile(imageUrl);
+      if (downloadedImage != null) {
+        if (mounted) {
+          setState(() {
+            if (isHotelImage == true) {
+              _hotelImage = downloadedImage;
+            } else {
+              _profileImage = downloadedImage;
+            }
+          });
+        }
+      }
     }
   }
 
@@ -95,11 +119,6 @@ class _UserBookingView extends State<UserBookingView> {
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
-    const imageUrl =
-        "https://pix8.agoda.net/hotelImages/124/1246280/1246280_16061017110043391702.jpg?ca=6&ce=1&s=1024x768";
-    const profileImageUrl =
-        "https://cdn-icons-png.flaticon.com/512/3135/3135715.png";
-
     return Scaffold(
       appBar: null,
       body: Container(
@@ -159,10 +178,18 @@ class _UserBookingView extends State<UserBookingView> {
                     child: Container(
                       width: (screenWidth - 100) / 3,
                       height: (screenHeight) / 8,
-                      child: const Image(
-                        image: NetworkImage(imageUrl),
-                        fit: BoxFit.cover,
-                      ),
+                      child: _hotelImage != null
+                          ? Image.file(
+                              _hotelImage!,
+                              width: 72,
+                              height: 72,
+                              fit: BoxFit.cover,
+                            )
+                          : const Icon(
+                              IconData(0xe043, fontFamily: 'MaterialIcons'),
+                              size: 72,
+                              color: Colors.white70,
+                            ),
                     ),
                   ),
                 ],
@@ -174,10 +201,18 @@ class _UserBookingView extends State<UserBookingView> {
                     child: Container(
                       width: (screenWidth - 100) / 3,
                       height: (screenHeight) / 8,
-                      child: const Image(
-                        image: NetworkImage(profileImageUrl),
-                        fit: BoxFit.cover,
-                      ),
+                      child: _profileImage != null
+                          ? Image.file(
+                              _profileImage!,
+                              width: 72,
+                              height: 72,
+                              fit: BoxFit.cover,
+                            )
+                          : const Icon(
+                              IconData(0xe043, fontFamily: 'MaterialIcons'),
+                              size: 72,
+                              color: Colors.white70,
+                            ),
                     ),
                   ),
                   Padding(
