@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:hotel_manager/models/hotel_model.dart';
 import 'package:hotel_manager/services/hotel_service.dart';
 import 'package:hotel_manager/utils/Utils.dart';
-import '../owner_flow/owner_botton_navigation.dart';
+import '../owner_flow/owner_bottom_navigation.dart';
 import '/models/user_model.dart';
 import '/services/user_auth.dart';
 import '/services/user_service.dart';

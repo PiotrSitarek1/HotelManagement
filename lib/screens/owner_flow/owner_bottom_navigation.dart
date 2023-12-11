@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:hotel_manager/screens/user_flow/avilable_hotels_screen.dart';
-import 'package:hotel_manager/screens/user_flow/user_reservations.dart';
-import 'package:hotel_manager/screens/user_settings_screen.dart';
+import 'package:hotel_manager/screens/owner_flow/pending_reservations_screen.dart';
+import 'package:hotel_manager/screens/owner_flow/reservations_screen.dart';
+import 'package:hotel_manager/screens/owner_flow/owner_panel_screen.dart';
 
-class UserBottomNavigationView extends StatefulWidget {
-  const UserBottomNavigationView({super.key});
+class OwnerBottomNavigationView extends StatefulWidget {
+  const OwnerBottomNavigationView({super.key});
 
   @override
-  _UserBottomNavigationView createState() => _UserBottomNavigationView();
+  _OwnerBottomNavigationView createState() => _OwnerBottomNavigationView();
 }
 
-class _UserBottomNavigationView extends State<UserBottomNavigationView> {
+class _OwnerBottomNavigationView extends State<OwnerBottomNavigationView> {
   int _selectedIndex = 0;
   void _navigateBottomNavigationBar(int index) {
     setState(() {
@@ -19,9 +19,9 @@ class _UserBottomNavigationView extends State<UserBottomNavigationView> {
   }
 
   final List<Widget> _pages = [
-    const AvailableHotelsView(),
-    const UserReservationsView(),
-    const UserSettingsView()
+    const PendingReservationsScreen(),
+    const ReservationsScreen(),
+    const OwnerPanelScreen()
   ];
 
   @override
@@ -45,10 +45,12 @@ class _UserBottomNavigationView extends State<UserBottomNavigationView> {
           currentIndex: _selectedIndex,
           onTap: _navigateBottomNavigationBar,
           items: const [
-            BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
             BottomNavigationBarItem(
-                icon: Icon(Icons.hotel), label: 'Reservations'),
-            BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Account'),
+                icon: Icon(Icons.pending_actions), label: 'Pending'),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.event), label: 'Reservations'),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.person), label: 'Owner Panel'),
           ],
         ),
       ),
