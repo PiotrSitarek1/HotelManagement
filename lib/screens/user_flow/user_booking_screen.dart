@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:date_picker_plus/date_picker_plus.dart';
 import 'package:intl/intl.dart';
@@ -28,6 +29,7 @@ class UserBookingView extends StatefulWidget {
 
 class _UserBookingView extends State<UserBookingView> {
   DateTime? reservationDate = DateTime.now();
+  DateTime? reservationEndDate = DateTime.now().add(const Duration(days: 1));
   final UserService _userService = UserService();
   final ReservationServices _reservationServices = ReservationServices();
   User? user = FirebaseAuth.instance.currentUser;
@@ -286,7 +288,59 @@ class _UserBookingView extends State<UserBookingView> {
                                   );
                                   if (date != null) {
                                     setState(() {
-                                      reservationDate = date;
+                                      if (date.compareTo(reservationEndDate!) <=
+                                              0 &&
+                                          date.compareTo(DateTime.now()) >= 0) {
+                                        reservationDate = date;
+                                      } else {
+                                        Fluttertoast.showToast(
+                                            msg: "Invalid date");
+                                      }
+                                    });
+                                  }
+                                },
+                                child: Text(
+                                  "Edit",
+                                  style: GoogleFonts.roboto(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.purple),
+                                ),
+                              ),
+                              const SizedBox(
+                                width: 32,
+                              ),
+                              Text(
+                                  DateFormat(
+                                    'dd.MM.yyyy',
+                                  ).format(reservationEndDate!),
+                                  style: GoogleFonts.roboto(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold)),
+                              const SizedBox(
+                                width: 16,
+                              ),
+                              GestureDetector(
+                                onTap: () async {
+                                  final date = await showDatePickerDialog(
+                                    context: context,
+                                    initialDate: DateTime.now()
+                                        .add(const Duration(days: 1)),
+                                    maxDate: DateTime.now()
+                                        .add(const Duration(days: 365 * 3)),
+                                    minDate: DateTime.now()
+                                        .subtract(const Duration(days: 31)),
+                                  );
+                                  if (date != null) {
+                                    setState(() {
+                                      if (date.compareTo(reservationDate!) >
+                                          0) {
+                                        reservationEndDate = date;
+                                      } else {
+                                        Fluttertoast.showToast(
+                                            msg:
+                                                "Checkout date cannot be before checkin date");
+                                      }
                                     });
                                   }
                                 },
