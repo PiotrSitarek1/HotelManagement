@@ -26,7 +26,6 @@ class _UserReservationsView extends State<UserReservationsView> {
   late String uID;
 
   void setReservations() {
-    //_reservations.add(ReservationPlaceholder(hotelname: 'asd', adress: 'Bot Night 82-134'));
     addReservations();
   }
 
