@@ -4,13 +4,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hotel_manager/screens/start_screen.dart';
 import 'package:hotel_manager/services/user_auth.dart';
 import 'package:hotel_manager/services/user_service.dart';
 import 'package:image_picker/image_picker.dart';
 import '../models/user_model.dart';
 import '../utils/Utils.dart';
 import 'authentication_flow/change_password_screen.dart';
-import 'authentication_flow/login_menu_screen.dart';
 
 class UserSettingsView extends StatefulWidget {
   const UserSettingsView({Key? key});
@@ -44,9 +44,9 @@ class _UserSettingsViewState extends State<UserSettingsView> {
 
   void _signOut(){
     _userAuth.signOut();
-    Navigator.of(context).push(MaterialPageRoute(
+    Navigator.of(context).pushReplacement(MaterialPageRoute(
       builder: (context) =>
-      const LoginMenuView(),//todo: block coming back to this page
+      const StartView(),
     ));
   }
 

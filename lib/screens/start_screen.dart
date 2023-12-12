@@ -24,7 +24,11 @@ class _StartViewState extends State<StartView> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return WillPopScope(
+        onWillPop: () async {
+          return false;
+        },
+      child: Scaffold(
         appBar: null,
         body: Container(
           decoration: const BoxDecoration(
@@ -100,7 +104,7 @@ class _StartViewState extends State<StartView> {
               ],
             ),
           ),
-        ));
+        )));
   }
 
   // TODO: temp methods for faster login process, delete later ---- change UserSettingsView
