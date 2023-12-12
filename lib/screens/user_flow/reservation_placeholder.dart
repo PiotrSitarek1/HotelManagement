@@ -9,7 +9,7 @@ class ReservationPlaceholder {
   //Todo
   String status = '';
   String contact = '';
-  int roomNumber;
+  int roomNumber = 1;
 
   ReservationPlaceholder({
     required this.hotelname,
@@ -18,5 +18,6 @@ class ReservationPlaceholder {
     required this.dateEnd,
     required this.imageUrl,
     required this.roomNumber,
+    required this.status,
   });
 }

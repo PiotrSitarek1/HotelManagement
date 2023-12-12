@@ -96,7 +96,9 @@ class ReservationServices {
         if (value2 is Map) {
           String address = value2['address'];
           String name = value2['name'];
-
+          //reservation.roomNumber
+          //reservation.status
+          String status = entry.value['status'];
           String image = value2['imageUrl'];
           String date = entry.value['checkInDate'];
           String dateEnd = entry.value['checkOutDate'];
@@ -108,7 +110,9 @@ class ReservationServices {
               date: date,
               dateEnd: dateEnd,
               imageUrl: image,
-              roomNumber: roomNum));
+              roomNumber: roomNum,
+              status: status,
+          ));
         }
       }
     });

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:hotel_manager/models/reservation_model.dart';
 import 'package:hotel_manager/screens/user_flow/reservation_placeholder.dart';
 import 'package:intl/intl.dart';
 
@@ -118,7 +117,7 @@ class _ReservationWidgetState extends State<ReservationWidget> {
                             Padding(
                               padding: const EdgeInsets.all(2),
                               child: Text(
-                                'Room Number : 5', //${widget.reservation.roomNumber}
+                                'Room Number : ${widget.reservation.roomNumber}',
                                 style: GoogleFonts.roboto(
                                     fontSize: 14,
                                     color: Colors.white,
@@ -128,7 +127,7 @@ class _ReservationWidgetState extends State<ReservationWidget> {
                             Padding(
                               padding: const EdgeInsets.all(8),
                               child: Text(
-                                'Status : Active ', //${widget.reservation.status}
+                                'Status : ${widget.reservation.status}',
                                 style: GoogleFonts.roboto(
                                     fontSize: 14,
                                     color: Colors.white,

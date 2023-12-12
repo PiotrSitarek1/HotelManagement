@@ -4,12 +4,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:hotel_manager/screens/owner_flow/hotel_reservation_screen.dart';
+import 'package:hotel_manager/services/user_auth.dart';
 import 'package:hotel_manager/services/user_service.dart';
 import 'package:image_picker/image_picker.dart';
 import '../models/user_model.dart';
 import '../utils/Utils.dart';
 import 'authentication_flow/change_password_screen.dart';
+import 'authentication_flow/login_menu_screen.dart';
 
 class UserSettingsView extends StatefulWidget {
   const UserSettingsView({Key? key});
@@ -20,6 +21,7 @@ class UserSettingsView extends StatefulWidget {
 
 class _UserSettingsViewState extends State<UserSettingsView> {
   final UserService _userService = UserService();
+  final UserAuth _userAuth = UserAuth();
   final TextEditingController firstNameController = TextEditingController();
   final TextEditingController lastNameController = TextEditingController();
   final TextEditingController userNameController = TextEditingController();
@@ -40,10 +42,11 @@ class _UserSettingsViewState extends State<UserSettingsView> {
     ));
   }
 
-  void _navigateToReservationView() {
+  void _signOut(){
+    _userAuth.signOut();
     Navigator.of(context).push(MaterialPageRoute(
       builder: (context) =>
-          const ReservationView(), //todo: DELETE when reservation view made
+      const LoginMenuView(),//todo: block coming back to this page
     ));
   }
 
@@ -240,8 +243,8 @@ class _UserSettingsViewState extends State<UserSettingsView> {
                   ),
                   const SizedBox(height: 16),
                   TextButton(
-                    onPressed: _navigateToReservationView,
-                    child: Text('DELETE LATER',
+                    onPressed: _signOut,
+                    child: Text('Sign out',
                         style: GoogleFonts.roboto(
                             fontSize: 14,
                             fontWeight: FontWeight.bold,
