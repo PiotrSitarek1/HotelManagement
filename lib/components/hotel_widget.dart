@@ -20,6 +20,8 @@ class HotelWidget extends StatelessWidget {
     }
 
     String imageUrl = hotel.imageUrl;
+    var width = MediaQuery.of(context).size.width;
+    var height = MediaQuery.of(context).size.height;
 
     if (Uri.tryParse(imageUrl)?.isAbsolute == false) {
       imageUrl =
@@ -35,65 +37,72 @@ class HotelWidget extends StatelessWidget {
             image: DecorationImage(
                 image: NetworkImage(imageUrl), fit: BoxFit.cover),
           ),
-          height: 400,
+          height: height * 0.5,
           child: Center(
               child: ClipRRect(
             borderRadius: BorderRadius.circular(40),
             child: Container(
               height: 350,
-              width: 350,
+              width: width * 0.85,
               color: const Color.fromRGBO(16, 7, 51, 70),
               child: Center(
                 child: Container(
                   height: 300,
-                  width: 300,
-                  child: Row(children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(40),
-                      child: Container(
-                        height: 300,
-                        width: 150,
-                        child: Image(
-                          image: NetworkImage(imageUrl),
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(
-                              hotel.name,
-                              style: GoogleFonts.roboto(
-                                  fontSize: 16,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold),
+                  width: width * 0.8,
+                  child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(40),
+                          child: Container(
+                            height: 300,
+                            width: width * 0.35,
+                            child: Image(
+                              image: NetworkImage(imageUrl),
+                              fit: BoxFit.cover,
                             ),
                           ),
-                          Text(hotel.address,
-                              style: GoogleFonts.roboto(
-                                  fontSize: 14, color: Colors.white)),
-                          Text(hotel.email,
-                              style: GoogleFonts.roboto(
-                                  fontSize: 14, color: Colors.white)),
-                          Container(
-                            child: ElevatedButton(
-                                onPressed: _NavigateToHotelDetails,
-                                child: Text(
-                                  "More Information",
-                                  style: GoogleFonts.roboto(
-                                      fontSize: 10,
-                                      fontWeight: FontWeight.bold),
-                                )),
-                          )
-                        ],
-                      ),
-                    ),
-                  ]),
+                        ),
+                        Flexible(
+                          child: Padding(
+                            padding: const EdgeInsets.all(2.0),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                Padding(
+                                  padding: const EdgeInsets.all(2.0),
+                                  child: Expanded(
+                                    child: Text(hotel.name,
+                                        style: GoogleFonts.roboto(
+                                            fontSize: 16,
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold),
+                                        softWrap: false,
+                                        maxLines: 1,
+                                        overflow: TextOverflow.fade),
+                                  ),
+                                ),
+                                Text(hotel.address,
+                                    style: GoogleFonts.roboto(
+                                        fontSize: 14, color: Colors.white)),
+                                Text(hotel.email,
+                                    style: GoogleFonts.roboto(
+                                        fontSize: 14, color: Colors.white)),
+                                Container(
+                                  child: ElevatedButton(
+                                      onPressed: _NavigateToHotelDetails,
+                                      child: Text(
+                                        "More Information",
+                                        style: GoogleFonts.roboto(
+                                            fontSize: 10,
+                                            fontWeight: FontWeight.bold),
+                                      )),
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                      ]),
                 ),
               ),
             ),

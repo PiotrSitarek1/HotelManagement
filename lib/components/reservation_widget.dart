@@ -23,14 +23,14 @@ class _ReservationWidgetState extends State<ReservationWidget> {
     }
     DateTime checkInDate = DateTime.parse(widget.reservation.date);
     DateTime checkOutDate = DateTime.parse(widget.reservation.dateEnd);
-
+    var width = MediaQuery.of(context).size.width;
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(50),
         child: ColorFiltered(
           colorFilter: widget.reservation.status ==
-                  'old' //Changes the color if status == old
+                  'Outdated' //Changes the color if status == old
               ? ColorFilter.mode(
                   Colors.grey,
                   BlendMode.color,
@@ -49,99 +49,101 @@ class _ReservationWidgetState extends State<ReservationWidget> {
               ClipRRect(
                 borderRadius: BorderRadius.circular(50),
                 child: Container(
-                  height: 250,
-                  width: 350,
+                  height: 270,
+                  width: width * 0.9,
                   color: const Color.fromRGBO(16, 7, 51, 70),
                 ),
               ),
               ClipRRect(
                 borderRadius: BorderRadius.circular(50),
                 child: Container(
-                  height: 220,
-                  width: 320,
+                  height: 250,
+                  width: width * 0.8,
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.all(4),
-                        child: Column(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(4),
-                              child: Text(
-                                widget.reservation.hotelname,
-                                style: GoogleFonts.roboto(
-                                    fontSize: 16,
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold),
+                      Flexible(
+                        child: Padding(
+                          padding: const EdgeInsets.all(4),
+                          child: Column(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(8),
+                                child: Text(
+                                  widget.reservation.hotelname,
+                                  style: GoogleFonts.roboto(
+                                      fontSize: 16,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold),
+                                ),
                               ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(4.0),
-                              child: Text(
-                                widget.reservation.adress,
-                                style: GoogleFonts.roboto(
-                                    fontSize: 16,
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.normal),
+                              Padding(
+                                padding: const EdgeInsets.all(4.0),
+                                child: Text(
+                                  widget.reservation.adress,
+                                  style: GoogleFonts.roboto(
+                                      fontSize: 16,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.normal),
+                                ),
                               ),
-                            ),
-                            Text(
-                              'Contact: ${widget.reservation.services}',
-                              style: GoogleFonts.roboto(
-                                  fontSize: 14,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                            Text(
-                              'Reservation Time:',
-                              style: GoogleFonts.roboto(
-                                  fontSize: 14,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                            Text(
-                              '${DateFormat('yyyy-MM-dd hh:mm').format(checkInDate)}',
-                              style: GoogleFonts.roboto(
-                                fontSize: 14,
-                                color: Colors.white,
-                              ),
-                            ),
-                            Text(
-                              '${DateFormat('yyyy-MM-dd hh:mm').format(checkOutDate)}',
-                              style: GoogleFonts.roboto(
-                                fontSize: 14,
-                                color: Colors.white,
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(2),
-                              child: Text(
-                                'Room Number : ${widget.reservation.roomNumber}',
+                              Text(
+                                'Contact: ${widget.reservation.services}',
                                 style: GoogleFonts.roboto(
                                     fontSize: 14,
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold),
                               ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(8),
-                              child: Text(
-                                'Status : ${widget.reservation.status}',
+                              Text(
+                                'Reservation Time:',
                                 style: GoogleFonts.roboto(
                                     fontSize: 14,
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold),
                               ),
-                            )
-                          ],
+                              Text(
+                                '${DateFormat('yyyy-MM-dd hh:mm').format(checkInDate)}',
+                                style: GoogleFonts.roboto(
+                                  fontSize: 14,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              Text(
+                                '${DateFormat('yyyy-MM-dd hh:mm').format(checkOutDate)}',
+                                style: GoogleFonts.roboto(
+                                  fontSize: 14,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(2),
+                                child: Text(
+                                  'Room Number : ${widget.reservation.roomNumber}',
+                                  style: GoogleFonts.roboto(
+                                      fontSize: 14,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(8),
+                                child: Text(
+                                  'Status : ${widget.reservation.status}',
+                                  style: GoogleFonts.roboto(
+                                      fontSize: 14,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              )
+                            ],
+                          ),
                         ),
                       ),
                       ClipRRect(
                         borderRadius: BorderRadius.circular(40),
                         child: Container(
                           height: 200,
-                          width: 150,
+                          width: width * 0.3,
                           child: Image(
                             image: NetworkImage(imageUrl),
                             fit: BoxFit.cover,
