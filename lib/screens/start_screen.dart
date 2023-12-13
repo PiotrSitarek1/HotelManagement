@@ -6,6 +6,9 @@ import 'package:hotel_manager/screens/user_flow/user_bottom_navigation.dart';
 import '/services/user_auth.dart';
 import 'owner_flow/owner_bottom_navigation.dart';
 
+import 'package:flutter/services.dart';
+
+
 class StartView extends StatefulWidget {
   const StartView({Key? key});
 
@@ -26,7 +29,8 @@ class _StartViewState extends State<StartView> {
   Widget build(BuildContext context) {
     return WillPopScope(
         onWillPop: () async {
-          return false;
+          SystemNavigator.pop();
+          return true;
         },
       child: Scaffold(
         appBar: null,

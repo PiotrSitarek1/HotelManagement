@@ -95,7 +95,7 @@ class _UserBookingView extends State<UserBookingView> {
     _hotelService.getHotelById(room.hotelId);
     String uID = user!.uid;
     Reservation reservation = Reservation(uID, room.hotelId, room.number,
-        DateTime.now(), DateTime.now(), "Pending", true, []);
+        reservationDate!, reservationEndDate!, "Pending", true, []);
     _reservationServices.addReservation(reservation);
     Navigator.pop(context);
   }
