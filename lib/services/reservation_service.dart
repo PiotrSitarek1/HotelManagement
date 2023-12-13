@@ -98,6 +98,7 @@ class ReservationServices {
           String name = value2['name'];
           //reservation.roomNumber
           //reservation.status
+          String reservationID = entry.key;
           String status = entry.value['status'];
           String image = value2['imageUrl'];
           String date = entry.value['checkInDate'];
@@ -112,6 +113,7 @@ class ReservationServices {
               imageUrl: image,
               roomNumber: roomNum,
               status: status,
+              reservationId: reservationID,
           ));
         }
       }

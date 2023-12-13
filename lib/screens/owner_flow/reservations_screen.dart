@@ -87,6 +87,7 @@ class _ReservationsScreenState extends State<ReservationsScreen> {
                         reservations.add(value);
                         reservationsKeys.add(key);
                       });
+                      _updateReservations(reservations);
 
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -185,5 +186,35 @@ class _ReservationsScreenState extends State<ReservationsScreen> {
   Future<String> _getHotelId() async {
     hotelID = (await UserService().getHotelByUserUID(uID))!;
     return hotelID;
+  }
+
+  void _updateReservations(List<Reservation> reservations){
+    List<Reservation> reservations2 = reservations;
+    for (int i = 0; i < reservations.length; i++) {
+      if ((reservations[i].status == 'Active' && reservations[i].checkOutDate.isBefore(DateTime.now())) || (reservations[i].status == 'Pending' && reservations[i].checkInDate.isBefore(DateTime.now()))) {
+        reservations[i].status = 'Outdated';
+
+      }
+    }
+    _updateInDB(reservations2);
+  }
+
+  void _updateInDB(List<Reservation> reservations) async {
+    for (int i = 0; i < reservations.length; i++) {
+      if (reservations[i].status == 'Outdated') {
+        await _reservationServices.updateReservationStatus(reservations[i].status, 'Outdated');
+        setRoom(reservations[i], false);
+
+      }
+    }
+  }
+
+  void setRoom(Reservation reservation, bool isActive) async {
+    Room? room = await roomService.getRoomByNumber(reservation.roomNumber);
+    String? roomId = await roomService.getRoomKeyByNumber(reservation.roomNumber);
+    if (room == null) return;
+    room.availability = !isActive;
+    roomService.updateRoom(roomId!, room);
+    return;
   }
 }
